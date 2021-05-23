@@ -1,0 +1,14 @@
+study,t1,t2,e.events,e.total,c.events,c.total
+Boulware,hydroxychloroquine,standard care/placebo,17,364,8,361
+Mitja,hydroxychloroquine,standard care/placebo,6,1197,0,1300
+Abella,hydroxychloroquine,standard care/placebo,3,64,3,61
+Grau-Pujol,hydroxychloroquine,standard care/placebo,1,142,5,127
+Chahla,"iota-carrageenan, ivermectin",standard care/placebo,0,117,0,117
+Seet,hydroxychloroquine,povidone-iodine,3,432,15,735
+Seet,hydroxychloroquine,"vitamin C, zinc",3,432,44,634
+Seet,hydroxychloroquine,vitamin C,3,432,29,619
+Seet,povidone-iodine,"vitamin C, zinc",15,735,44,634
+Seet,povidone-iodine,vitamin C,15,735,29,619
+Seet,"vitamin C, zinc",vitamin C,44,634,29,619
+Figueroa,iota-carrageenan,standard care/placebo,2,196,3,198
+Rojas-Serrano,hydroxychloroquine,standard care/placebo,4,62,4,65

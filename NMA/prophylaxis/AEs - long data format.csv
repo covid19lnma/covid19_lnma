@@ -1,0 +1,19 @@
+﻿refid,study,interventionname,treatment,sampleSize,responders
+5783,Boulware,hydroxychloroquine,hydroxychloroquine,364,17
+5783,Boulware,placebo,standard care/placebo,361,8
+"9242, 22538",Mitja,hydroxychloroquine,hydroxychloroquine,1197,6
+"9242, 22538",Mitja,standard care,standard care/placebo,1300,0
+14414,Abella,hydroxychloroquine,hydroxychloroquine,64,3
+14414,Abella,placebo,standard care/placebo,61,3
+Grau-Pujol,Grau-Pujol,hydroxychloroquine,hydroxychloroquine,142,1
+Grau-Pujol,Grau-Pujol,placebo,standard care/placebo,127,5
+Chahla,Chahla,"iota-carrageenan, ivermectin","iota-carrageenan, ivermectin",117,0
+Chahla,Chahla,standard care,standard care/placebo,117,0
+39941,Seet,hydroxychloroquine,hydroxychloroquine,432,3
+39941,Seet,povidone-iodine throat spray,povidone-iodine,735,15
+39941,Seet,"vitamin C, zinc","vitamin C, zinc",634,44
+39941,Seet,vitamin C,vitamin C,619,29
+Figueroa,Figueroa,iota-carrageenan,iota-carrageenan,196,2
+Figueroa,Figueroa,placebo,standard care/placebo,198,3
+Rojas-Serrano,Rojas-Serrano,hydroxychloroquine,hydroxychloroquine,62,4
+Rojas-Serrano,Rojas-Serrano,placebo,standard care/placebo,65,4
