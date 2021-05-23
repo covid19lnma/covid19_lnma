@@ -18,6 +18,8 @@ model=mtc.model(network,type = "consistency",
 plot(model)
 results <- model.processing(model)
 
+# prob.ref=0.03 checar para poner en extra.txt. Quitar de model$code el ultimo corchete
+
 extra = readLines("NMA/extra.txt")
 cat(model$code,extra,file = "NMA/code.txt")
 
@@ -28,9 +30,11 @@ monitors=c("cr","RD")
 
 samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
 
-summary(samples)
+spread_draws(samples,RD[v,i]) %>% group_by(v,i) %>%
+  summarise(mean=mean(RD),lower=quantile(RD,.025),upper=quantile(RD,.975))
 
-model$network$treatments
+
+model$network$treatments #nombres para tabla
 
 list.estimates=list()
 

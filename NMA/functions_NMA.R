@@ -6,6 +6,7 @@ library(stringr)
 library(ggplot2)
 library(dplyr)
 library(viridis)
+library(rjags)
 
 
 model.processing <- function(model){
