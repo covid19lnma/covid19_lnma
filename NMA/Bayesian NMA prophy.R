@@ -1,4 +1,9 @@
+wd <- "/home/antonio/covid19_lnma"
+setwd(wd)
 source("NMA/functions_NMA.R")
+
+mainDir <- wd
+subDir <- "output"
 
 data=read.csv("NMA/prophylaxis/AEs - long data format.csv")
 
@@ -15,26 +20,47 @@ model=mtc.model(network,type = "consistency",
                 powerAdjust=NA, dic=TRUE,
                 hy.prior=mtc.hy.prior("var", "dlnorm",-1.87, 0.4328))
 
+#create output directory
+
+output_dir <- file.path(mainDir, subDir)
+
+if (!dir.exists(output_dir)){
+  dir.create(output_dir)
+}
+pdf("output/profilaxis_aes_network.pdf")
 plot(model)
+dev.off()
+
 results <- model.processing(model)
 
 # prob.ref=0.03 checar para poner en extra.txt. Quitar de model$code el ultimo corchete
+code <- model$code
+code <- substr(code,1,nchar(code)-2)
+
+prob.ref.value <- 0.02
+prob.ref <- sprintf("prob.ref <- %s\n", prob.ref.value)
 
 extra = readLines("NMA/extra.txt")
-cat(model$code,extra,file = "NMA/code.txt")
+cat(code,prob.ref,extra,file = "NMA/code.txt")
 
 model.jags=jags.model(file ="NMA/code.txt",data = model$data,inits = model$inits,
                       n.adapt = 10000,n.chains = model$n.chain)  
 
 monitors=c("cr","RD")
 
+treatments.names <- model$network$treatments #nombres para tabla
+
 samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
 
-spread_draws(samples,RD[v,i]) %>% group_by(v,i) %>%
-  summarise(mean=mean(RD),lower=quantile(RD,.025),upper=quantile(RD,.975))
+spread_draws(samples,RD[i,j]) %>% group_by(i,j) %>%
+  summarise(mean=mean(RD),lower=quantile(RD,.025),upper=quantile(RD,.975)) %>%
+  mutate(i = as.character(treatments.names[i,1]), j =as.character(treatments.names[j,1]))
 
 
-model$network$treatments #nombres para tabla
+spread_draws(samples,cr[i]) %>% group_by(i) %>%
+  summarise(mean=mean(cr),lower=quantile(cr,.025),upper=quantile(cr,.975)) %>%
+  mutate(i = as.character(treatments.names[i,1]))
+
 
 list.estimates=list()
 
