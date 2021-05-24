@@ -1,8 +1,8 @@
-wd <- "/home/antonio/covid19_lnma"
-setwd(wd)
+# wd <- "/home/antonio/covid19_lnma"
+# setwd(wd)
 source("NMA/functions_NMA.R")
 
-mainDir <- wd
+mainDir <- paste0(getwd(),"/NMA/prophylaxis")
 subDir <- "output"
 
 data=read.csv("NMA/prophylaxis/AEs - long data format.csv")
@@ -27,7 +27,7 @@ output_dir <- file.path(mainDir, subDir)
 if (!dir.exists(output_dir)){
   dir.create(output_dir)
 }
-pdf("output/profilaxis_aes_network.pdf")
+pdf(paste0(output_dir,"/profilaxis_aes_network.pdf"))
 plot(model)
 dev.off()
 
@@ -37,7 +37,7 @@ results <- model.processing(model)
 code <- model$code
 code <- substr(code,1,nchar(code)-2)
 
-prob.ref.value <- 0.02
+prob.ref.value <- 0.03
 prob.ref <- sprintf("prob.ref <- %s\n", prob.ref.value)
 
 extra = readLines("NMA/extra.txt")
@@ -52,9 +52,10 @@ treatments.names <- model$network$treatments #nombres para tabla
 
 samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
 
-spread_draws(samples,RD[i,j]) %>% group_by(i,j) %>%
+absolute=spread_draws(samples,RD[i,j]) %>% group_by(i,j) %>%
   summarise(mean=mean(RD),lower=quantile(RD,.025),upper=quantile(RD,.975)) %>%
-  mutate(i = as.character(treatments.names[i,1]), j =as.character(treatments.names[j,1]))
+  mutate(i = as.character(treatments.names[i,1]), j =as.character(treatments.names[j,1])) %>% 
+  ungroup()
 
 
 spread_draws(samples,cr[i]) %>% group_by(i) %>%
@@ -71,8 +72,12 @@ for (i in 1:nrow(relative.effect.table(results))) {
   list.estimates[[i]] <- temp
 }
 
-NMA=bind_rows(list.estimates) %>% select(t1,t2,`50%`,`2.5%`,`50%`,`97.5%`) %>% rename(ci.l.net=`2.5%`,pe.net=`50%`,ci.u.net=`97.5%`) %>%
-  filter(!is.na(pe.net))
+bind_rows(list.estimates) %>% select(t1,t2,`50%`,`2.5%`,`50%`,`97.5%`) %>% rename(ci.l.net=`2.5%`,pe.net=`50%`,ci.u.net=`97.5%`) %>%
+  filter(!is.na(pe.net)) %>% inner_join(absolute,by=c("t1"="i","t2"="j"))
+
+
+pairwise=read.csv("pairwise/prophylaxis/output/AE_prophylaxis.csv")
+
 
 # result.node <- mtc.nodesplit(network, likelihood="binom",link="logit",
 #                              linearModel="fixed", n.chain =3,
