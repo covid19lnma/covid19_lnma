@@ -1,5 +1,5 @@
-# wd <- "/home/antonio/covid19_lnma"
-# setwd(wd)
+wd <- "/home/antonio/covid19_lnma"
+setwd(wd)
 source("NMA/functions_NMA.R")
 
 mainDir <- paste0(getwd(),"/NMA/prophylaxis")
@@ -8,6 +8,12 @@ subDir <- "output"
 data=read.csv("NMA/prophylaxis/AEs - long data format.csv")
 
 #filter(stauthor!="REMAP-CAP_2_NCT02735707") 
+dictionary=data %>% select(study,treatment,responders,sampleSize) %>%
+  filter(sampleSize!=0) %>% as.data.frame() 
+
+dictionary$treatments.simp <- dictionary$treatment
+dictionary = dictionary %>% select(treatment, treatments.simp) %>%
+  mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% distinct()
 
 data=data %>% select(study,treatment,responders,sampleSize) %>%
   mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% filter(sampleSize!=0) %>% as.data.frame() 
@@ -33,7 +39,6 @@ dev.off()
 
 results <- model.processing(model)
 
-# prob.ref=0.03 checar para poner en extra.txt. Quitar de model$code el ultimo corchete
 code <- model$code
 code <- substr(code,1,nchar(code)-2)
 
@@ -49,18 +54,20 @@ model.jags=jags.model(file ="NMA/code.txt",data = model$data,inits = model$inits
 monitors=c("cr","RD")
 
 treatments.names <- model$network$treatments #nombres para tabla
+treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
+  select(id, treatments.simp)
 
 samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
 
-absolute=spread_draws(samples,RD[i,j]) %>% group_by(i,j) %>%
+absolute.RD=spread_draws(samples,RD[i,j]) %>% group_by(i,j) %>%
   summarise(mean=mean(RD),lower=quantile(RD,.025),upper=quantile(RD,.975)) %>%
-  mutate(i = as.character(treatments.names[i,1]), j =as.character(treatments.names[j,1])) %>% 
+  mutate(i = as.character(treatments.names[i,2]), j =as.character(treatments.names[j,2])) %>% 
   ungroup()
 
 
-spread_draws(samples,cr[i]) %>% group_by(i) %>%
+absolut.cr=spread_draws(samples,cr[i]) %>% group_by(i) %>%
   summarise(mean=mean(cr),lower=quantile(cr,.025),upper=quantile(cr,.975)) %>%
-  mutate(i = as.character(treatments.names[i,1]))
+  mutate(i = as.character(treatments.names[i,2]))
 
 
 list.estimates=list()
@@ -72,12 +79,24 @@ for (i in 1:nrow(relative.effect.table(results))) {
   list.estimates[[i]] <- temp
 }
 
-bind_rows(list.estimates) %>% select(t1,t2,`50%`,`2.5%`,`50%`,`97.5%`) %>% rename(ci.l.net=`2.5%`,pe.net=`50%`,ci.u.net=`97.5%`) %>%
-  filter(!is.na(pe.net)) %>% inner_join(absolute,by=c("t1"="i","t2"="j"))
+aux = bind_rows(list.estimates) %>% select(t1,t2,`50%`,`2.5%`,`50%`,`97.5%`) %>% 
+  rename(ci.l.net=`2.5%`,pe.net=`50%`,ci.u.net=`97.5%`) %>%
+  filter(!is.na(pe.net)) #%>% inner_join(absolute.RD,by=c("t1"="i","t2"="j"))
 
+aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp,t2,pe.net,ci.l.net,ci.u.net)
+aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net)
 
-pairwise=read.csv("pairwise/prophylaxis/output/AE_prophylaxis.csv")
+absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatments.simp.y"="j")) %>% 
+  rename(t1 = treatments.simp.x, t2= treatments.simp.y)
 
+pairwise=as_tibble(read.csv("pairwise/prophylaxis/output/AE_prophylaxis.csv"))
+
+out1 = left_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
+out1 = out1 %>% filter(!is.na(out1$type))
+out2 = left_join(absolute.RD,pairwise,by=c("t1"="t2","t2"="t1"))
+out2 = out2 %>% filter(!is.na(out2$type))
+
+out = rbind(out1,out2)
 
 # result.node <- mtc.nodesplit(network, likelihood="binom",link="logit",
 #                              linearModel="fixed", n.chain =3,
