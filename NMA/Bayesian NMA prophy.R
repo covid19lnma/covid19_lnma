@@ -87,16 +87,45 @@ aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp
 aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net)
 
 absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatments.simp.y"="j")) %>% 
-  rename(t1 = treatments.simp.x, t2= treatments.simp.y)
+  rename(t1 = treatments.simp.x, 
+         t2 = treatments.simp.y, 
+         relative_nma = pe.net, 
+         relative_nma_lower = ci.l.net,
+         relative_nma_upper = ci.u.net,
+         absolute_nma = mean,
+         absolute_nma_lower = lower,
+         absolute_nma_upper = upper)
 
-pairwise=as_tibble(read.csv("pairwise/prophylaxis/output/AE_prophylaxis.csv"))
+pairwise=as_tibble(read.csv("pairwise/prophylaxis/output/AE_prophylaxis.csv")) %>% 
+  rename(relative_direct = OR,
+         relative_direct_lower = OR_l,
+         relative_direct_upper = OR_u,
+         absolute_direct = risk,
+         absolute_direct_lower = risk_l,
+         absolute_direct_upper = risk_u) %>%
+  select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper, 
+         absolute_direct, absolute_direct_lower, absolute_direct_upper)
+  
+pairwise.inv = pairwise %>% rename("t1"="t2","t2"="t1") %>%
+  mutate(relative_direct = 1/relative_direct,
+         relative_direct_lower = 1/relative_direct_upper,
+         relative_direct_upper = 1/relative_direct_lower,
+         absolute_direct = (-1)*absolute_direct,
+         absolute_direct_lower = (-1)*absolute_direct_upper,
+         absolute_direct_upper = (-1)*absolute_direct_lower)
 
 out1 = left_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
-out1 = out1 %>% filter(!is.na(out1$type))
 out2 = left_join(absolute.RD,pairwise,by=c("t1"="t2","t2"="t1"))
-out2 = out2 %>% filter(!is.na(out2$type))
 
-out = rbind(out1,out2)
+plus <- function(x) {
+  if(all(is.na(x))){
+    c(x[0],NA)
+  } else {
+    sum(x,na.rm = TRUE)}
+}
+
+out = rbind(out1,out2) %>% group_by(t1,t2)
+out = aggregate(out[,3:14], out[,1:2], FUN = plus)
 
 # result.node <- mtc.nodesplit(network, likelihood="binom",link="logit",
 #                              linearModel="fixed", n.chain =3,
