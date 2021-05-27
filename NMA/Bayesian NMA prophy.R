@@ -111,13 +111,11 @@ pairwise.inv = pairwise %>% rename("t1"="t2","t2"="t1") %>%
          relative_direct_lower = 1/relative_direct_upper,
          relative_direct_upper = 1/relative_direct_lower,
          absolute_direct = (-1)*absolute_direct,
-         absolute_direct_lower = (-1)*absolute_direct_lower,
-         absolute_direct_upper = (-1)*absolute_direct_upper)
+         absolute_direct_lower = (-1)*absolute_direct_upper,
+         absolute_direct_upper = (-1)*absolute_direct_lower)
 
 out1 = left_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
-# out1 = out1 %>% filter(!is.na(out1$type))
 out2 = left_join(absolute.RD,pairwise,by=c("t1"="t2","t2"="t1"))
-# out2 = out2 %>% filter(!is.na(out2$type))
 
 plus <- function(x) {
   if(all(is.na(x))){
