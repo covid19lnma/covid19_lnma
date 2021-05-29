@@ -54,4 +54,4 @@ model {
 	d.standardcareplacebo.iotacarrageenanivermectin ~ dnorm(0, prior.prec)
 	
  prob.ref <- 0.03
- for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- cr[k] - cr[c]                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }
+ for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }

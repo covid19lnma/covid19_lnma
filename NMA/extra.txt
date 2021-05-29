@@ -3,7 +3,7 @@ for(k in 1:nt){
               }
 for (c in 1:(nt-1)) {
 for (k in (c+1):nt) {
- RD[k, c] <- cr[k] - cr[c]    
+ RD[k, c] <- (cr[k] - cr[c])*1000    
                       } 
                    }
 for(c in 1:nt){
