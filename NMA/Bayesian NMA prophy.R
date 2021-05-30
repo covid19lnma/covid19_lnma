@@ -135,6 +135,8 @@ outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower 
   mutate(relative_nma = exp(relative_nma),
          relative_nma_lower = exp(relative_nma_lower),
          relative_nma_upper = exp(relative_nma_upper))
+outbase %>% write.csv("GRADE_prophy.csv")
+
 
   # mutate(t1 = if_else((t1 == pairwise$t2) & (t2 == pairwise$t1), pairwise$t2, pairwise$t1),
   #        t2 = if_else((t1 == pairwise$t2) & (t2 == pairwise$t1), pairwise$t1, pairwise$t2),
