@@ -69,6 +69,7 @@ absolut.cr=spread_draws(samples,cr[i]) %>% group_by(i) %>%
   summarise(mean=mean(cr),lower=quantile(cr,.025),upper=quantile(cr,.975)) %>%
   mutate(i = as.character(treatments.names[i,2]))
 
+absolut.cr %>% write.csv("absolute_prophy.csv")
 
 list.estimates=list()
 
