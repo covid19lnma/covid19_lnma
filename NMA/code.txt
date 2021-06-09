@@ -26,12 +26,11 @@ model {
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- d.hydroxychloroquine.standardcareplacebo + d.standardcareplacebo.iotacarrageenan
-	d[1, 3] <- d.hydroxychloroquine.standardcareplacebo + d.standardcareplacebo.iotacarrageenanivermectin
-	d[1, 4] <- d.hydroxychloroquine.povidoneiodine
-	d[1, 5] <- d.hydroxychloroquine.standardcareplacebo
-	d[1, 6] <- d.hydroxychloroquine.vitaminC
-	d[1, 7] <- d.hydroxychloroquine.vitaminCzinc
+	d[1, 2] <- -d.standardcareplacebo.sarilumab + d.standardcareplacebo.steroids + d.steroids.sarilumabsteroids
+	d[1, 3] <- -d.standardcareplacebo.sarilumab
+	d[1, 4] <- -d.standardcareplacebo.sarilumab + d.standardcareplacebo.steroids
+	d[1, 5] <- -d.standardcareplacebo.sarilumab + d.standardcareplacebo.tocilizumab
+	d[1, 6] <- -d.standardcareplacebo.sarilumab + d.standardcareplacebo.steroids + d.steroids.tocilizumabsteroids
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -46,12 +45,11 @@ model {
 	}
 
 	# Effect parameter priors
-	d.hydroxychloroquine.povidoneiodine ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.standardcareplacebo ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.vitaminC ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.vitaminCzinc ~ dnorm(0, prior.prec)
-	d.standardcareplacebo.iotacarrageenan ~ dnorm(0, prior.prec)
-	d.standardcareplacebo.iotacarrageenanivermectin ~ dnorm(0, prior.prec)
+	d.standardcareplacebo.sarilumab ~ dnorm(0, prior.prec)
+	d.standardcareplacebo.steroids ~ dnorm(0, prior.prec)
+	d.standardcareplacebo.tocilizumab ~ dnorm(0, prior.prec)
+	d.steroids.sarilumabsteroids ~ dnorm(0, prior.prec)
+	d.steroids.tocilizumabsteroids ~ dnorm(0, prior.prec)
 	
- prob.ref <- 0.03
+ prob.ref <- 0.23
  for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }

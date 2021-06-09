@@ -1,0 +1,117 @@
+﻿study,treatment,sampleSize,responders
+Angus,steroids,278,78
+Angus,standard care/placebo,101,33
+ARCHITECTS_NCT04412772_s,"tocilizumab, steroids",9,0
+ARCHITECTS_NCT04412772_s,steroids,11,2
+BACC Bay_NCT04356937_n,tocilizumab,158,9
+BACC Bay_NCT04356937_n,standard care/placebo,81,4
+CORIMUNO-SARI-1_NCT04324073_n,sarilumab,72,14
+CORIMUNO-SARI-1_NCT04324073_n,standard care/placebo,65,10
+CORIMUNO-SARI-1_NCT04324073_s,"sarilumab, steroids",4,2
+CORIMUNO-SARI-1_NCT04324073_s,steroids,3,0
+CORIMUNO-SARI-ICU_NCT04324073_n,sarilumab,48,14
+CORIMUNO-SARI-ICU_NCT04324073_n,standard care/placebo,31,13
+CORIMUNO-TOCI-1_NCT04331808_n,tocilizumab,53,6
+CORIMUNO-TOCI-1_NCT04331808_n,standard care/placebo,55,7
+CORIMUNO-TOCI-1_NCT04331808_s,"tocilizumab, steroids",10,1
+CORIMUNO-TOCI-1_NCT04331808_s,steroids,12,4
+CORIMUNO-TOCI-ICU_NCT04331808_n,tocilizumab,41,8
+CORIMUNO-TOCI-ICU_NCT04331808_n,standard care/placebo,39,11
+CORIMUNO-TOCI-ICU_NCT04331808_s,"tocilizumab, steroids",8,4
+CORIMUNO-TOCI-ICU_NCT04331808_s,steroids,4,2
+Corral-Gudino,steroids,35,7
+Corral-Gudino,standard care/placebo,29,5
+COV-AID_NCT04330638_n,tocilizumab,33,3
+COV-AID_NCT04330638_n,standard care/placebo,30,6
+COV-AID_NCT04330638_s,"tocilizumab, steroids",48,7
+COV-AID_NCT04330638_s,steroids,42,3
+COVACTA_NCT04320615_n,tocilizumab,238,56
+COVACTA_NCT04320615_n,standard care/placebo,103,22
+COVACTA_NCT04320615_s,"tocilizumab, steroids",56,16
+COVACTA_NCT04320615_s,steroids,41,14
+COVIDOSE2-SSA_NCT04479358_n,tocilizumab,13,0
+COVIDOSE2-SSA_NCT04479358_n,standard care/placebo,6,1
+COVIDOSE2-SSA_NCT04479358_s,"tocilizumab, steroids",6,0
+COVIDOSE2-SSA_NCT04479358_s,steroids,2,1
+COVIDSTORM_s,"tocilizumab, steroids",13,1
+COVIDSTORM_s,steroids,17,1
+COVITOZ_n,tocilizumab,4,0
+COVITOZ_n,standard care/placebo,3,0
+COVITOZ_s,"tocilizumab, steroids",6,0
+COVITOZ_s,steroids,6,0
+Dequin,steroids,75,11
+Dequin,standard care/placebo,73,20
+Edalatifard,steroids,34,2
+Edalatifard,standard care/placebo,28,12
+EMPACTA_NCT04372186_n,tocilizumab,49,2
+EMPACTA_NCT04372186_n,standard care/placebo,16,0
+EMPACTA_NCT04372186_s,"tocilizumab, steroids",200,27
+EMPACTA_NCT04372186_s,steroids,112,15
+HMO-020-0224_NCT04377750_n,tocilizumab,6,2
+HMO-020-0224_NCT04377750_n,standard care/placebo,2,1
+HMO-020-0224_NCT04377750_s,"tocilizumab, steroids",31,16
+HMO-020-0224_NCT04377750_s,steroids,15,9
+Horby_1,steroids,2104,482
+Horby_1,standard care/placebo,4321,1110
+ImmCoVA_s,"tocilizumab, steroids",21,2
+ImmCoVA_s,steroids,26,2
+Jamaati,steroids,25,16
+Jamaati,standard care/placebo,25,15
+Jeronimo,steroids,209,79
+Jeronimo,standard care/placebo,207,80
+PreToVid_Trial NL8504_n,tocilizumab,11,1
+PreToVid_Trial NL8504_n,standard care/placebo,11,2
+PreToVid_Trial NL8504_s,"tocilizumab, steroids",159,20
+PreToVid_Trial NL8504_s,steroids,167,32
+Rashad,tocilizumab,74,60
+Rashad,steroids,75,45
+RECOVERY_NCT04381936_n,tocilizumab,357,139
+RECOVERY_NCT04381936_n,standard care/placebo,367,127
+RECOVERY_NCT04381936_s,"tocilizumab, steroids",1664,482
+RECOVERY_NCT04381936_s,steroids,1721,600
+REGENERON-P2_NCT04315298_n,sarilumab,305,81
+REGENERON-P2_NCT04315298_n,standard care/placebo,76,18
+REGENERON-P2_NCT04315298_s,"sarilumab, steroids",62,28
+REGENERON-P2_NCT04315298_s,steroids,14,6
+REGENERON-P3_NCT04315298_n,sarilumab,699,198
+REGENERON-P3_NCT04315298_n,standard care/placebo,187,50
+REGENERON-P3_NCT04315298_s,"sarilumab, steroids",345,99
+REGENERON-P3_NCT04315298_s,steroids,99,34
+REMAP-CAP_1_NCT02735707_sarilumab_n,sarilumab,4,2
+REMAP-CAP_1_NCT02735707_sarilumab_n,standard care/placebo,11,5
+REMAP-CAP_1_NCT02735707_sarilumab_s,"sarilumab, steroids",44,8
+REMAP-CAP_1_NCT02735707_sarilumab_s,steroids,52,13
+REMAP-CAP_1_NCT02735707_tocilizumab_n,tocilizumab,127,33
+REMAP-CAP_1_NCT02735707_tocilizumab_n,standard care/placebo,129,44
+REMAP-CAP_1_NCT02735707_tocilizumab_s,"tocilizumab, steroids",214,63
+REMAP-CAP_1_NCT02735707_tocilizumab_s,steroids,217,80
+REMAP-CAP_2_NCT02735707_s,"tocilizumab, steroids",589,215
+REMAP-CAP_2_NCT02735707_s,"sarilumab, steroids",431,146
+REMDACTA_NCT04409262_n,tocilizumab,72,9
+REMDACTA_NCT04409262_n,standard care/placebo,29,2
+REMDACTA_NCT04409262_s,"tocilizumab, steroids",358,69
+REMDACTA_NCT04409262_s,steroids,181,39
+SARCOVID_NCT04357808_n,sarilumab,3,1
+SARCOVID_NCT04357808_n,standard care/placebo,2,0
+SARCOVID_NCT04357808_s,"sarilumab, steroids",17,1
+SARCOVID_NCT04357808_s,steroids,8,0
+SARICOR_EudraCT2020-001531-27_n,sarilumab,10,1
+SARICOR_EudraCT2020-001531-27_n,standard care/placebo,5,1
+SARICOR_EudraCT2020-001531-27_s,"sarilumab, steroids",66,2
+SARICOR_EudraCT2020-001531-27_s,steroids,34,3
+SARTRE_EudraCT2020-002037-15_s,"sarilumab, steroids",70,2
+SARTRE_EudraCT2020-002037-15_s,steroids,70,1
+Sterne_1,steroids,7,2
+Sterne_1,standard care/placebo,12,2
+Sterne_2,steroids,15,6
+Sterne_2,standard care/placebo,14,2
+Sterne_3,steroids,24,13
+Sterne_3,standard care/placebo,23,13
+Tang_2,steroids,43,0
+Tang_2,standard care/placebo,43,1
+TOCIBRAS_NCT04403685_n,tocilizumab,34,8
+TOCIBRAS_NCT04403685_n,standard care/placebo,30,2
+TOCIBRAS_NCT04403685_s,"tocilizumab, steroids",31,9
+TOCIBRAS_NCT04403685_s,steroids,34,5
+Tomazini,steroids,151,85
+Tomazini,standard care/placebo,148,91
