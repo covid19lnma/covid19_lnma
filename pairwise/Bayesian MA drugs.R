@@ -271,6 +271,115 @@ list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
 
 write.estimates.csv(list.estimates,folder, name)
 
+############### Colchicine Mortality ######################
+
+data=read.csv("drugs/colch_mortality - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="standard care/placebo" | t2=="standard care/placebo") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "mortality_colch.csv"
+folder <- "drugs"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
+############### Colchicine admission to hosp ######################
+
+data=read.csv("drugs/colch_admission to hospital - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="standard care/placebo" | t2=="standard care/placebo") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "admission_to_hosp_colch.csv"
+folder <- "drugs"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
+############### Colchicine AEs ######################
+
+data=read.csv("drugs/colch_Adverse effects leading to discont - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="standard care/placebo" | t2=="standard care/placebo") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "AEs_colch.csv"
+folder <- "drugs"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
+############### Colchicine MV ######################
+
+data=read.csv("drugs/colch_mechanical ventilation - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="standard care/placebo" | t2=="standard care/placebo") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "MV_colch.csv"
+folder <- "drugs"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
+############### Colchicine Duration of hosp ######################
+
+data=read.csv("drugs/colch_Duration of hospitalization_wide data.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="standard care/placebo" | t2=="standard care/placebo") %>%
+  summarise(median=median(mean2)) %>% as.numeric()
+
+measure <- "MD"
+name <- "Duration_of_hosp_colch.csv"
+folder <- "drugs"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
 
 
 
