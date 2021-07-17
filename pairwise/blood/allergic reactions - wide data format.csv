@@ -1,6 +1,7 @@
 study,t1,t2,e.events,e.total,c.events,c.total
 Bajpai,convalescent plasma,control plasma,1,14,1,15
 Bennett-Guerrero,convalescent plasma,control plasma,1,58,0,14
+Bégin,convalescent plasma,placebo/standard care,9,614,0,307
 Chen_1,bamlanivimab,placebo/standard care,7,309,2,143
 Eom,CT-P59 monoclonal antibody,placebo/standard care,1,215,2,110
 Estcourt,convalescent plasma,placebo/standard care,1,1075,0,905
@@ -15,6 +16,7 @@ Li,convalescent plasma,placebo/standard care,1,52,0,51
 Libster,convalescent plasma,placebo/standard care,0,79,0,79
 Lundgren,bamlanivimab,placebo/standard care,23,163,14,151
 O'Donnell,convalescent plasma,control plasma,2,150,1,73
+Sekine,convalescent plasma,placebo/standard care,2,79,4,81
 Simonovich,convalescent plasma,placebo/standard care,4,228,2,105
 Weinreich_2_1,"casirivimab, imdevimab",placebo/standard care,1,1849,1,1476
 Weinreich_3,"casirivimab, imdevimab",placebo/standard care,4,518,1,262

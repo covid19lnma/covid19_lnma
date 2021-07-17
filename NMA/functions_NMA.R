@@ -7,6 +7,7 @@ library(ggplot2)
 library(dplyr)
 library(viridis)
 library(rjags)
+library(magrittr)
 
 
 model.processing <- function(model){

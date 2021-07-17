@@ -1,13 +1,15 @@
-wd <- "/home/antonio/covid19_lnma"
-setwd(wd)
+#wd <- "/home/antonio/covid19_lnma"
+#setwd(wd)
 source("NMA/functions_NMA.R")
 
-mainDir <- paste0(getwd(),"/NMA/drugs")
+mainDir <- paste0(getwd(),"/NMA/blood")
 subDir <- "output"
 
-data=read.csv("NMA/drugs/Mortality - IL6 (subgroup) - long data format.csv")
 
-#filter(stauthor!="REMAP-CAP_2_NCT02735707") 
+data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx",range = "U2:Y18")
+
+data %<>% rename(study=stauthor,responders=responder)
+
 dictionary=data %>% select(study,treatment,responders,sampleSize) %>%
   filter(sampleSize!=0) %>% as.data.frame() 
 
@@ -22,7 +24,7 @@ network=mtc.network(data)
 
 model=mtc.model(network,type = "consistency",
                 likelihood="binom",link="logit",
-                linearModel="fixed", n.chain =3,
+                linearModel="random", n.chain =3,
                 powerAdjust=NA, dic=TRUE,
                 hy.prior=mtc.hy.prior("var", "dlnorm",-1.87, 0.4328))
 
@@ -33,11 +35,15 @@ output_dir <- file.path(mainDir, subDir)
 if (!dir.exists(output_dir)){
   dir.create(output_dir)
 }
-pdf(paste0(output_dir,"/mortality_IL6_network.pdf"))
+pdf(paste0(output_dir,"/admission_hosp_blood_network.pdf"))
 plot(model)
 dev.off()
 
 results <- model.processing(model)
+
+## indirect
+
+mtc.nodesplit.comparisons(network)
 
 result.node <- mtc.nodesplit(network, likelihood="binom",link="logit",
                              linearModel="fixed", n.chain =4,
@@ -50,9 +56,11 @@ indirect=summary(result.node)[[2]]  %>% select(t2,t1,pe,ci.l,ci.u) %>%
 if (!dir.exists(output_dir)){
   dir.create(output_dir)
 }
-pdf(paste0(output_dir,"/ns_mortality_fixed.pdf"),width = 8,)
+pdf(paste0(output_dir,"/ns_admission.pdf"),width = 8,)
 plot(summary(result.node))
 dev.off()
+
+## indirect
 
 code <- model$code
 code <- substr(code,1,nchar(code)-2)
@@ -61,7 +69,7 @@ prob.ref.value <- 0.23
 prob.ref <- sprintf("prob.ref <- %s\n", prob.ref.value)
 
 extra = readLines("NMA/extra.txt")
-cat(code,prob.ref,extra,file = "NMA/code.txt")
+cat(code,prob.ref,extra,file="NMA/code.txt")
 
 model.jags=jags.model(file ="NMA/code.txt",data = model$data,inits = model$inits,
                       n.adapt = 10000,n.chains = model$n.chain)  
@@ -99,10 +107,10 @@ aux = bind_rows(list.estimates) %>% select(t1,t2,`50%`,`2.5%`,`50%`,`97.5%`) %>%
   rename(ci.l.net=`2.5%`,pe.net=`50%`,ci.u.net=`97.5%`) %>%
   filter(!is.na(pe.net))
 
-aux=aux %>% left_join(indirect)
+aux=aux %>% left_join(indirect) # checar
 
-aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp,t2,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
-aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
+aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp,t2,pe.net,ci.l.net,ci.u.net)#,pe.ind,ci.l.ind,ci.u.ind)
+aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net)#,pe.ind,ci.l.ind,ci.u.ind)
 
 absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatments.simp.y"="j")) %>% 
   rename(t1 = treatments.simp.x, 
@@ -110,9 +118,9 @@ absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatment
          logrelative_nma = pe.net, 
          logrelative_nma_lower = ci.l.net,
          logrelative_nma_upper = ci.u.net,
-         logrelative_indirect = pe.ind, 
-         logrelative_indirect_lower = ci.l.ind,
-         logrelative_indirect_upper = ci.u.ind,
+         # logrelative_indirect = pe.ind, 
+         # logrelative_indirect_lower = ci.l.ind,
+         # logrelative_indirect_upper = ci.u.ind,
          absolute_nma = mean,
          absolute_nma_lower = lower,
          absolute_nma_upper = upper)
@@ -122,18 +130,18 @@ absolute.RD.inv = absolute.RD %>% rename("t1"="t2", "t2"="t1") %>%
   mutate(logrelative_nma = (-1)*logrelative_nma,
          logrelative_nma_lower_aux = (-1)*logrelative_nma_upper, 
          logrelative_nma_upper = (-1)*logrelative_nma_lower, 
-         logrelative_indirect = (-1)*logrelative_indirect,
-         logrelative_indirect_lower_aux = (-1)*logrelative_indirect_upper, 
-         logrelative_indirect_upper = (-1)*logrelative_indirect_lower, 
+         # logrelative_indirect = (-1)*logrelative_indirect,
+         # logrelative_indirect_lower_aux = (-1)*logrelative_indirect_upper, 
+         # logrelative_indirect_upper = (-1)*logrelative_indirect_lower, 
          absolute_nma = (-1)*absolute_nma, 
          absolute_nma_lower_aux = (-1)*absolute_nma_upper, 
          absolute_nma_upper = (-1)*absolute_nma_lower) %>%
   select(t1, t2, logrelative_nma, logrelative_nma_lower = logrelative_nma_lower_aux, logrelative_nma_upper, 
-         logrelative_indirect, logrelative_indirect_lower = logrelative_indirect_lower_aux, logrelative_indirect_upper,
+         #logrelative_indirect, logrelative_indirect_lower = logrelative_indirect_lower_aux, logrelative_indirect_upper,
          absolute_nma, absolute_nma_lower = absolute_nma_lower_aux, absolute_nma_upper)
   
 
-pairwise=as_tibble(read.csv("pairwise/drugs/output/mortality_IL6_310521.csv")) %>% 
+pairwise=as_tibble(read.csv("pairwise/blood/output/admission_hop.csv")) %>% 
   rename(relative_direct = OR,
          relative_direct_lower = OR_l,
          relative_direct_upper = OR_u,
@@ -157,19 +165,19 @@ for (i in 1:nrow(outbase)) {
 }
 
 outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower = logrelative_nma_lower, 
-                             relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, relative_indirect_lower = logrelative_indirect_lower, 
-                             relative_indirect_upper = logrelative_indirect_upper) %>%
+                             relative_nma_upper = logrelative_nma_upper) %>% #,relative_indirect = logrelative_indirect, relative_indirect_lower = logrelative_indirect_lower, 
+                             #relative_indirect_upper = logrelative_indirect_upper) %>%
   mutate(relative_nma = exp(relative_nma),
          relative_nma_lower = exp(relative_nma_lower),
-         relative_nma_upper = exp(relative_nma_upper),
-         relative_indirect = exp(relative_indirect),
-         relative_indirect_lower = exp(relative_indirect_lower),
-         relative_indirect_upper = exp(relative_indirect_upper)) %>% 
+         relative_nma_upper = exp(relative_nma_upper)) %>% 
+         # relative_indirect = exp(relative_indirect),
+         # relative_indirect_lower = exp(relative_indirect_lower),
+         # relative_indirect_upper = exp(relative_indirect_upper)) %>% 
   select(t1,t2,relative_nma,relative_nma_lower,relative_nma_upper,absolute_nma,absolute_nma_lower,
-         absolute_nma_upper,relative_indirect,relative_indirect_lower,
-         relative_indirect_upper,relative_direct,relative_direct_lower,relative_direct_upper,
+         absolute_nma_upper,#relative_indirect,relative_indirect_lower,relative_indirect_upper,
+         relative_direct,relative_direct_lower,relative_direct_upper,
          absolute_direct,absolute_direct_lower,absolute_direct_upper)
-outbase %>% write.csv("NMA/drugs/output/GRADE_mortality_IL6_fixed.csv")
+outbase %>% write.csv("NMA/blood/output/GRADE_admission.csv")
 
 
   # mutate(t1 = if_else((t1 == pairwise$t2) & (t2 == pairwise$t1), pairwise$t2, pairwise$t1),
