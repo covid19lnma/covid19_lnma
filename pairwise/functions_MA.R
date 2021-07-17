@@ -143,7 +143,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
-        if (p1 == "standard care/placebo" | p2 == "standard care/placebo"){
+        if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care"){
           
           estimates = estimates %>% 
             as_tibble(rownames="type") %>% 
@@ -165,14 +165,14 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
-        if (p1 == "standard care/placebo" | p2 == "standard care/placebo"){
+        if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care"){
           
           estimates = estimates %>% 
             as_tibble(rownames="type") %>% 
             mutate(t1=p1,t2=p2,ROM=exp(mu),ROM_l=exp(`95% lower`),ROM_u=exp(`95% upper`),
-                   risk=mu_exp*baseline-baseline,
-                   risk_l=mu_l*baseline-baseline,
-                   risk_u=mu_u*baseline-baseline) %>% 
+                   risk=ROM*baseline-baseline,
+                   risk_l=ROM_l*baseline-baseline,
+                   risk_u=ROM_u*baseline-baseline) %>% 
             rename(mu_l=`95% lower`,mu_u=`95% upper`)
         } else {
           

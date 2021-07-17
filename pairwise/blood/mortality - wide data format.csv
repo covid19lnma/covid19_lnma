@@ -1,0 +1,33 @@
+study,t1,t2,e.events,e.total,c.events,c.total
+Agarwal,convalescent plasma,placebo/standard care,34,235,31,229
+AlQahtani,convalescent plasma,placebo/standard care,1,20,2,20
+Avendano-Sola,convalescent plasma,placebo/standard care,0,38,4,43
+Bajpai,convalescent plasma,control plasma,3,14,1,15
+Bennett-Guerrero,convalescent plasma,control plasma,16,59,5,15
+Carmenate,nebulized peripheral blood non-hematopoietic enriched stem cells,placebo/standard care,4,69,7,70
+Chen_1,bamlanivimab,placebo/standard care,0,309,0,143
+Eom,CT-P59 monoclonal antibody,placebo/standard care,0,204,0,103
+Estcourt,convalescent plasma,placebo/standard care,401,1075,347,904
+Gharbharan,convalescent plasma,placebo/standard care,6,43,11,43
+Gharebaghi,intravenous immunoglobulin,placebo/standard care,6,30,14,29
+Gonzalez,intravenous immunoglobulin,convalescent plasma,32,60,70,130
+Gupta,sotrovimab,placebo/standard care,0,291,1,292
+Horby_1,convalescent plasma,placebo/standard care,1399,5795,1408,5763
+Horby_2,"casirivimab, imdevimab",placebo/standard care,944,4839,1026,4946
+Korper,convalescent plasma,placebo/standard care,11,53,17,52
+Li,convalescent plasma,placebo/standard care,8,51,12,50
+Libster,convalescent plasma,placebo/standard care,2,80,4,80
+Lopardo,puried equine anti-RBD F(ab´)2 fragments (INM005),placebo/standard care,8,118,14,123
+Lundgren,bamlanivimab,placebo/standard care,9,163,5,151
+O'Donnell,convalescent plasma,control plasma,19,150,18,73
+Pouladzadeh,convalescent plasma,placebo/standard care,3,30,5,30
+Raman,intravenous immunoglobulin,placebo/standard care,0,50,1,50
+Ray,convalescent plasma,placebo/standard care,10,40,14,40
+Sakoulas,intravenous immunoglobulin,placebo/standard care,1,16,3,17
+Simonovich,convalescent plasma,placebo/standard care,25,228,12,105
+Tabarsi,intravenous immunoglobulin,placebo/standard care,24,52,14,32
+Weinreich_2_1,"casirivimab, imdevimab",placebo/standard care,1,1355,3,1341
+Weinreich_2_2,"casirivimab, imdevimab",placebo/standard care,1,736,1,748
+Weinreich_2_3,"casirivimab, imdevimab",placebo/standard care,0,625,2,593
+Weinreich_3,"casirivimab, imdevimab",placebo/standard care,0,434,0,231
+Zambrano,nebulized peripheral blood non-hematopoietic enriched stem cells,placebo/standard care,4,69,6,70
