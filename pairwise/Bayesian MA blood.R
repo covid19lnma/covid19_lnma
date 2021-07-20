@@ -215,3 +215,28 @@ folder <- "blood"
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
 
 write.estimates.csv(list.estimates,folder, name)
+
+
+##### Time to viral clereaance ########
+
+data=read.csv("blood/Time to viral clearance_wide.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% filter(t1=="placebo/standard care" | t2=="placebo/standard care") %>%
+  summarise(median=median(mean2)) %>% as.numeric()
+
+
+measure <- "ROM"
+name <- "time_clear.csv"
+folder <- "blood"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)

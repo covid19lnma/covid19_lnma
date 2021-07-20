@@ -1,0 +1,6 @@
+study,treatment,diff,std.err
+Eom,placebo/standard care,NA,NA
+Eom,CT-P59 monoclonal antibody,-0.04909933096738077,0.0038724239857713945
+Gottlieb,placebo/standard care,NA,0.0010879975326175187
+Gottlieb,"bamlanivimab, etesevimab",-0.13353139262452263,0.0029964400212266823
+Gottlieb,bamlanivimab,-0.02617287430402331,0.0020471881835921442
