@@ -185,7 +185,7 @@ getestimatesnma <- function(data,
            absolute_nma_upper,relative_indirect,relative_indirect_lower,relative_indirect_upper,
            relative_direct,relative_direct_lower,relative_direct_upper,
            absolute_direct,absolute_direct_lower,absolute_direct_upper)
-  outbase %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
+  outbase %>% distinct %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
   
 }
 
