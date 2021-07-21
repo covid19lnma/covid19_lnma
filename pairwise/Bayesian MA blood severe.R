@@ -1,3 +1,5 @@
+#wd <- "/home/antonio/covid19_lnma/pairwise"
+#setwd(wd)
 source("functions_MA.R")
 
 ########### Ventilation free days ####

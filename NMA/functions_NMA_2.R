@@ -390,9 +390,12 @@ getestimatesnmacontinuous <- function(data,
     outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
     outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
     
-    for (i in 1:nrow(outbase)) {
-      for (j in 1:nrow(outaux)){
-        if ((outbase[i,1]==outaux[j,2]) & (outbase[i,2]==outaux[j,1])){
+    if (nrow(outaux) != 0){
+    
+      for (i in 1:nrow(outbase)) {
+      
+        for (j in 1:nrow(outaux)){
+        
           for (k in 1:ncol(outbase)){
             outbase[i,k] = outaux[j,k]
           }
@@ -431,10 +434,12 @@ getestimatesnmacontinuous <- function(data,
              relative_indirect = exp(relative_indirect),
              relative_indirect_lower = exp(relative_indirect_lower),
              relative_indirect_upper = exp(relative_indirect_upper)) %>% 
-      select(t1,t2,relative_nma,relative_nma_lower,relative_nma_upper,absolute_nma,absolute_nma_lower,
-             absolute_nma_upper,relative_indirect,relative_indirect_lower,relative_indirect_upper,
-             relative_direct,relative_direct_lower,relative_direct_upper,
-             absolute_direct,absolute_direct_lower,absolute_direct_upper)
+      select(t1,t2,
+             relative_nma,relative_nma_lower,relative_nma_upper,
+             #absolute_nma,absolute_nma_lower,absolute_nma_upper,
+             relative_indirect,relative_indirect_lower,relative_indirect_upper,
+             relative_direct,relative_direct_lower,relative_direct_upper)#,
+             #absolute_direct,absolute_direct_lower,absolute_direct_upper)
     outbase %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
   }
