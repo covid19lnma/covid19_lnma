@@ -1,3 +1,5 @@
+#wd <- "/home/antonio/covid19_lnma"
+#setwd(wd)
 source("NMA/functions_NMA.R")
 source("NMA/functions_NMA_2.R")
 

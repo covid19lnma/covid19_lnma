@@ -1,0 +1,23 @@
+study,treatment,diff,std.err
+AlQahtani,placebo/standard care,NA,NA
+AlQahtani,convalescent plasma,-3.950000000000001,0.3560368421052632
+B<e9>gin,placebo/standard care,NA,NA
+B<e9>gin,convalescent plasma,-0.33999999999999986,0.4348065146579805
+Gharbharan,placebo/standard care,NA,NA
+Gharbharan,convalescent plasma,0.33999999999999986,8.1121625
+Pouladzadeh,placebo/standard care,NA,NA
+Pouladzadeh,convalescent plasma,2,1.1337866666666665
+Ray,placebo/standard care,NA,NA
+Ray,convalescent plasma,-1,3.961085
+Sekine,placebo/standard care,NA,NA
+Sekine,convalescent plasma,0.0600000000000005,3.169871541501977
+Simonovich,placebo/standard care,NA,NA
+Simonovich,convalescent plasma,0.6700000000000017,4.028174824561404
+Gharebaghi,placebo/standard care,NA,NA
+Gharebaghi,intravenous immunoglobulin,2.34,0.9157771264367816
+Raman,placebo/standard care,NA,NA
+Raman,intravenous immunoglobulin,-9.780000000000001,0.699613922294172
+Sakoulas,placebo/standard care,NA,NA
+Sakoulas,intravenous immunoglobulin,-4.25,4.529394485294118
+Tabarsi,placebo/standard care,NA,NA
+Tabarsi,intravenous immunoglobulin,3,0.7019451923076924
