@@ -339,17 +339,37 @@ getestimatesnmacontinuous <- function(data,
              logrelative_indirect, logrelative_indirect_lower = logrelative_indirect_lower_aux, logrelative_indirect_upper,
              absolute_nma, absolute_nma_lower = absolute_nma_lower_aux, absolute_nma_upper)
 
+  } else if(measure=="MD"){
+    absolute.RD = aux %>% rename(t1 = treatments.simp.x, 
+             t2 = treatments.simp.y, 
+             logrelative_nma = pe.net, 
+             logrelative_nma_lower = ci.l.net,
+             logrelative_nma_upper = ci.u.net,
+             logrelative_indirect = pe.ind, 
+             logrelative_indirect_lower = ci.l.ind,
+             logrelative_indirect_upper = ci.u.ind)
+    
+    absolute.RD.inv = absolute.RD %>% rename("t1"="t2", "t2"="t1") %>%
+      mutate(logrelative_nma = (-1)*logrelative_nma,
+             logrelative_nma_lower_aux = (-1)*logrelative_nma_upper, 
+             logrelative_nma_upper = (-1)*logrelative_nma_lower, 
+             logrelative_indirect = (-1)*logrelative_indirect,
+             logrelative_indirect_lower_aux = (-1)*logrelative_indirect_upper, 
+             logrelative_indirect_upper = (-1)*logrelative_indirect_lower) %>%
+      select(t1, t2, logrelative_nma, logrelative_nma_lower = logrelative_nma_lower_aux, logrelative_nma_upper, 
+             logrelative_indirect, logrelative_indirect_lower = logrelative_indirect_lower_aux, logrelative_indirect_upper)
+    
   }
 
   if(measure == "MD"){
     
     pairwise=as_tibble(pairwise_data) %>% 
-      rename(relative_direct = OR,
-             relative_direct_lower = OR_l,
-             relative_direct_upper = OR_u,
-             absolute_direct = risk,
-             absolute_direct_lower = risk_l,
-             absolute_direct_upper = risk_u) %>%
+      rename(relative_direct = mu,
+             relative_direct_lower = mu_l,
+             relative_direct_upper = mu_u) %>% 
+             # absolute_direct = risk,
+             # absolute_direct_lower = risk_l,
+             # absolute_direct_upper = risk_u) %>%
       select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper)
     
   } else if(measure == "ROM"){
@@ -366,8 +386,6 @@ getestimatesnmacontinuous <- function(data,
     
   }
   
-  
-  if(measure == "ROM"){
     
     outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
     outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
@@ -381,13 +399,6 @@ getestimatesnmacontinuous <- function(data,
         }
       }
     }
-    
-    
-  } else if(measure == "MD"){
-    
-    outaux = pairwise
-    outbase = pairwise
-  }
   
   
   if(measure == "ROM"){
