@@ -4,19 +4,18 @@ library(bayesmeta)
 library(readxl)
 library(forestplot)
 
+entry <- function(study, treatment, diff, std.err) {
+  list(study = study, treatment = treatment, diff = diff, std.err = std.err)
+}
+
+as.entry <- function(row) {
+  entry(row$study, row$treatment, row$diff, row$std.err)
+}
 
 convert <- function(re) {
   options(stringsAsFactors = FALSE)  # Because R
   results <- data.frame()
   studies <- unique(re$study)
-
-  entry <- function(study, treatment, diff, std.err) {
-    list(study = study, treatment = treatment, diff = diff, std.err = std.err)
-  }
-
-  as.entry <- function(row) {
-    entry(row$study, row$treatment, row$diff, row$std.err)
-  }
 
   for(studyId in studies) {
     data <- subset(re, study == studyId)

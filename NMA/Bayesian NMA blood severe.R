@@ -43,3 +43,101 @@ getestimatesnmacontinuous(data,
                           output_dir,
                           file_name,
                           prob.ref.value)
+########### Mortality ####
+
+data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:E40") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_severe.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "Mortality"
+
+prob.ref.value <- 0.22
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Mechanical ventilation ####
+
+data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "K2:O18") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_severe.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "MV"
+
+prob.ref.value <- 0.30
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Time to viral ####
+
+data=read_csv("NMA/blood/time_viral_clear_notsevere.csv") %>% 
+  as.data.frame()#%>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/time_viral_clear_notsevere.csv"))
+
+measure = "ROM"
+likelihood = "normal"
+link = "identity"
+linearModel = "random"
+
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
+
+file_name = "Time to viral not severe"
+
+prob.ref.value <- 24
+
+getestimatesnmacontinuous(data,
+                          pairwise_data,
+                          measure,
+                          likelihood, 
+                          link, 
+                          #linearModel, 
+                          hy.prior1, 
+                          hy.prior2,
+                          output_dir,
+                          file_name,
+                          prob.ref.value)
