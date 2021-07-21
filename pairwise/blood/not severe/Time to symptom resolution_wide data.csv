@@ -1,0 +1,8 @@
+study,t1,t2,mean1,sd1,n1,mean2,sd2,n2
+Eom,CT-P59 monoclonal antibody,placebo/standard care,5.79,6.63,204,8.77,12.97,103
+Gottlieb,"bamlanivimab, etesevimab",bamlanivimab,8,7.99,109,8.33,9.61,309
+Gottlieb,"bamlanivimab, etesevimab",placebo/standard care,8,7.99,109,9,9.44,152
+Gottlieb,bamlanivimab,placebo/standard care,8.33,9.61,309,9,9.44,152
+Weinreich_2_1,"casirivimab, imdevimab",placebo/standard care,10,7.83,1214,14,17.65,1197
+Weinreich_2_2,"casirivimab, imdevimab",placebo/standard care,10,19.85,673,14,19.96,680
+Dougan,"bamlanivimab, etesevimab",placebo/standard care,8,5.73837851,506,9,11.39709587,499

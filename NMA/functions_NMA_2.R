@@ -155,11 +155,10 @@ getestimatesnma <- function(data,
   outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
   outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
   
-  for (n in 1:nrow(outbase)) {
-    
-    for (m in 1:nrow(outaux)){
+  if (nrow(outaux) !=0){
+    for (n in 1:nrow(outbase)) {
       
-      if (!is.na(outbase[n,1]) & !is.na(outaux[m,2]) & !is.na(outbase[n,2]) & !is.na(outaux[m,1])){ 
+      for (m in 1:nrow(outaux)){
         
         if ((outbase[n,1]==outaux[m,2]) & (outbase[n,2]==outaux[m,1])){
           
@@ -203,15 +202,25 @@ getestimatesnmacontinuous <- function(data,
                             file_name,
                             prob.ref.value){
   
-  dictionary=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
-    filter(sampleSize!=0) %>% as.data.frame() 
+  if(measure == "MD"){
+    dictionary=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
+      filter(sampleSize!=0) %>% as.data.frame() 
+  } else if (measure == "ROM"){
+    dictionary=data %>% select(study,treatment,diff,std.err) %>% 
+      as.data.frame()  
+  }
   
   dictionary$treatments.simp <- dictionary$treatment
   dictionary = dictionary %>% select(treatment, treatments.simp) %>%
     mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% distinct()
   
-  data=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
-    mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% filter(sampleSize!=0) %>% as.data.frame() 
+  if(measure == "MD"){
+    data=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
+      mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% filter(sampleSize!=0) %>% as.data.frame() 
+  } else if (measure == "ROM"){
+    data=data %>% select(study,treatment,diff,std.err) %>%
+      mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% as.data.frame() 
+  }
   
   if(measure == "ROM"){
     network=mtc.network(data.re = data)
@@ -375,9 +384,9 @@ getestimatesnmacontinuous <- function(data,
   } else if(measure == "ROM"){
     
     pairwise=as_tibble(pairwise_data) %>% 
-      rename(relative_direct = OR,
-             relative_direct_lower = OR_l,
-             relative_direct_upper = OR_u,
+      rename(relative_direct = ROM,
+             relative_direct_lower = ROM_l,
+             relative_direct_upper = ROM_u,
              absolute_direct = risk,
              absolute_direct_lower = risk_l,
              absolute_direct_upper = risk_u) %>%
@@ -428,12 +437,12 @@ getestimatesnmacontinuous <- function(data,
                                  relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, 
                                  relative_indirect_lower = logrelative_indirect_lower, 
                                  relative_indirect_upper = logrelative_indirect_upper) %>%
-      mutate(relative_nma = exp(relative_nma),
-             relative_nma_lower = exp(relative_nma_lower),
-             relative_nma_upper = exp(relative_nma_upper), 
-             relative_indirect = exp(relative_indirect),
-             relative_indirect_lower = exp(relative_indirect_lower),
-             relative_indirect_upper = exp(relative_indirect_upper)) %>% 
+      mutate(relative_nma = relative_nma,
+             relative_nma_lower = (relative_nma_lower),
+             relative_nma_upper = (relative_nma_upper), 
+             relative_indirect = (relative_indirect),
+             relative_indirect_lower = (relative_indirect_lower),
+             relative_indirect_upper = (relative_indirect_upper)) %>% 
       select(t1,t2,
              relative_nma,relative_nma_lower,relative_nma_upper,
              #absolute_nma,absolute_nma_lower,absolute_nma_upper,

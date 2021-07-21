@@ -4,19 +4,18 @@ library(bayesmeta)
 library(readxl)
 library(forestplot)
 
+entry <- function(study, treatment, diff, std.err) {
+  list(study = study, treatment = treatment, diff = diff, std.err = std.err)
+}
+
+as.entry <- function(row) {
+  entry(row$study, row$treatment, row$diff, row$std.err)
+}
 
 convert <- function(re) {
   options(stringsAsFactors = FALSE)  # Because R
   results <- data.frame()
   studies <- unique(re$study)
-
-  entry <- function(study, treatment, diff, std.err) {
-    list(study = study, treatment = treatment, diff = diff, std.err = std.err)
-  }
-
-  as.entry <- function(row) {
-    entry(row$study, row$treatment, row$diff, row$std.err)
-  }
 
   for(studyId in studies) {
     data <- subset(re, study == studyId)
@@ -304,11 +303,13 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
     }
   }
   
-  bind_rows(list.effsize) %>% select(study,t1,t2,yi,vi,n1,n2) %>% 
-    rename(base=t2,treatment=t1,diff=yi,std.err=vi,base.n=n2,treatment.n=n1) %>% 
-    mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment),
-           base=gsub("^\\d+_(.*$)","\\1",base)) %>% convert() %>% 
-    write_csv(paste0("~/covid19_lnma/NMA/",folder,"/",name.pdf))
+  if(measure == "ROM"){
+    bind_rows(list.effsize) %>% select(study,t1,t2,yi,vi,n1,n2) %>% 
+      rename(base=t2,treatment=t1,diff=yi,std.err=vi,base.n=n2,treatment.n=n1) %>% 
+      mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment),
+             base=gsub("^\\d+_(.*$)","\\1",base)) %>% convert() %>% 
+      write_csv(paste0("~/covid19_lnma/NMA/",folder,"/",name.pdf)) 
+  }
   
   dev.off()
   return(list.estimates)
