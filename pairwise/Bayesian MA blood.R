@@ -554,7 +554,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "ROM"
-name <- "viral_clearance.csv"
+name <- "time_viral_clearance.csv"
 folder <- "blood"
 
 output_dir <- file.path(folder, "output")

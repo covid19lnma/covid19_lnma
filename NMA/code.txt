@@ -37,13 +37,7 @@ model {
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- -d.placebostandardcare.bamlanivimab + d.placebostandardcare.bamlanivimabetesevimab
-	d[1, 3] <- -d.placebostandardcare.bamlanivimab + d.placebostandardcare.casirivimabimdevimab
-	d[1, 4] <- d.convalescentplasma.controlplasma + -d.convalescentplasma.placebostandardcare + -d.placebostandardcare.bamlanivimab
-	d[1, 5] <- -d.convalescentplasma.placebostandardcare + -d.placebostandardcare.bamlanivimab
-	d[1, 6] <- -d.placebostandardcare.bamlanivimab + d.placebostandardcare.CTPmonoclonalantibody
-	d[1, 7] <- -d.placebostandardcare.bamlanivimab
-	d[1, 8] <- -d.placebostandardcare.bamlanivimab + d.placebostandardcare.sotrovimab
+	d[1, 2] <- d.convalescentplasma.placebostandardcare
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -58,13 +52,7 @@ model {
 	}
 
 	# Effect parameter priors
-	d.convalescentplasma.controlplasma ~ dnorm(0, prior.prec)
 	d.convalescentplasma.placebostandardcare ~ dnorm(0, prior.prec)
-	d.placebostandardcare.bamlanivimab ~ dnorm(0, prior.prec)
-	d.placebostandardcare.bamlanivimabetesevimab ~ dnorm(0, prior.prec)
-	d.placebostandardcare.casirivimabimdevimab ~ dnorm(0, prior.prec)
-	d.placebostandardcare.CTPmonoclonalantibody ~ dnorm(0, prior.prec)
-	d.placebostandardcare.sotrovimab ~ dnorm(0, prior.prec)
 	
  prob.ref <- 0.23
  for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }

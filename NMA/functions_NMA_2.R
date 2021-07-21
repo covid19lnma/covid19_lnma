@@ -155,11 +155,18 @@ getestimatesnma <- function(data,
   outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
   outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
   
-  for (i in 1:nrow(outbase)) {
-    for (j in 1:nrow(outaux)){
-      if ((outbase[i,1]==outaux[j,2]) & (outbase[i,2]==outaux[j,1])){
-        for (k in 1:ncol(outbase)){
-          outbase[i,k] = outaux[j,k]
+  for (n in 1:nrow(outbase)) {
+    
+    for (m in 1:nrow(outaux)){
+      
+      if (!is.na(outbase[n,1]) & !is.na(outaux[m,2]) & !is.na(outbase[n,2]) & !is.na(outaux[m,1])){ 
+        
+        if ((outbase[n,1]==outaux[m,2]) & (outbase[n,2]==outaux[m,1])){
+          
+          for (k in 1:ncol(outbase)){
+            
+            outbase[n,k] = outaux[m,k]
+          }
         }
       }
     }
@@ -365,21 +372,23 @@ getestimatesnmacontinuous <- function(data,
     outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
     outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
     
+    for (i in 1:nrow(outbase)) {
+      for (j in 1:nrow(outaux)){
+        if ((outbase[i,1]==outaux[j,2]) & (outbase[i,2]==outaux[j,1])){
+          for (k in 1:ncol(outbase)){
+            outbase[i,k] = outaux[j,k]
+          }
+        }
+      }
+    }
+    
+    
   } else if(measure == "MD"){
     
     outaux = pairwise
     outbase = pairwise
   }
   
-  for (i in 1:nrow(outbase)) {
-    for (j in 1:nrow(outaux)){
-      if ((outbase[i,1]==outaux[j,2]) & (outbase[i,2]==outaux[j,1])){
-        for (k in 1:ncol(outbase)){
-          outbase[i,k] = outaux[j,k]
-        }
-      }
-    }
-  }
   
   if(measure == "ROM"){
     

@@ -124,7 +124,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx", range = "AE2:AI22") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/AE_disc.csv"))
+pairwise_data1=as_tibble(read.csv("pairwise/blood/output/AE_disc.csv"))
 
 
 likelihood = "normal"
@@ -425,7 +425,7 @@ getestimatesnmacontinuous(data,
 data=read_excel("NMA/blood/Continuous outcomes_20210715_long data for analysis.xlsx", range = "AR2:AW7") %>%
   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clearance.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/time_viral_clearance.csv"))
 
 measure = "ROM"
 likelihood = "normal"
