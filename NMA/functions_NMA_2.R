@@ -185,7 +185,7 @@ getestimatesnma <- function(data,
            absolute_nma_upper,relative_indirect,relative_indirect_lower,relative_indirect_upper,
            relative_direct,relative_direct_lower,relative_direct_upper,
            absolute_direct,absolute_direct_lower,absolute_direct_upper)
-  outbase %>% distinct %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
+  outbase %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
   
 }
 
@@ -399,20 +399,24 @@ getestimatesnmacontinuous <- function(data,
     outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
     outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
     
-    if (nrow(outaux) != 0){
     
-      for (i in 1:nrow(outbase)) {
-      
-        for (j in 1:nrow(outaux)){
+    if (nrow(outaux) !=0){
+      for (n in 1:nrow(outbase)) {
         
-          for (k in 1:ncol(outbase)){
-            outbase[i,k] = outaux[j,k]
+        for (m in 1:nrow(outaux)){
+          
+          if ((outbase[n,1]==outaux[m,2]) & (outbase[n,2]==outaux[m,1])){
+            
+            for (k in 1:ncol(outbase)){
+              
+              outbase[n,k] = outaux[m,k]
+            }
           }
         }
       }
     }
-  
-  
+    
+
   if(measure == "ROM"){
     
     outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower = logrelative_nma_lower, 
@@ -429,7 +433,7 @@ getestimatesnmacontinuous <- function(data,
              absolute_nma_upper,relative_indirect,relative_indirect_lower,relative_indirect_upper,
              relative_direct,relative_direct_lower,relative_direct_upper,
              absolute_direct,absolute_direct_lower,absolute_direct_upper)
-    outbase %>% distinct() %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
+    outbase %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
   } else if(measure == "MD"){
     
@@ -449,7 +453,7 @@ getestimatesnmacontinuous <- function(data,
              relative_indirect,relative_indirect_lower,relative_indirect_upper,
              relative_direct,relative_direct_lower,relative_direct_upper)#,
              #absolute_direct,absolute_direct_lower,absolute_direct_upper)
-    outbase %>% distinct %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
+    outbase %>% write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
   }
   
