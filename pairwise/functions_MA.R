@@ -22,6 +22,12 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
   
   pathname <- paste0(folder,"/output/", gsub(".{4}$", "", name.pdf),".pdf")
   
+  # output_dir <- file.path(folder, "output")
+  # 
+  # if (!dir.exists(output_dir)){
+  #   dir.create(output_dir)
+  # }
+  # 
   pdf(pathname, width = 8, height = 5, pointsize = 6)
   
   for (i in 1:nrow(categories)) {
@@ -212,3 +218,4 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
   rows.estimates %>% filter(type=="Turner Prior") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
+
