@@ -431,3 +431,63 @@ list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
 
 write.estimates.csv(list.estimates,folder, name)
 
+#######################Allergic ###########################
+
+
+data=read.csv("blood/allergic reactions - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "allergic_reac.csv"
+folder <- "blood"
+
+output_dir <- file.path(folder, "output")
+
+if (!dir.exists(output_dir)){
+  dir.create(output_dir)
+}
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+
+#######################AE ###########################
+
+
+data=read.csv("blood/adverse effects leading to discontinuation - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "OR"
+name <- "AEs.csv"
+folder <- "blood"
+
+output_dir <- file.path(folder, "output")
+
+if (!dir.exists(output_dir)){
+  dir.create(output_dir)
+}
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,folder)
+
+write.estimates.csv(list.estimates,folder, name)
+

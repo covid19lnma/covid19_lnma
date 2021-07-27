@@ -28,7 +28,7 @@ linearModel = "random"
 hy.prior1 = -2.34
 hy.prior2 = 0.3303
 
-file_name = "duration hospitalization"
+file_name = "duration hospitalization severe"
 
 prob.ref.value <- 11.67
 
@@ -58,7 +58,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
-file_name = "Mortality"
+file_name = "Mortality severe"
 
 prob.ref.value <- 0.22
 
@@ -92,7 +92,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
-file_name = "MV"
+file_name = "MV severe"
 
 prob.ref.value <- 0.30
 
@@ -141,3 +141,247 @@ getestimatesnmacontinuous(data,
                           output_dir,
                           file_name,
                           prob.ref.value)
+
+########### Time to symptom ####
+
+data=read_csv("NMA/blood/symptom_resolution_notsevere.csv") %>% 
+  as.data.frame()#%>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/symptom_resolution_notsevere.csv"))
+
+measure = "ROM"
+likelihood = "normal"
+link = "identity"
+linearModel = "random"
+
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
+
+file_name = "Time to symptom not severe"
+
+prob.ref.value <- 9
+
+getestimatesnmacontinuous(data,
+                          pairwise_data,
+                          measure,
+                          likelihood, 
+                          link, 
+                          #linearModel, 
+                          hy.prior1, 
+                          hy.prior2,
+                          output_dir,
+                          file_name,
+                          prob.ref.value)
+
+########### Viral clearance ####
+
+data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "AO2:AS11") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clear_notsevere.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "Viral clearance not severe"
+
+prob.ref.value <- .16
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Mortality ####
+
+data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "A2:E28") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_notsevere.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "Mortality not severe"
+
+prob.ref.value <- 0.003
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Mechanical ventilation ####
+
+data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "K2:O16") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_notsevere.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "MV not severe"
+
+prob.ref.value <- 0.006
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Admission to ####
+
+data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "U2:Y18") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder) #%>% 
+  #mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
+
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "Admission to hosp not severe"
+
+prob.ref.value <- 0.06
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+########### Allergic ####
+
+data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).xlsx", range = "BS2:BW41") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "Allergic react"
+
+prob.ref.value <- 0.003
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+
+########### AEs ####
+
+data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).xlsx", range = "AE2:AI22") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs.csv"))
+
+
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+file_name = "AEs disc"
+
+prob.ref.value <- 0.000
+
+getestimatesnma(data,
+                pairwise_data,
+                # study = "study",
+                # treatment = "treatment",
+                # responders = "responders",
+                # sampleSize = "sampleSize",
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value)
+
+
+
+
+
+
