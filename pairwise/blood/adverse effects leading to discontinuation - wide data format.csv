@@ -1,0 +1,11 @@
+study,t1,t2,e.events,e.total,c.events,c.total
+Chen_1,bamlanivimab,placebo/standard care,0,309,0,143
+Gonzalez,intravenous immunoglobulin,convalescent plasma,1,60,0,130
+Korper,convalescent plasma,placebo/standard care,0,53,0,52
+Lopardo,puried equine anti-RBD F(ab´)2 fragments (INM005),placebo/standard care,0,119,0,124
+Raman,intravenous immunoglobulin,placebo/standard care,2,50,0,50
+Sakoulas,intravenous immunoglobulin,placebo/standard care,0,16,0,17
+Weinreich_2_1,"casirivimab, imdevimab",placebo/standard care,1,1512,4,1476
+Weinreich_2_2,"casirivimab, imdevimab",placebo/standard care,0,827,1,840
+Weinreich_2_3,"casirivimab, imdevimab",placebo/standard care,1,689,3,648
+Weinreich_3,"casirivimab, imdevimab",placebo/standard care,1,518,0,262
