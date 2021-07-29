@@ -208,7 +208,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
       list.effsize[[i]] <- to.append
       
       #we use the same loop to obtain the bayesmeta.turner objects and append them in another loops
-      if (p1 == "standard care/placebo" | p2 == "standard care/placebo") {
+      if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care") {
         bm.Turner <- bayesmeta(effsize, tau.prior=TP$dprior)
         
       } else {

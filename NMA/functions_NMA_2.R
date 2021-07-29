@@ -14,11 +14,12 @@ getestimatesnma <- function(data,
                             hy.prior2,
                             output_dir,
                             file_name,
-                            prob.ref.value){
+                            prob.ref.value,
+                            placebo){
   
   #data %<>% rename(study=stauthor,responders=responder)
-  data %<>% mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
-  pairwise_data %<>% mutate(t2=if_else(t2=="placebo/standard care","a",t2))
+  data %<>% mutate(treatment=if_else(treatment==placebo,"a",treatment))
+  pairwise_data %<>% mutate(t2=if_else(t2==placebo,"a",t2))
   
   dictionary=data %>% select(study,treatment,responders,sampleSize) %>%
     filter(sampleSize!=0) %>% as.data.frame() 
@@ -74,8 +75,8 @@ getestimatesnma <- function(data,
   monitors=c("cr","RD")
   
   treatments.names <- model$network$treatments #nombres para tabla
-  treatments.names %>% select(description) %>% filter(row_number()==1) %>% 
-    write.csv(paste0(output_dir,"/","reference/", file_name, ".csv"),row.names = F)
+  treatments.names %>% select(description) %>% filter(row_number()==1) #%>% 
+    #write.csv(paste0(output_dir,"/", file_name, ".csv"),row.names = F)
   
   
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
@@ -180,7 +181,7 @@ getestimatesnma <- function(data,
       }
     }
   }
-  outbase = outbase %>% mutate(t1=if_else(t1=="a","placebo/standard care",t1),t2=if_else(t2=="a","placebo/standard care",t2))
+  outbase = outbase %>% mutate(t1=if_else(t1=="a",placebo,t1),t2=if_else(t2=="a",placebo,t2))
   
   outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower = logrelative_nma_lower, 
                                relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, 
@@ -194,19 +195,19 @@ getestimatesnma <- function(data,
            relative_indirect_upper = exp(relative_indirect_upper),
            absolute_indirect= case_when(
              is.na(relative_indirect) & is.na(relative_direct) ~ absolute_nma,
-             !is.na(relative_indirect) & !is.na(relative_direct) & t2=="placebo/standard care"  ~ 
+             !is.na(relative_indirect) & !is.na(relative_direct) & t2==placebo  ~ 
                -1*1000*(prob.ref.value-((relative_indirect*prob.ref.value)/(1-prob.ref.value+relative_indirect*prob.ref.value)))
              
            ),
            absolute_indirect_lower = case_when(
              is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ absolute_nma_lower,
-             !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) & t2=="placebo/standard care"  ~ 
+             !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) & t2==placebo  ~ 
                -1*1000*(prob.ref.value-((relative_indirect_lower*prob.ref.value)/(1-prob.ref.value+relative_indirect_lower*prob.ref.value)))
              
            ),
            absolute_indirect_upper = case_when(
              is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ absolute_nma_upper,
-             !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) & t2=="placebo/standard care"  ~ 
+             !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) & t2==placebo  ~ 
                -1*1000*(prob.ref.value-((relative_indirect_upper*prob.ref.value)/(1-prob.ref.value+relative_indirect_upper*prob.ref.value)))
              
            )) %>% 
@@ -226,20 +227,20 @@ getestimatesnma <- function(data,
     
   #   
   #   absolute_indirect= case_when(
-  #     !is.na(relative_indirect) & t2!="placebo/standard care" & semaf==T ~ NA_real_,
-  #     !is.na(relative_indirect) & t2=="placebo/standard care" & semaf==T ~ 
+  #     !is.na(relative_indirect) & t2!=placebo & semaf==T ~ NA_real_,
+  #     !is.na(relative_indirect) & t2==placebo & semaf==T ~ 
   # -1*1000*(prob.ref.value-((relative_indirect*prob.ref.value)/(1-prob.ref.value+relative_indirect*prob.ref.value))),
   #     TRUE                      ~ absolute_nma
   #   ),
   # absolute_indirect_lower = case_when(
-  #   !is.na(relative_indirect_lower) & t2!="placebo/standard care" & semaf==T ~ NA_real_,
-  #   !is.na(relative_indirect_lower) &t2=="placebo/standard care" & semaf==T ~ 
+  #   !is.na(relative_indirect_lower) & t2!=placebo & semaf==T ~ NA_real_,
+  #   !is.na(relative_indirect_lower) &t2==placebo & semaf==T ~ 
   # -1*1000*(prob.ref.value-((relative_indirect_lower*prob.ref.value)/(1-prob.ref.value+relative_indirect_lower*prob.ref.value))),
   #   TRUE                      ~ absolute_nma_lower
   # ),
   # absolute_indirect_upper = case_when(
-  #   !is.na(relative_indirect_upper) & t2!="placebo/standard care" & semaf==T ~ NA_real_,
-  #   !is.na(relative_indirect_upper) & t2=="placebo/standard care" & semaf==T ~ 
+  #   !is.na(relative_indirect_upper) & t2!=placebo & semaf==T ~ NA_real_,
+  #   !is.na(relative_indirect_upper) & t2==placebo & semaf==T ~ 
   #-1*1000*(prob.ref.value-((relative_indirect_upper*prob.ref.value)/(1-prob.ref.value+relative_indirect_upper*prob.ref.value))),
   #   TRUE                      ~ absolute_nma_upper
   # ) 
@@ -256,7 +257,7 @@ getestimatesnma <- function(data,
            absolute_indirect,absolute_indirect_lower,absolute_indirect_upper,
            relative_direct,relative_direct_lower,relative_direct_upper,
            absolute_direct,absolute_direct_lower,absolute_direct_upper)
-  outbase %>% arrange(match(t2, "placebo/standard care")) %>% 
+  outbase %>% arrange(match(t2, placebo)) %>% 
     write.csv(paste0(output_dir,"/", file_name, ".csv"))
   
 }
@@ -273,10 +274,11 @@ getestimatesnmacontinuous <- function(data,
                             hy.prior2,
                             output_dir,
                             file_name,
-                            prob.ref.value){
+                            prob.ref.value,
+                            placebo){
   
-  data %<>% mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
-  pairwise_data %<>% mutate(t2=if_else(t2=="placebo/standard care","a",t2))
+  data %<>% mutate(treatment=if_else(treatment==placebo,"a",treatment))
+  pairwise_data %<>% mutate(t2=if_else(t2==placebo,"a",t2))
   
   if(measure == "MD"){
     dictionary=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
@@ -349,8 +351,8 @@ getestimatesnmacontinuous <- function(data,
   }
   
   treatments.names <- model$network$treatments #nombres para tabla
-  treatments.names %>% select(description) %>% filter(row_number()==1) %>% 
-    write.csv(paste0(output_dir,"/","reference/", file_name, ".csv"),row.names = F)
+  treatments.names %>% select(description) %>% filter(row_number()==1) #%>% 
+    #write.csv(paste0(output_dir,"/", file_name, ".csv"),row.names = F)
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
     select(id, treatments.simp)
   
@@ -496,7 +498,7 @@ getestimatesnmacontinuous <- function(data,
       }
     }
     
-    outbase = outbase %>% mutate(t1=if_else(t1=="a","placebo/standard care",t1),t2=if_else(t2=="a","placebo/standard care",t2))
+    outbase = outbase %>% mutate(t1=if_else(t1=="a",placebo,t1),t2=if_else(t2=="a",placebo,t2))
 
   if(measure == "ROM"){
     
@@ -512,19 +514,19 @@ getestimatesnmacontinuous <- function(data,
              relative_indirect_upper = exp(relative_indirect_upper),
              absolute_indirect= case_when(
                is.na(relative_indirect) & is.na(relative_direct) ~ absolute_nma,
-               !is.na(relative_indirect) & !is.na(relative_direct) & t2=="placebo/standard care"  ~ 
+               !is.na(relative_indirect) & !is.na(relative_direct) & t2==placebo  ~ 
                  relative_indirect*prob.ref.value-prob.ref.value
                
              ),
              absolute_indirect_lower = case_when(
                is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ absolute_nma_lower,
-               !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) & t2=="placebo/standard care"  ~ 
+               !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) & t2==placebo  ~ 
                  relative_indirect_lower*prob.ref.value-prob.ref.value
                
              ),
              absolute_indirect_upper = case_when(
                is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ absolute_nma_upper,
-               !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) & t2=="placebo/standard care"  ~ 
+               !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) & t2==placebo  ~ 
                  relative_indirect_upper*prob.ref.value-prob.ref.value
                
              )) %>% 
@@ -548,7 +550,7 @@ getestimatesnmacontinuous <- function(data,
              absolute_indirect,absolute_indirect_lower,absolute_indirect_upper,
              relative_direct,relative_direct_lower,relative_direct_upper,
              absolute_direct,absolute_direct_lower,absolute_direct_upper)
-    outbase %>% arrange(match(t2, "placebo/standard care")) %>% 
+    outbase %>% arrange(match(t2, placebo)) %>% 
       write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
   } else if(measure == "MD"){
@@ -569,7 +571,7 @@ getestimatesnmacontinuous <- function(data,
              relative_indirect,relative_indirect_lower,relative_indirect_upper,
              relative_direct,relative_direct_lower,relative_direct_upper)#,
              #absolute_direct,absolute_direct_lower,absolute_direct_upper)
-    outbase %>%  arrange(match(t2, "placebo/standard care")) %>% 
+    outbase %>%  arrange(match(t2, placebo)) %>% 
       write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
   }

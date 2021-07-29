@@ -7,6 +7,10 @@
 # Session Data files
 .RData
 
+# input
+*.csv
+*.xlsx
+
 # User-specific files
 .Ruserdata
 
