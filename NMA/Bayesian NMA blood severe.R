@@ -32,7 +32,13 @@ placebo = "placebo/standard care"
 
 file_name = "duration hospitalization severe"
 
-prob.ref.value <- 11.67
+data.baseline=read.csv("pairwise/blood/severe/Duration of hospitalization_wide data.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -65,7 +71,13 @@ placebo = "placebo/standard care"
 
 file_name = "Mortality severe"
 
-prob.ref.value <- 0.22
+data.baseline=read.csv("pairwise/blood/severe/mortality - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -101,7 +113,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "MV severe"
 
-prob.ref.value <- 0.30
+data.baseline=read.csv("pairwise/blood/severe/mechanical ventilation - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -137,7 +155,13 @@ hy.prior2 = 0.3303
 placebo = "placebo/standard care"
 file_name = "Time to viral not severe"
 
-prob.ref.value <- 24
+data.baseline=read.csv("pairwise/blood/not severe/Time to viral clearance_wide data.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -170,7 +194,13 @@ hy.prior2 = 0.3303
 placebo = "placebo/standard care"
 file_name = "Time to symptom not severe"
 
-prob.ref.value <- 9
+data.baseline=read.csv("pairwise/blood/not severe/Time to symptom resolution_wide data.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -203,7 +233,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "Viral clearance not severe"
 
-prob.ref.value <- .16
+data.baseline=read.csv("pairwise/blood/not severe/viral clearance - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -239,7 +275,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "Mortality not severe"
 
-prob.ref.value <- 0.003
+data.baseline=read.csv("pairwise/blood/not severe/mortality - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -275,7 +317,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "MV not severe"
 
-prob.ref.value <- 0.006
+data.baseline=read.csv("pairwise/blood/not severe/mechanical ventilation - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -313,7 +361,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "Admission to hosp not severe"
 
-prob.ref.value <- 0.06
+data.baseline=read.csv("pairwise/blood/not severe/admission to hospital - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -349,7 +403,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "Allergic react"
 
-prob.ref.value <- 0.003
+data.baseline=read.csv("pairwise/blood/allergic reactions - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
@@ -386,7 +446,13 @@ hy.prior2 = 0.4328
 placebo = "placebo/standard care"
 file_name = "AEs disc"
 
-prob.ref.value <- 0.000
+data.baseline=read.csv("pairwise/blood/adverse effects leading to discontinuation - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 getestimatesnma(data,
                 pairwise_data,
