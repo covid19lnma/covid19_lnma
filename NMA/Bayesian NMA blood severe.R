@@ -28,6 +28,8 @@ linearModel = "random"
 hy.prior1 = -2.34
 hy.prior2 = 0.3303
 
+placebo = "placebo/standard care"
+
 file_name = "duration hospitalization severe"
 
 prob.ref.value <- 11.67
@@ -42,7 +44,8 @@ getestimatesnmacontinuous(data,
                           hy.prior2,
                           output_dir,
                           file_name,
-                          prob.ref.value)
+                          prob.ref.value,
+                          placebo)
 ########### Mortality ####
 
 data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:E40") %>%
@@ -57,6 +60,8 @@ linearModel = "random"
 
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
+
+placebo = "placebo/standard care"
 
 file_name = "Mortality severe"
 
@@ -75,7 +80,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Mechanical ventilation ####
 
@@ -92,6 +98,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "MV severe"
 
 prob.ref.value <- 0.30
@@ -109,7 +116,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Time to viral ####
 
@@ -126,6 +134,7 @@ linearModel = "random"
 hy.prior1 = -2.34
 hy.prior2 = 0.3303
 
+placebo = "placebo/standard care"
 file_name = "Time to viral not severe"
 
 prob.ref.value <- 24
@@ -140,7 +149,8 @@ getestimatesnmacontinuous(data,
                           hy.prior2,
                           output_dir,
                           file_name,
-                          prob.ref.value)
+                          prob.ref.value,
+                          placebo)
 
 ########### Time to symptom ####
 
@@ -157,6 +167,7 @@ linearModel = "random"
 hy.prior1 = -2.34
 hy.prior2 = 0.3303
 
+placebo = "placebo/standard care"
 file_name = "Time to symptom not severe"
 
 prob.ref.value <- 9
@@ -171,7 +182,8 @@ getestimatesnmacontinuous(data,
                           hy.prior2,
                           output_dir,
                           file_name,
-                          prob.ref.value)
+                          prob.ref.value,
+                          placebo)
 
 ########### Viral clearance ####
 
@@ -188,6 +200,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "Viral clearance not severe"
 
 prob.ref.value <- .16
@@ -205,7 +218,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Mortality ####
 
@@ -222,6 +236,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "Mortality not severe"
 
 prob.ref.value <- 0.003
@@ -239,7 +254,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Mechanical ventilation ####
 
@@ -256,6 +272,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "MV not severe"
 
 prob.ref.value <- 0.006
@@ -273,7 +290,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Admission to ####
 
@@ -292,6 +310,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "Admission to hosp not severe"
 
 prob.ref.value <- 0.06
@@ -309,7 +328,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 ########### Allergic ####
 
@@ -326,6 +346,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "Allergic react"
 
 prob.ref.value <- 0.003
@@ -343,7 +364,8 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
+                prob.ref.value,
+                placebo)
 
 
 ########### AEs ####
@@ -361,6 +383,7 @@ linearModel = "random"
 hy.prior1 = -1.87
 hy.prior2 = 0.4328
 
+placebo = "placebo/standard care"
 file_name = "AEs disc"
 
 prob.ref.value <- 0.000
@@ -378,10 +401,6 @@ getestimatesnma(data,
                 hy.prior2,
                 output_dir,
                 file_name,
-                prob.ref.value)
-
-
-
-
-
+                prob.ref.value,
+                placebo)
 
