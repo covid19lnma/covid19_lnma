@@ -56,7 +56,7 @@ getestimatesnma <- function(data,
     indirect=summary(result.node)[[2]]  %>% select(t2,t1,pe,ci.l,ci.u) %>% 
       rename(t1=t2,t2=t1,ci.l.ind=ci.l,pe.ind=pe,ci.u.ind=ci.u)
     
-    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 8,)
+    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 12)
     plot(summary(result.node))
     dev.off()
   }
@@ -75,8 +75,8 @@ getestimatesnma <- function(data,
   monitors=c("cr","RD")
   
   treatments.names <- model$network$treatments #nombres para tabla
-  treatments.names %>% select(description) %>% filter(row_number()==1) #%>% 
-    #write.csv(paste0(output_dir,"/", file_name, ".csv"),row.names = F)
+  treatments.names %>% select(description) %>% filter(row_number()==1) %>% 
+    write.csv(paste0(output_dir,"/","reference/", file_name, ".csv"),row.names = F)
   
   
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
@@ -329,7 +329,7 @@ getestimatesnmacontinuous <- function(data,
     indirect=summary(result.node)[[2]]  %>% select(t2,t1,pe,ci.l,ci.u) %>% 
       rename(t1=t2,t2=t1,ci.l.ind=ci.l,pe.ind=pe,ci.u.ind=ci.u)
     
-    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 8,)
+    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 12)
     plot(summary(result.node))
     dev.off()
   }
@@ -351,8 +351,9 @@ getestimatesnmacontinuous <- function(data,
   }
   
   treatments.names <- model$network$treatments #nombres para tabla
-  treatments.names %>% select(description) %>% filter(row_number()==1) #%>% 
-    #write.csv(paste0(output_dir,"/", file_name, ".csv"),row.names = F)
+  treatments.names %>% select(description) %>% filter(row_number()==1) %>% 
+    write.csv(paste0(output_dir,"/","reference/", file_name, ".csv"),row.names = F)
+  
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
     select(id, treatments.simp)
   
@@ -559,12 +560,19 @@ getestimatesnmacontinuous <- function(data,
                                  relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, 
                                  relative_indirect_lower = logrelative_indirect_lower, 
                                  relative_indirect_upper = logrelative_indirect_upper) %>%
-      mutate(relative_nma = relative_nma,
-             relative_nma_lower = (relative_nma_lower),
-             relative_nma_upper = (relative_nma_upper), 
-             relative_indirect = (relative_indirect),
-             relative_indirect_lower = (relative_indirect_lower),
-             relative_indirect_upper = (relative_indirect_upper)) %>% 
+      
+      mutate(relative_indirect=case_when(
+          is.na(relative_indirect) & is.na(relative_direct) ~ relative_nma,
+          !is.na(relative_indirect) & !is.na(relative_direct) ~ relative_indirect),
+        
+        relative_indirect_lower=case_when(
+          is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ relative_nma_lower,
+          !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) ~ relative_indirect_lower),
+        
+        relative_indirect_upper=case_when(
+          is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ relative_nma_upper,
+          !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) ~ relative_indirect_upper)
+      ) %>% 
       select(t1,t2,
              relative_nma,relative_nma_lower,relative_nma_upper,
              #absolute_nma,absolute_nma_lower,absolute_nma_upper,

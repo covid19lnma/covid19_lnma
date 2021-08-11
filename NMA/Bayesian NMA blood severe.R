@@ -199,8 +199,7 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -387,7 +386,7 @@ getestimatesnma(data,
 
 ########### Allergic ####
 
-data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).xlsx", range = "BS2:BW41") %>%
+data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx", range = "BS2:BW41") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv"))
