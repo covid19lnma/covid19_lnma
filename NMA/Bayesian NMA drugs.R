@@ -14,7 +14,7 @@ if (!dir.exists(output_dir)){
 
 ########### Mortality ####
 
-data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "A2:F423") %>%
+data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "A2:F426") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mortality.csv", stringsAsFactors = F))
@@ -28,15 +28,12 @@ hy.prior2 = 0.4328
 
 placebo = "standard care/placebo"
 
-file_name = "Mortality severe"
+file_name = "Mortality"
 
 data.baseline=read.csv("pairwise/drugs/mortality - wide data format.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+prob.ref.value=.13
 
 getestimatesnma(data,
                 pairwise_data,
@@ -202,11 +199,8 @@ file_name = "mechanical ventilation"
 data.baseline=read.csv("pairwise/drugs/mechanical ventilation - wide data format.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
-
+prob.ref.value=.116
+  
 getestimatesnma(data,
                 pairwise_data,
                 # study = "study",
@@ -319,8 +313,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -329,11 +323,8 @@ file_name = "Duration of hospitalization"
 data.baseline=read.csv("pairwise/drugs/Duration of hospitalization_wide data.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
-
+prob.ref.value=12.8
+  
 getestimatesnmacontinuous(data,
                           pairwise_data,
                           measure,
@@ -359,8 +350,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -369,10 +360,7 @@ file_name = "Duration of ventilation"
 data.baseline=read.csv("pairwise/drugs/Duration of ventilation_wide data.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+prob.ref.value=14.7
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -399,8 +387,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -409,10 +397,7 @@ file_name = "ICU length"
 data.baseline=read.csv("pairwise/drugs/ICU length of stay_wide data.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+prob.ref.value=13.3
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -429,7 +414,7 @@ getestimatesnmacontinuous(data,
 
 ########### Time to symptom resolution ####
 
-data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20210723.xlsx", range = "AR2:AW122") %>%
+data=read_csv("NMA/drugs/Time_to_symptom_resolution.csv") %>%
   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
@@ -439,8 +424,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -451,8 +436,7 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -469,8 +453,8 @@ getestimatesnmacontinuous(data,
 
 ########### Time to viral clearance ####
 
-data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20210723.xlsx", range = "AR2:AW122") %>%
-  as.data.frame() #%>% rename(study=stauthor,responders=responder)
+data=read_csv("NMA/drugs/Time_to_viral_clearance.csv") %>%
+  as.data.frame() %>% filter(study!="Arabi",study!="Elogary") #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_viral_clearance.csv", stringsAsFactors = F))
 
@@ -479,8 +463,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -491,8 +475,7 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,
@@ -510,7 +493,7 @@ getestimatesnmacontinuous(data,
 ########### Ventilator-free days  ####
 
 data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20210723.xlsx", range = "V2:AA36") %>%
-  as.data.frame() #%>% rename(study=stauthor,responders=responder)
+  as.data.frame() %>% filter(study!="Self") #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Ventilator_free_days.csv", stringsAsFactors = F))
 
@@ -519,8 +502,8 @@ likelihood = "normal"
 link = "identity"
 linearModel = "random"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
@@ -531,8 +514,7 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 getestimatesnmacontinuous(data,
                           pairwise_data,

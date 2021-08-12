@@ -230,7 +230,7 @@ measure <- "ROM"
 name <- "symptom_resolution_notsevere.csv"
 
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="blood")
 
 write.estimates.csv(list.estimates,mainDir, name)
 

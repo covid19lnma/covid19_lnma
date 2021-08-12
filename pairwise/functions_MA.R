@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
+getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folderROM="drugs"){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -308,7 +308,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder){
       rename(base=t2,treatment=t1,diff=yi,std.err=vi,base.n=n2,treatment.n=n1) %>% 
       mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment),
              base=gsub("^\\d+_(.*$)","\\1",base)) %>% convert() %>% 
-      write_csv(paste0("~/covid19_lnma/NMA/",folder,"/",name.pdf)) 
+      write_csv(paste0("~/covid19_lnma/NMA/",folderROM,"/",name.pdf)) 
   }
   
   dev.off()

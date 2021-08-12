@@ -21,10 +21,7 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
-baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+baseline=.13
 
 measure <- "OR"
 name <- "mortality.csv"
@@ -177,8 +174,7 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Duration_of_hospitalization.csv"
@@ -199,8 +195,7 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Duration_of_ventilation.csv"
@@ -221,8 +216,7 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "ICU_length.csv"
@@ -243,10 +237,9 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
-measure <- "MD"
+measure <- "ROM"
 name <- "Time_to_symptom_resolution.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
@@ -265,8 +258,7 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_viral_clearance.csv"
@@ -278,7 +270,8 @@ write.estimates.csv(list.estimates,mainDir, name)
 ####################### Ventilator-free days ###########################
 
 data=read.csv("pairwise/drugs/Ventilator-free days_wide data.csv")
-data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% 
+  filter(study!="Self")
 
 # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
@@ -287,8 +280,7 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 
 baseline=data %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Ventilator_free_days.csv"
