@@ -107,6 +107,15 @@ getestimatesnma <- function(data,
   }
   
   treatments.names <- model$network$treatments #nombres para tabla
+  
+  subDir_ref <- "reference"
+  
+  reference_dir <- file.path(output_dir, subDir_ref)
+  
+  if (!dir.exists(reference_dir)){
+    dir.create(reference_dir)
+  }
+  
   treatments.names %>% select(description) %>% filter(row_number()==1) %>% 
     write.csv(paste0(output_dir,"/","reference/", file_name, ".csv"),row.names = F)
   
