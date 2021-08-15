@@ -19,6 +19,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mortality.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -37,10 +38,7 @@ prob.ref.value=.13
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -59,6 +57,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/admission_to_hospital.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -80,10 +79,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -101,6 +97,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/adverse_effects.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -122,10 +119,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -143,6 +137,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/clinically_important_bleeding.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -164,10 +159,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -185,6 +177,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mechanical_ventilation.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -203,10 +196,7 @@ prob.ref.value=.116
   
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -224,6 +214,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/viral_clearance.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -245,10 +236,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -266,6 +254,7 @@ data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.x
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/VTE.csv", stringsAsFactors = F))
 
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -287,10 +276,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -325,18 +311,18 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=12.8
   
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Duration of ventilation  ####
 
@@ -362,18 +348,18 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=14.7
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### ICU length of stay  ####
 
@@ -399,18 +385,18 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=13.3
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Time to symptom resolution ####
 
@@ -438,18 +424,18 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Time to viral clearance ####
 
@@ -477,18 +463,18 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Ventilator-free days  ####
 
@@ -516,15 +502,15 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)

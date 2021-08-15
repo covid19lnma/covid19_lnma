@@ -40,18 +40,19 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 ########### Mortality ####
 
 data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:E40") %>%
@@ -59,7 +60,7 @@ data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_2021071
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_severe.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -81,10 +82,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -102,7 +100,7 @@ data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_2021071
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_severe.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -123,10 +121,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -163,18 +158,18 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Time to symptom ####
 
@@ -201,18 +196,18 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 ########### Viral clearance ####
 
@@ -221,7 +216,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clear_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -242,10 +237,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -263,7 +255,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -284,10 +276,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -305,7 +294,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -326,10 +315,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -349,7 +335,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -370,10 +356,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -391,7 +374,7 @@ data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx"
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -412,10 +395,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -434,7 +414,7 @@ data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).x
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -455,10 +435,7 @@ prob.ref.value=data.baseline %>%
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
