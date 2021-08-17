@@ -519,14 +519,12 @@ placebo = "standard care/placebo"
 file_name = "Time to viral clearance"
 
 data.baseline=read.csv("pairwise/drugs/Time to viral clearance_wide data.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% filter(study!="Arabi",study!="Elogary")
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-#nc1 <- netconnection(t1, t2, study, data = data.baseline)
-#dist = nc1$D.matrix
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnmacontinuous(data,
