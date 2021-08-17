@@ -1,7 +1,8 @@
-#wd <- "/home/antonio/covid19_lnma"
-#setwd(wd)
+# wd <- "/home/antonio/covid19_lnma"
+# setwd(wd)
 source("NMA/functions_NMA.R")
 source("NMA/functions_NMA_2.R")
+source("NMA/functions_NMA_3.R")
 
 mainDir <- paste0(getwd(),"/NMA/blood")
 subDir <- "output"
@@ -40,6 +41,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnmacontinuous(data,
                           pairwise_data,
                           measure,
@@ -59,7 +62,7 @@ data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_2021071
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_severe.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -78,6 +81,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -102,7 +107,7 @@ data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_2021071
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_severe.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -120,6 +125,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -163,6 +170,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnmacontinuous(data,
                           pairwise_data,
                           measure,
@@ -201,6 +210,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnmacontinuous(data,
                           pairwise_data,
                           measure,
@@ -221,7 +232,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clear_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -239,6 +250,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -263,7 +276,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -281,6 +294,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -305,7 +320,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -323,6 +338,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -349,7 +366,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -367,6 +384,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -391,7 +410,7 @@ data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx"
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -409,6 +428,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -434,7 +455,7 @@ data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).x
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs.csv"))
 
-
+measure = "OR"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -452,6 +473,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
