@@ -144,6 +144,7 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+# data.baseline %<>% filter((e.events != 0 & c.events !=0))
 # nc1 <- netconnection(t1, t2, study, data = data.baseline)
 # dist = nc1$D.matrix
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)

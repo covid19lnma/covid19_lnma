@@ -41,11 +41,22 @@ get.network.pdf <- function(pairwise, measure, placebo, folder, name){
   if (measure=="MD" | measure == "ROM") {
     contrast_df=pairwise(list(t1,t2), mean = list(mean1,mean2), n = list(n1,n2),sd=list(sd1,sd2),studlab = study, data = pairwise, sm = measure)
   } else if (measure == "OR"){
-    pairwise %<>% filter((e.events != 0 & c.events !=0))
-    contrast_df=pairwise(list(t1,t2), event = list(e.events,c.events), n = list(e.total,c.total),studlab = study, data = pairwise, sm = measure) 
+    #pairwise %<>% filter((e.events != 0 & c.events !=0))
+    contrast_df=pairwise(list(t1,t2), 
+                         event = list(e.events,c.events), 
+                         n = list(e.total,c.total), 
+                         studlab = study, 
+                         data = pairwise, 
+                         sm = measure, 
+                         allstudies = T) 
   } 
   
-  network=netmeta(contrast_df,reference.group = placebo,details.chkmultiarm = T,comb.fixed = F)
+  network=netmeta(contrast_df,
+                  reference.group = placebo,
+                  details.chkmultiarm = T,
+                  comb.fixed = F,
+                  tol.multiarm = 0.5,
+                  tol.multiarm.se = 0.5)
   netgraph(network,multiarm = F)
   dev.off()
 }
