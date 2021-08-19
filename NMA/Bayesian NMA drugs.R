@@ -92,7 +92,8 @@ placebo = "standard care/placebo"
 file_name = "Admission to hospital"
 
 data.baseline=read.csv("pairwise/drugs/admission to hospital - wide data format.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2),
+                                       t2=if_else(t2=="","standard care/placebo",t2)) 
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
