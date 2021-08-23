@@ -91,7 +91,7 @@ getestimatesnma <- function(data,
                           n.adapt = 10000,n.chains = model$n.chain)  
     
     monitors=c("cr","RD")
-  } else if(measure == "ROM"){
+  } else if(measure == "OR"){
     code <- model$code
     code <- substr(code,1,nchar(code)-2)
     
