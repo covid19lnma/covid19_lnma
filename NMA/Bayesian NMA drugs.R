@@ -2,6 +2,7 @@
 # setwd(wd)
 source("NMA/functions_NMA.R")
 source("NMA/functions_NMA_2.R")
+source("NMA/functions_NMA_3.R")
 
 mainDir <- paste0(getwd(),"/NMA/drugs")
 subDir <- "output"
@@ -31,8 +32,8 @@ placebo = "standard care/placebo"
 
 file_name = "Mortality"
 
-data.baseline=read.csv("pairwise/drugs/mortality - wide data format.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data.baseline=read.csv("pairwise/drugs/mortality - wide data format.csv", stringsAsFactors = F)
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% as_tibble()
 
 prob.ref.value=.13
 
@@ -49,6 +50,24 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+#get.network.pdf <- function(pairwise, measure, folder, name){
+  
+# pathname <- paste0(mainDir,"/output/", file_name,".pdf")
+# pdf(pathname, width = 8, height = 5, pointsize = 6)
+# 
+# if (measure=="MD" | measure == "ROM") {
+#   contrast_df=pairwise(list(t1,t2), mean = list(mean1,mean2), n = list(n1,n2),sd=list(sd1,sd2),studlab = study, data = data.baseline, sm = measure)
+# } else if (measure == "OR"){
+#   contrast_df=pairwise(list(t1,t2), event = list(e.events,c.events), n = list(e.total,c.total),studlab = study, data = data.baseline, sm = measure) 
+# } 
+# 
+# network=netmeta(contrast_df,reference.group = "standard care/placebo",details.chkmultiarm = T,comb.fixed = F)
+# netgraph(network,multiarm = F)
+# dev.off()
+#}
+
+# data.baseline %<>% filter((e.events != 0 & c.events !=0))
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Admission to hospital ####
 
@@ -70,12 +89,15 @@ placebo = "standard care/placebo"
 file_name = "Admission to hospital"
 
 data.baseline=read.csv("pairwise/drugs/admission to hospital - wide data format.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2),
+                                       t2=if_else(t2=="","standard care/placebo",t2)) 
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -117,6 +139,11 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+# data.baseline %<>% filter((e.events != 0 & c.events !=0))
+# nc1 <- netconnection(t1, t2, study, data = data.baseline)
+# dist = nc1$D.matrix
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -157,6 +184,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -194,6 +223,8 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=.116
   
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -234,6 +265,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -273,6 +306,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -324,6 +359,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+
 ########### Duration of ventilation  ####
 
 data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20210723.xlsx", range = "AG2:AL36") %>%
@@ -361,6 +399,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+
 ########### ICU length of stay  ####
 
 data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20210723.xlsx", range = "L2:Q18") %>%
@@ -397,6 +438,8 @@ getestimatesnma(data,
                 file_name,
                 prob.ref.value,
                 placebo)
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Time to symptom resolution ####
 
@@ -437,6 +480,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+
 ########### Time to viral clearance ####
 
 data=read_csv("NMA/drugs/Time_to_viral_clearance.csv") %>%
@@ -457,7 +503,7 @@ placebo = "standard care/placebo"
 file_name = "Time to viral clearance"
 
 data.baseline=read.csv("pairwise/drugs/Time to viral clearance_wide data.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% filter(study!="Arabi",study!="Elogary")
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
@@ -475,6 +521,9 @@ getestimatesnma(data,
                 file_name,
                 prob.ref.value,
                 placebo)
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 
 ########### Ventilator-free days  ####
 
@@ -514,3 +563,5 @@ getestimatesnma(data,
                 file_name,
                 prob.ref.value,
                 placebo)
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)

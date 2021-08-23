@@ -33,7 +33,8 @@ write.estimates.csv(list.estimates,mainDir, name)
 ####################### admission to hospital ###########################
 
 data=read.csv("pairwise/drugs/admission to hospital - wide data format.csv")
-data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2),
+                     t2=if_else(t2=="","standard care/placebo",t2)) 
 
 # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")

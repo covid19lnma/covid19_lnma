@@ -1,6 +1,5 @@
 library(readr)
 
-
 ######
 getestimatesnma <- function(data,
                             pairwise_data,
@@ -56,9 +55,9 @@ getestimatesnma <- function(data,
                   hy.prior=mtc.hy.prior("var", "dlnorm", hy.prior1, hy.prior2))
   
   
-  pdf(paste0(output_dir,"/", file_name, ".pdf"))
-  plot(model)
-  dev.off()
+  # pdf(paste0(output_dir,"/", file_name, ".pdf"))
+  # plot(model)
+  # dev.off()
   
   results <- model.processing(model)
   
@@ -72,9 +71,9 @@ getestimatesnma <- function(data,
     indirect=summary(result.node)[[2]]  %>% select(t2,t1,pe,ci.l,ci.u) %>% 
       rename(t1=t2,t2=t1,ci.l.ind=ci.l,pe.ind=pe,ci.u.ind=ci.u)
     
-    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 12)
-    plot(summary(result.node))
-    dev.off()
+    # pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 12)
+    # plot(summary(result.node))
+    # dev.off()
   }
   
   if (measure == "ROM"){

@@ -2,6 +2,7 @@
 # setwd(wd)
 source("NMA/functions_NMA.R")
 source("NMA/functions_NMA_2.R")
+source("NMA/functions_NMA_3.R")
 
 mainDir <- paste0(getwd(),"/NMA/blood")
 subDir <- "output"
@@ -52,6 +53,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 ########### Mortality ####
 
 data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:E40") %>%
@@ -78,6 +82,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -117,6 +123,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -170,6 +178,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+
 ########### Time to symptom ####
 
 data=read_csv("NMA/blood/symptom_resolution_notsevere.csv") %>% 
@@ -208,6 +219,9 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+
 ########### Viral clearance ####
 
 data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "AO2:AS11") %>%
@@ -233,6 +247,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -273,6 +289,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -312,6 +330,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -330,7 +350,6 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "U2:Y18") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder) #%>% 
   #mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
-
 
 pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv", stringsAsFactors = F))
 
@@ -352,6 +371,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
@@ -392,6 +413,8 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
 getestimatesnma(data,
                 pairwise_data,
                 measure,
@@ -431,6 +454,8 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
