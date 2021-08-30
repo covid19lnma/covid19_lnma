@@ -39,10 +39,7 @@ prob.ref.value=.13
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -104,10 +101,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -152,10 +146,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -197,10 +188,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -239,10 +227,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -284,10 +269,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -329,10 +311,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -366,21 +345,22 @@ data.baseline=read.csv("pairwise/drugs/Duration of hospitalization_wide data.csv
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
 prob.ref.value=12.8
+  
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### Duration of ventilation  ####
 
@@ -406,20 +386,21 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=14.7
 
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### ICU length of stay  ####
 
@@ -445,20 +426,20 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=13.3
 
-get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Time to symptom resolution ####
 
@@ -486,20 +467,21 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### Time to viral clearance ####
 
@@ -527,20 +509,21 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### Ventilator-free days  ####
 
@@ -568,17 +551,17 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)

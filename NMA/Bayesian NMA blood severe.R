@@ -19,7 +19,7 @@ if (!dir.exists(output_dir)){
 data=read_excel("NMA/blood/Continuous outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:F24") %>%
   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/duration_hosp_severe.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/duration_hosp_severe.csv", stringsAsFactors = F))
 
 measure = "MD"
 likelihood = "normal"
@@ -38,29 +38,30 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
+
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 ########### Mortality ####
 
 data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "A2:E40") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_severe.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_severe.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -86,10 +87,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -105,7 +103,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_severe_long data for analysis_20210715.xlsx", range = "K2:O18") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_severe.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_severe.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -130,10 +128,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -149,7 +144,7 @@ getestimatesnma(data,
 data=read_csv("NMA/blood/time_viral_clear_notsevere.csv") %>% 
   as.data.frame()#%>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/time_viral_clear_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/time_viral_clear_notsevere.csv", stringsAsFactors = F))
 
 measure = "ROM"
 likelihood = "normal"
@@ -170,27 +165,28 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### Time to symptom ####
 
 data=read_csv("NMA/blood/symptom_resolution_notsevere.csv") %>% 
   as.data.frame()#%>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/symptom_resolution_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/symptom_resolution_notsevere.csv", stringsAsFactors = F))
 
 measure = "ROM"
 likelihood = "normal"
@@ -210,27 +206,28 @@ prob.ref.value=data.baseline %>%
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-getestimatesnmacontinuous(data,
-                          pairwise_data,
-                          measure,
-                          likelihood, 
-                          link, 
-                          #linearModel, 
-                          hy.prior1, 
-                          hy.prior2,
-                          output_dir,
-                          file_name,
-                          prob.ref.value,
-                          placebo)
 
 ########### Viral clearance ####
 
 data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "AO2:AS11") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clear_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/viral_clear_notsevere.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -255,10 +252,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -274,7 +268,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "A2:E28") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality_notsevere.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -299,10 +293,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -318,7 +309,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_20210715.xlsx", range = "K2:O16") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/mv_notsevere.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -343,10 +334,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -363,8 +351,7 @@ data=read_excel("NMA/blood/Binary outcomes_non severe_long data for analysis_202
   as.data.frame() %>% rename(study=stauthor,responders=responder) #%>% 
   #mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
 
-
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_hosp_notsevere.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -389,10 +376,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -408,7 +392,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis.xlsx", range = "BS2:BW41") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/allergic_reac.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -433,10 +417,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 
@@ -453,7 +434,7 @@ getestimatesnma(data,
 data=read_excel("NMA/blood/Binary outcomes_20210714_long data for analysis (1).xlsx", range = "AE2:AI22") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs.csv"))
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -478,10 +459,7 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
                 pairwise_data,
-                # study = "study",
-                # treatment = "treatment",
-                # responders = "responders",
-                # sampleSize = "sampleSize",
+                measure,
                 likelihood, 
                 link, 
                 #linearModel, 

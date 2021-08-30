@@ -1,5 +1,5 @@
-#wd <- "/home/antonio/covid19_lnma"
-#setwd(wd)
+# wd <- "/home/antonio/covid19_lnma"
+# setwd(wd)
 source("pairwise/functions_MA.R")
 
 mainDir <- paste0(getwd(),"/pairwise/drugs")
