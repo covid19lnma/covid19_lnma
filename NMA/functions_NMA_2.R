@@ -20,7 +20,7 @@ getestimatesnma <- function(data,
   if(measure == "MD"){
     dictionary=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
       filter(sampleSize!=0) %>% as.data.frame() 
-  } else if (measure == "ROM"){
+  } else if (measure == "ROM" | measure == "RD"){
     dictionary=data %>% select(study,treatment,diff,std.err) %>% 
       as.data.frame()  
   } else if (measure == "OR"){
@@ -35,7 +35,7 @@ getestimatesnma <- function(data,
   if(measure == "MD"){
     data=data %>% select(study,treatment,mean,std.dev,sampleSize) %>%
       mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% filter(sampleSize!=0) %>% as.data.frame() 
-  } else if (measure == "ROM"){
+  } else if (measure == "ROM" | measure == "RD"){
     data=data %>% select(study,treatment,diff,std.err) %>%
       mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% as.data.frame() 
   } else if (measure == "OR"){
@@ -43,7 +43,7 @@ getestimatesnma <- function(data,
       mutate(treatment=gsub("[^A-Za-z]","\\1",treatment)) %>% filter(sampleSize!=0) %>% as.data.frame() 
   }
   
-  if(measure == "ROM"){
+  if(measure == "ROM" | measure == "RD"){
     network=mtc.network(data.re = data)
   } else {
     network=mtc.network(data)
@@ -77,7 +77,7 @@ getestimatesnma <- function(data,
     dev.off()
   }
   
-  if (measure == "ROM"){
+  if (measure == "ROM" | measure == "RD"){
     
     code <- model$code
     code <- substr(code,1,nchar(code)-2)
@@ -122,7 +122,7 @@ getestimatesnma <- function(data,
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
     select(id, treatments.simp)
   
-  if(measure == "ROM" | measure == "OR"){
+  if(measure == "ROM" | measure == "OR" | measure == "RD"){
     
     samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
     
@@ -167,7 +167,7 @@ getestimatesnma <- function(data,
   aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp,t2,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
   aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
   
-  if(measure == "ROM" | measure == "OR"){
+  if(measure == "ROM" | measure == "OR" | measure == "RD"){
     
     absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatments.simp.y"="j")) %>% 
       rename(t1 = treatments.simp.x, 
@@ -250,6 +250,15 @@ getestimatesnma <- function(data,
              absolute_direct = risk,
              absolute_direct_lower = risk_l,
              absolute_direct_upper = risk_u) %>%
+      select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper, 
+             absolute_direct, absolute_direct_lower, absolute_direct_upper)
+    
+  } else if(measure == "RD"){
+    
+    pairwise=as_tibble(pairwise_data) %>% 
+      rename(relative_direct = RD,
+             relative_direct_lower = RD_l,
+             relative_direct_upper = RD_u,) %>%
       select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper, 
              absolute_direct, absolute_direct_lower, absolute_direct_upper)
   }
@@ -357,7 +366,35 @@ getestimatesnma <- function(data,
     outbase %>%  arrange(match(t2, placebo)) %>% 
       write.csv(paste0(output_dir,"/", file_name, ".csv"))
     
-  } else if(measure == "OR"){
+  } else if(measure == "RD"){
+    
+    outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower = logrelative_nma_lower, 
+                                 relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, 
+                                 relative_indirect_lower = logrelative_indirect_lower, 
+                                 relative_indirect_upper = logrelative_indirect_upper) %>%
+      
+      mutate(relative_indirect=case_when(
+        is.na(relative_indirect) & is.na(relative_direct) ~ exp(relative_nma),
+        !is.na(relative_indirect) & !is.na(relative_direct) ~ exp(relative_indirect)),
+        
+        relative_indirect_lower=case_when(
+          is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ exp(relative_nma_lower),
+          !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) ~ exp(relative_indirect_lower)),
+        
+        relative_indirect_upper=case_when(
+          is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ exp(relative_nma_upper),
+          !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) ~ exp(relative_indirect_upper))
+      ) %>% 
+      select(t1,t2,
+             relative_nma,relative_nma_lower,relative_nma_upper,
+             #absolute_nma,absolute_nma_lower,absolute_nma_upper,
+             relative_indirect,relative_indirect_lower,relative_indirect_upper,
+             relative_direct,relative_direct_lower,relative_direct_upper)#,
+    #absolute_direct,absolute_direct_lower,absolute_direct_upper)
+    outbase %>%  arrange(match(t2, placebo)) %>% 
+      write.csv(paste0(output_dir,"/", file_name, ".csv"))
+    
+    } else if(measure == "OR"){
     
     outbase = outbase %>% rename(relative_nma = logrelative_nma, relative_nma_lower = logrelative_nma_lower, 
                                  relative_nma_upper = logrelative_nma_upper,relative_indirect = logrelative_indirect, 
