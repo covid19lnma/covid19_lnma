@@ -199,6 +199,46 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
+########### clinically important bleeding -RD ####
+
+data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "BT2:BY16") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/drugs/output/clinically_important_bleeding.csv", stringsAsFactors = F))
+
+measure = "RD"
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+placebo = "standard care/placebo"
+
+file_name = "clinically important bleeding RD"
+
+data.baseline=read.csv("pairwise/drugs/clinically important bleeding - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
 ########### mechanical ventilation ####
 
 data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "M2:R224") %>%

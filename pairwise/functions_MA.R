@@ -149,7 +149,25 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
                      xlab="Odds ratio", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
                      atransf=exp, digits=2)
       
-    } else if (measure == "ROM") {
+    } else if (measure == "RD") {
+      
+      effsize <- escalc(measure = measure,
+                        ai = e.events,  n1i = e.total,
+                        ci = c.events, n2i = c.total,
+                        slab = study,
+                        subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        data = data)
+      
+      yrange <- c(-7 - nrow(effsize), 1)
+      forest.default(effsize$yi, vi = effsize$vi, refline = 0,
+                     rows = seq(-2, -length(effsize$yi) - 1, by = -1),width=0,
+                     alim = c(-2.5, 2.5),
+                     xlim = c(-10,10),
+                     ylim = yrange, top=2, steps=5, level=95,
+                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
+                     atransf=exp, digits=2)
+      
+      } else if (measure == "ROM") {
       
       effsize <- escalc(measure = measure,
                         m1i = mean1,  sd1i = sd1, n1i = n1,
@@ -263,6 +281,17 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
             rename(mu_l=`95% lower`,mu_u=`95% upper`)
           
         }
+      } else if (measure == "RD") {
+        
+        for (j in 1:nrow(estimates)){
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
+                  mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
+        
+        estimates = estimates %>% 
+          as_tibble(rownames="type") %>% 
+          mutate(t1=p1,t2=p2,RD=exp(mu),RD_l=exp(`95% lower`),RD_u=exp(`95% upper`)) %>% 
+          rename(mu_l=`95% lower`,mu_u=`95% upper`)
+          
       } else if (measure == "ROM") {
         
         for (j in 1:nrow(estimates)){
@@ -305,9 +334,19 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
   
   if(measure == "ROM"){
     bind_rows(list.effsize) %>% select(study,t1,t2,yi,vi,n1,n2) %>% 
-      rename(base=t2,treatment=t1,diff=yi,std.err=vi,base.n=n2,treatment.n=n1) %>% 
+      mutate(std.err=sqrt(vi)) %>%
+      rename(base=t2,treatment=t1,diff=yi,base.n=n2,treatment.n=n1) %>% 
       mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment),
              base=gsub("^\\d+_(.*$)","\\1",base)) %>% convert() %>% 
+      write_csv(paste0("~/covid19_lnma/NMA/",folderROM,"/",name.pdf))
+    
+  } else if(measure == "RD"){
+    bind_rows(list.effsize) %>% 
+      select(study,t1,t2,yi,vi,e.total,c.total) %>% 
+      mutate(std.err=sqrt(vi)) %>%
+      rename(base=t2,treatment=t1,diff=yi,base.n=c.total,treatment.n=e.total) %>% 
+      mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment), base=gsub("^\\d+_(.*$)","\\1",base)) %>% 
+      convert() %>% 
       write_csv(paste0("~/covid19_lnma/NMA/",folderROM,"/",name.pdf)) 
   }
   
