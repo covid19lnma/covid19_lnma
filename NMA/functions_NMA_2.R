@@ -71,12 +71,12 @@ getestimatesnma <- function(data,
     indirect=summary(result.node)[[2]]  %>% select(t2,t1,pe,ci.l,ci.u) %>% 
       rename(t1=t2,t2=t1,ci.l.ind=ci.l,pe.ind=pe,ci.u.ind=ci.u)
     
-    # pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 12)
-    # plot(summary(result.node))
-    # dev.off()
+    pdf(paste0(output_dir,"/ns_", file_name, ".pdf"),width = 15)
+    plot(summary(result.node))
+    dev.off()
   }
   
-  if (measure == "ROM" | measure == "RD"){
+  if (measure == "ROM"){
     
     code <- model$code
     code <- substr(code,1,nchar(code)-2)
@@ -121,7 +121,7 @@ getestimatesnma <- function(data,
   treatments.names = left_join(treatments.names, dictionary, by=c("id"="treatment")) %>%
     select(id, treatments.simp)
   
-  if(measure == "ROM" | measure == "OR" | measure == "RD"){
+  if(measure == "ROM" | measure == "OR"){
     
     samples=coda.samples(model.jags,variable.names = monitors,n.iter = 50000)
     
@@ -141,7 +141,7 @@ getestimatesnma <- function(data,
   list.estimates=list()
   
   for (i in 1:nrow(relative.effect.table(results))) {
-    temp=round((relative.effect.table(results)),2)[i,,] %>% as_tibble(rownames = "t1") %>% as.data.frame()
+    temp=round((relative.effect.table(results)),5)[i,,] %>% as_tibble(rownames = "t1") %>% as.data.frame()
     temp$t2=temp[i,1]
     temp=temp[-c(1:i),]
     list.estimates[[i]] <- temp
@@ -166,7 +166,7 @@ getestimatesnma <- function(data,
   aux = left_join(aux,treatments.names,by=c("t1"="id")) %>% select(treatments.simp,t2,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
   aux = left_join(aux,treatments.names,by=c("t2"="id")) %>% select(treatments.simp.x,treatments.simp.y,pe.net,ci.l.net,ci.u.net,pe.ind,ci.l.ind,ci.u.ind)
   
-  if(measure == "ROM" | measure == "OR" | measure == "RD"){
+  if(measure == "ROM" | measure == "OR"){
     
     absolute.RD = inner_join(aux,absolute.RD,by=c("treatments.simp.x"="i","treatments.simp.y"="j")) %>% 
       rename(t1 = treatments.simp.x, 
@@ -195,7 +195,7 @@ getestimatesnma <- function(data,
              logrelative_indirect, logrelative_indirect_lower = logrelative_indirect_lower_aux, logrelative_indirect_upper,
              absolute_nma, absolute_nma_lower = absolute_nma_lower_aux, absolute_nma_upper)
 
-  } else if(measure=="MD"){
+  } else if(measure=="MD" | measure == "RD"){
     absolute.RD = aux %>% rename(t1 = treatments.simp.x, 
              t2 = treatments.simp.y, 
              logrelative_nma = pe.net, 
@@ -258,8 +258,7 @@ getestimatesnma <- function(data,
       rename(relative_direct = RD,
              relative_direct_lower = RD_l,
              relative_direct_upper = RD_u,) %>%
-      select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper, 
-             absolute_direct, absolute_direct_lower, absolute_direct_upper)
+      select(t1, t2, relative_direct, relative_direct_lower, relative_direct_upper)
   }
   
     
@@ -373,16 +372,16 @@ getestimatesnma <- function(data,
                                  relative_indirect_upper = logrelative_indirect_upper) %>%
       
       mutate(relative_indirect=case_when(
-        is.na(relative_indirect) & is.na(relative_direct) ~ exp(relative_nma),
-        !is.na(relative_indirect) & !is.na(relative_direct) ~ exp(relative_indirect)),
+        is.na(relative_indirect) & is.na(relative_direct) ~ (relative_nma),
+        !is.na(relative_indirect) & !is.na(relative_direct) ~ (relative_indirect)),
         
         relative_indirect_lower=case_when(
-          is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ exp(relative_nma_lower),
-          !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) ~ exp(relative_indirect_lower)),
+          is.na(relative_indirect_lower) & is.na(relative_direct_lower) ~ (relative_nma_lower),
+          !is.na(relative_indirect_lower) & !is.na(relative_direct_lower) ~ (relative_indirect_lower)),
         
         relative_indirect_upper=case_when(
-          is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ exp(relative_nma_upper),
-          !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) ~ exp(relative_indirect_upper))
+          is.na(relative_indirect_upper) & is.na(relative_direct_upper) ~ (relative_nma_upper),
+          !is.na(relative_indirect_upper) & !is.na(relative_direct_upper) ~ (relative_indirect_upper))
       ) %>% 
       select(t1,t2,
              relative_nma,relative_nma_lower,relative_nma_upper,

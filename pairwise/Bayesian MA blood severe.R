@@ -50,7 +50,7 @@ measure <- "ROM"
 name <- "symptom_resolution_severe.csv"
 
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,"blood")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -120,6 +120,31 @@ list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
+
+#######################transfusion-related acute lung injury RD ###########################
+
+
+data=read.csv("pairwise/blood/severe/transfusion-related acute lung injury - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "RD"
+name <- "acute_lung_injury_severe_RD.csv"
+
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,"blood")
+
+write.estimates.csv(list.estimates,mainDir, name)
+
 #######################transfusion-associated circulatory overload ###########################
 
 
@@ -144,6 +169,32 @@ list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
+#######################transfusion-associated circulatory overload RD ###########################
+
+
+data=read.csv("pairwise/blood/severe/transfusion-associated circulatory overload - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "RD"
+name <- "circulatory_overload_severe_RD.csv"
+
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,"blood")
+
+write.estimates.csv(list.estimates,mainDir, name)
+
+
+
 #######################Mortality ###########################
 
 
@@ -167,6 +218,30 @@ name <- "mortality_severe.csv"
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
+
+data=data %>% filter(t1=="convalescent plasma",t2=="placebo/standard care")
+effsize=escalc(measure = measure,
+               ai = e.events,  n1i = e.total,
+               ci = c.events, n2i = c.total,
+               slab = study,
+               data = data)
+
+rma.random.DL=rma.uni(effsize, method="DL")
+
+pathname <- paste0(mainDir,"/output/", gsub(".{4}$", "", name),"_funnelplot",".pdf")
+
+# output_dir <- file.path(folder, "output")
+# 
+# if (!dir.exists(output_dir)){
+#   dir.create(output_dir)
+# }
+# 
+pdf(pathname, width = 8, height = 5, pointsize = 6)
+
+funnel(rma.random.DL, atransf=exp, label="out")
+title("Convalescent plasma vs. standard care/placebo - mortality for severe patients", line=0)
+
+dev.off()
 
 #######################Mechanical Ventilation ###########################
 
@@ -209,7 +284,7 @@ measure <- "ROM"
 name <- "time_viral_clear_notsevere.csv"
 
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,"blood")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -302,6 +377,30 @@ name <- "mortality_notsevere.csv"
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
+
+data=data %>% filter(t1=="convalescent plasma",t2=="placebo/standard care")
+effsize=escalc(measure = measure,
+                  ai = e.events,  n1i = e.total,
+                  ci = c.events, n2i = c.total,
+                  slab = study,
+                  data = data)
+
+rma.random.DL=rma.uni(effsize, method="DL")
+
+pathname <- paste0(mainDir,"/output/", gsub(".{4}$", "", name),"_funnelplot",".pdf")
+
+# output_dir <- file.path(folder, "output")
+# 
+# if (!dir.exists(output_dir)){
+#   dir.create(output_dir)
+# }
+# 
+pdf(pathname, width = 8, height = 5, pointsize = 6)
+
+funnel(rma.random.DL, atransf=exp, label="out")
+title("Convalescent plasma vs. standard care/placebo - mortality for non-severe patients", line=0)
+
+dev.off()
 
 #######################Mechanical Ventilation ###########################
 
@@ -396,6 +495,30 @@ name <- "AEs.csv"
 
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,mainDir)
+
+write.estimates.csv(list.estimates,mainDir, name)
+
+#######################AE RD ###########################
+
+
+data=read.csv("pairwise/blood/adverse effects leading to discontinuation - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "RD"
+name <- "AEs_RD.csv"
+
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name,mainDir,"blood")
 
 write.estimates.csv(list.estimates,mainDir, name)
 

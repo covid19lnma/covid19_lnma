@@ -1,14 +1,14 @@
 study,treatment,diff,std.err
 Eom,placebo/standard care,NA,NA
-Eom,CT-P59 monoclonal antibody,-0.4152045147991878,0.0276620390260217
-Gottlieb,placebo/standard care,NA,0.010506355346436435
-Gottlieb,"bamlanivimab, etesevimab",-0.11778303565638351,0.01638933720029985
-Gottlieb,bamlanivimab,-0.07736112115746804,0.011545178999782232
+Eom,CT-P59 monoclonal antibody,-0.4152045147991878,0.16631908797856518
+Gottlieb,placebo/standard care,NA,0.08507612308191104
+Gottlieb,"bamlanivimab, etesevimab",-0.11778303565638351,0.12802084674106734
+Gottlieb,bamlanivimab,-0.07736112115746804,0.10744849463711548
 Dougan,placebo/standard care,NA,NA
-Dougan,"bamlanivimab, etesevimab",-0.11778303565638351,0.004230510468110335
+Dougan,"bamlanivimab, etesevimab",-0.11778303565638351,0.0650423744040017
 Weinreich_2_1,placebo/standard care,NA,NA
-Weinreich_2_1,"casirivimab, imdevimab",-0.3364722366212129,0.0018328356258491881
+Weinreich_2_1,"casirivimab, imdevimab",-0.3364722366212129,0.042811629563112734
 Weinreich_2_2,placebo/standard care,NA,NA
-Weinreich_2_2,"casirivimab, imdevimab",-0.3364722366212129,0.008843925365094034
+Weinreich_2_2,"casirivimab, imdevimab",-0.3364722366212129,0.09404214674864687
 O'Brien_1,placebo/standard care,NA,NA
-O'Brien_1,"casirivimab, imdevimab",-0.22957444164450025,0.09057611929910071
+O'Brien_1,"casirivimab, imdevimab",-0.22957444164450025,0.3009586670941721
