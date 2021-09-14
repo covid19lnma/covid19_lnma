@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folderROM="drugs"){
+getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folderROM){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -164,8 +164,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
                      alim = c(-2.5, 2.5),
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
-                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     atransf=exp, digits=2)
+                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5, digits=3)
       
       } else if (measure == "ROM") {
       
@@ -284,12 +283,13 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
       } else if (measure == "RD") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
-                  mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4],
+                  mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0,
+                  digits=3)}
         
         estimates = estimates %>% 
           as_tibble(rownames="type") %>% 
-          mutate(t1=p1,t2=p2,RD=exp(mu),RD_l=exp(`95% lower`),RD_u=exp(`95% upper`)) %>% 
+          mutate(t1=p1,t2=p2,RD=(mu),RD_l=(`95% lower`),RD_u=(`95% upper`)) %>% 
           rename(mu_l=`95% lower`,mu_u=`95% upper`)
           
       } else if (measure == "ROM") {
@@ -361,7 +361,7 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     est <- as.data.frame(list.estimates[i][1])
     rows.estimates <- bind_rows(rows.estimates, est)
   }
-  rows.estimates %>% filter(type=="Turner Prior") %>% 
+  rows.estimates %>% filter(type=="Turner prior") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
 

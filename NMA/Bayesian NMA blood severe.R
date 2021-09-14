@@ -162,8 +162,8 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 
 prob.ref.value=data.baseline %>% 
   filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
+
 
 getestimatesnma(data,
                 pairwise_data,
@@ -469,4 +469,46 @@ getestimatesnma(data,
                 file_name,
                 prob.ref.value,
                 placebo)
+
+########### AEs RD ####
+
+data=read_csv("NMA/blood/AEs_RD.csv") %>%
+  as.data.frame()
+
+pairwise_data=as_tibble(read.csv("pairwise/blood/output/AEs_RD.csv", stringsAsFactors = F))
+
+measure = "RD"
+likelihood = "normal"
+link = "identity"
+linearModel = "fixed"
+
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
+
+placebo ="placebo/standard care"
+
+file_name = "AEs disc RD"
+
+data.baseline=read.csv("pairwise/blood/adverse effects leading to discontinuation - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+prob.ref.value=data.baseline %>% 
+  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood, 
+                link, 
+                #linearModel, 
+                hy.prior1, 
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
+#get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 

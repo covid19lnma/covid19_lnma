@@ -45,3 +45,6 @@ vignettes/*.pdf
 .Renviron
 
 **/output
+
+NMA.R
+NMAfunc.R
