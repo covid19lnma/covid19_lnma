@@ -361,7 +361,7 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     est <- as.data.frame(list.estimates[i][1])
     rows.estimates <- bind_rows(rows.estimates, est)
   }
-  rows.estimates %>% filter(type=="Turner prior") %>% 
+  rows.estimates %>% filter(type=="Turner Prior") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
 

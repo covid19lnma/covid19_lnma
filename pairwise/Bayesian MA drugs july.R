@@ -243,7 +243,7 @@ baseline=data %>%
 measure <- "ROM"
 name <- "Time_to_symptom_resolution.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -264,7 +264,7 @@ baseline=data %>%
 measure <- "ROM"
 name <- "Time_to_viral_clearance.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
