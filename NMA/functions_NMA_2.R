@@ -268,15 +268,24 @@ getestimatesnma <- function(data,
     
     if (nrow(outaux) !=0){
       for (n in 1:nrow(outbase)) {
-        
+          
         for (m in 1:nrow(outaux)){
           
-          if (((outbase[n,1]==outaux[m,2]) & (outbase[n,2]==outaux[m,1])) | (outbase[n,1] == "a")){
+          if ((outbase[n,1]==outaux[m,2]) & (outbase[n,2]==outaux[m,1])){
             
             for (k in 1:ncol(outbase)){
               
               outbase[n,k] = outaux[m,k]
             }
+          }
+        }
+        
+        if (outbase[n,1] == "a"){
+          
+          for (k in 1:ncol(outbase)){
+            
+            outbase[n,k] = outaux[n,k]
+            
           }
         }
       }
