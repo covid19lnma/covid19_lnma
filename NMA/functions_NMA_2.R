@@ -262,9 +262,9 @@ getestimatesnma <- function(data,
   }
   
     
-    outaux = left_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
+    outaux = inner_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
+    outauxplacebo = left_join(absolute.RD,pairwise,by=c("t1"="t1","t2"="t2"))
     outbase = left_join(absolute.RD.inv,pairwise,by=c("t1"="t1","t2"="t2"))
-    
     
     if (nrow(outaux) !=0){
       for (n in 1:nrow(outbase)) {
@@ -284,7 +284,7 @@ getestimatesnma <- function(data,
           
           for (k in 1:ncol(outbase)){
             
-            outbase[n,k] = outaux[n,k]
+            outbase[n,k] = outauxplacebo[n,k]
             
           }
         }
