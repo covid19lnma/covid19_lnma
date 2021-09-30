@@ -15,7 +15,7 @@ if (!dir.exists(output_dir)){
 
 ########### Mortality ####
 
-data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "A2:F426") %>%
+data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20210723.xlsx", range = "A2:F444") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mortality.csv", stringsAsFactors = F))
