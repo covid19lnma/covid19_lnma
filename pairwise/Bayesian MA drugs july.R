@@ -322,7 +322,10 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
-baseline=.13
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_jaki_no_oxygen.csv"
@@ -341,7 +344,10 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
-baseline=.13
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_jaki_oxygen.csv"
@@ -360,7 +366,10 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
-baseline=.13
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_MV_jaki_no_oxygen.csv"
@@ -379,7 +388,10 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
-baseline=.13
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_MV_jaki_oxygen.csv"
@@ -399,11 +411,11 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
-name <- "Time_to_recovery_no_oxygen.csv"
+name <- "Time_to_recovery_jaki_no_oxygen.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
 
@@ -420,12 +432,55 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
-name <- "Time_to_recovery_oxygen.csv"
+name <- "Time_to_recovery_jaki_oxygen.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
+
+####################### Time to recovery moderate ###########################
+
+data=read_excel("pairwise/drugs/All outcomes_wide format.xlsx", sheet =7)
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  summarise(median=median(mean2)) %>% as.numeric()
+
+measure <- "ROM"
+name <- "Time_to_recovery_jaki_moderate.csv"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+
+write.estimates.csv(list.estimates,mainDir, name)
+
+####################### Time to recovery severe ###########################
+
+data=read_excel("pairwise/drugs/All outcomes_wide format.xlsx", sheet =8)
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+baseline=data %>% 
+  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  summarise(median=median(mean2)) %>% as.numeric()
+
+measure <- "ROM"
+name <- "Time_to_recovery_jaki_severe.csv"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+
+write.estimates.csv(list.estimates,mainDir, name)
+
