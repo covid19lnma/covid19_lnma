@@ -1,5 +1,5 @@
-wd <- "/home/antonio/covid19_lnma"
-setwd(wd)
+# wd <- "/home/antonio/covid19_lnma"
+# setwd(wd)
 source("pairwise/functions_MA.R")
 
 mainDir <- paste0(getwd(),"/pairwise/drugs")
@@ -21,12 +21,13 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=.13
 
 measure <- "OR"
 name <- "mortality.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -41,15 +42,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "admission_to_hospital.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -63,15 +65,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "adverse_effects.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -85,15 +88,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "clinically_important_bleeding.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -107,15 +111,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mechanical_ventilation.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -129,15 +134,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "viral_clearance.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -151,15 +157,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "VTE.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -173,14 +180,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Duration_of_hospitalization.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -194,14 +202,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Duration_of_ventilation.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -215,14 +224,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "ICU_length.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -236,14 +246,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_symptom_resolution.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -257,14 +268,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_viral_clearance.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, placebo, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -279,14 +291,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
 name <- "Ventilator_free_days.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -300,15 +313,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "standard care/placebo"
 baseline=data %>% 
-  filter(t1=="placebo/standard care" | t1=="standard care/placebo"| t2=="standard care/placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "RD"
 name <- "clinically_important_bleeding_rd.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 #######################jaki################
@@ -322,15 +336,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_jaki_no_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -344,15 +359,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_jaki_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -366,15 +382,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_MV_jaki_no_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -388,15 +405,16 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
 name <- "mortality_MV_jaki_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -410,14 +428,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_recovery_jaki_no_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -431,14 +450,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_recovery_jaki_oxygen.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -452,14 +472,15 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_recovery_jaki_moderate.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
@@ -473,14 +494,14 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
+placebo <- "placebo"
 baseline=data %>% 
-  filter(t1=="placebo" | t1=="standard care/placebo"| t2=="placebo" |t2=="placebo/standard care") %>%
+  filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
 name <- "Time_to_recovery_jaki_severe.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, name, mainDir,folderROM="drugs")
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
-
