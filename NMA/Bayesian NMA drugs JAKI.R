@@ -328,12 +328,12 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Time to symptom resolution ####
 
-data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20211025.xlsx", range = "AG2:AL18") %>%
+data=read.csv("NMA/drugs/Time_to_symptom_resolution_jaki.csv", stringsAsFactors = F) %>%
   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution_jaki.csv", stringsAsFactors = F))
 
-measure = "MD"
+measure = "ROM"
 likelihood = "normal"
 link = "identity"
 linearModel = "random"
@@ -369,12 +369,12 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Time to viral clearance ####
 
-data=read_excel("NMA/drugs/All continuous outcomes_long data for analysis_20211025.xlsx", range = "AO2:AT4") %>%
+data=read.csv("NMA/drugs/Time_to_viral_clearance_jaki.csv", stringsAsFactors = F) %>%
   as.data.frame()# %>% filter(study!="Arabi",study!="Elogary") #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_viral_clearance_jaki.csv", stringsAsFactors = F))
 
-measure = "MD"
+measure = "ROM"
 likelihood = "normal"
 link = "identity"
 linearModel = "random"

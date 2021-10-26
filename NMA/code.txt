@@ -1,18 +1,16 @@
 model {
 	# Likelihood for arm-based data
-	for (i in studies.a) {
-		for (k in 1:na[i]) {
-			logit(p[i, k]) <- mu[i] + delta[i, k]
-			r[i, k] ~ dbin(p[i, k], n[i, k])
-			
-			rhat[i, k] <- p[i, k] * n[i, k]
-			dev[i, k] <- 2 *
-			  (r[i, k] * (log(r[i, k]) - log(rhat[i, k])) +
-			   (n[i, k]-r[i, k]) * (log(n[i, k] - r[i, k]) - log(n[i, k] - rhat[i, k])))
-		}
-	}
-	# Likelihood for contrast-based data (univariate for 2-arm trials)
 	## OMITTED
+	# Likelihood for contrast-based data (univariate for 2-arm trials)
+	for(i in studies.r2) {
+		for (k in 2:na[i]) {
+			mest[i, k] <- delta[i, k]
+		}
+		m[i, 2] ~ dnorm(mest[i, 2], prec[i, 2])
+		prec[i, 2] <- 1 / (e[i, 2] * e[i, 2])
+	
+		dev[i, 1] <- pow(m[i, 2] - mest[i, 2], 2) * prec[i, 2]
+	}
 	# Likelihood for contrast-based data (multivariate for multi-arm trials)
 	## OMITTED
 
@@ -31,16 +29,13 @@ model {
 	}
 	
 	# Random effects variance prior
-	var.d ~ dlnorm(-1.87, 0.4328)
+	var.d ~ dlnorm(-2.34, 0.3303)
 	sd.d <- sqrt(var.d)
 	tau.d <- 1 / var.d
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- d.a.baricitinib
-	d[1, 3] <- d.a.corticosteroidsILi
-	d[1, 4] <- d.a.ruxolitinib
-	d[1, 5] <- d.a.tofacitinib
+	d[1, 2] <- d.a.JAKinhibitors
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -50,15 +45,10 @@ model {
 	prior.prec <- pow(re.prior.sd, -2)
 
 	# Study baseline priors
-	for (i in studies.a) {
-	  mu[i] ~ dnorm(0, prior.prec)
-	}
+	## OMITTED
 
 	# Effect parameter priors
-	d.a.baricitinib ~ dnorm(0, prior.prec)
-	d.a.corticosteroidsILi ~ dnorm(0, prior.prec)
-	d.a.ruxolitinib ~ dnorm(0, prior.prec)
-	d.a.tofacitinib ~ dnorm(0, prior.prec)
+	d.a.JAKinhibitors ~ dnorm(0, prior.prec)
 	
- prob.ref <- 0.154761904761905
- for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }
+ prob.ref <- 10.33
+ for(k in 1:nt){    cr[k] <- exp(d[1,k])*prob.ref               } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])                       }                     } }
