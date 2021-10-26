@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folderROM){
+getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder,folderROM){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -225,7 +225,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
       list.effsize[[i]] <- to.append
       
       #we use the same loop to obtain the bayesmeta.turner objects and append them in another loops
-      if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care") {
+      if (p1 == placebo | p2 == placebo) {
         bm.Turner <- bayesmeta(effsize, tau.prior=TP$dprior)
         
       } else {
@@ -264,7 +264,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
-        if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care"){
+        if (p1 == placebo | p2 == placebo){
           
           estimates = estimates %>% 
             as_tibble(rownames="type") %>% 
@@ -298,7 +298,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, name.pdf,folder,folde
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
-        if (p1 == "standard care/placebo" | p2 == "standard care/placebo" | p1 == "placebo/standard care" | p2 == "placebo/standard care"){
+        if (p1 == placebo | p2 == placebo){
           
           estimates = estimates %>% 
             as_tibble(rownames="type") %>% 
