@@ -12,7 +12,21 @@ model {
 		dev[i, 1] <- pow(m[i, 2] - mest[i, 2], 2) * prec[i, 2]
 	}
 	# Likelihood for contrast-based data (multivariate for multi-arm trials)
-	## OMITTED
+	for(i in studies.rm) {
+		for (k in 2:na[i]) {
+			mest[i, k] <- delta[i, k]
+		}
+		for (k in 1:(na[i]-1)) {
+			for (j in 1:(na[i]-1)) {
+				Sigma[i,j,k] <- ifelse(equals(j, k), pow(e[i,k+1], 2), pow(e[i,1], 2))
+			}
+		}
+		Omega[i,1:(na[i]-1),1:(na[i]-1)] <- inverse(Sigma[i,1:(na[i]-1),1:(na[i]-1)])
+		m[i,2:na[i]] ~ dmnorm(mest[i,2:na[i]], Omega[i,1:(na[i]-1),1:(na[i]-1)])
+	
+		mdiff[i, 2:na[i]] <- m[i, 2:na[i]] - mest[i, 2:na[i]]
+		dev[i, 1] <- t(mdiff[i, 2:na[i]]) %*% Omega[i, 1:(na[i]-1),1:(na[i]-1)] %*% mdiff[i, 2:na[i]]
+	}
 
 	# Random effects model
 	for (i in studies) {
@@ -35,7 +49,11 @@ model {
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- d.a.JAKinhibitors
+	d[1, 2] <- d.a.bamlanivimab
+	d[1, 3] <- d.a.bamlanivimabetesevimab
+	d[1, 4] <- d.a.casirivimabimdevimab
+	d[1, 5] <- d.a.convalescentplasma
+	d[1, 6] <- d.a.CTPmonoclonalantibody
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -48,9 +66,11 @@ model {
 	## OMITTED
 
 	# Effect parameter priors
-	d.a.JAKinhibitors ~ dnorm(0, prior.prec)
+	d.a.bamlanivimab ~ dnorm(0, prior.prec)
+	d.a.bamlanivimabetesevimab ~ dnorm(0, prior.prec)
+	d.a.casirivimabimdevimab ~ dnorm(0, prior.prec)
+	d.a.convalescentplasma ~ dnorm(0, prior.prec)
+	d.a.CTPmonoclonalantibody ~ dnorm(0, prior.prec)
 	
-
- prob.ref <- 0.116
- for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }
-
+ prob.ref <- 9
+ for(k in 1:nt){    cr[k] <- exp(d[1,k])*prob.ref               } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])                       }                     } }
