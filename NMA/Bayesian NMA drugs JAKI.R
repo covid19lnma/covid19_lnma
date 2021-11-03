@@ -344,47 +344,6 @@ prob.ref.value=data.baseline %>%
   filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
-getestimatesnma(data,
-                pairwise_data,
-                measure,
-                likelihood, 
-                link, 
-                #linearModel, 
-                hy.prior1, 
-                hy.prior2,
-                output_dir,
-                file_name,
-                prob.ref.value,
-                placebo)
-
-get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
-
-########### Time to viral clearance ####
-
-data=read.csv("NMA/drugs/Time_to_viral_clearance_jaki.csv", stringsAsFactors = F) %>%
-  as.data.frame()# %>% filter(study!="Arabi",study!="Elogary") #%>% rename(study=stauthor,responders=responder)
-
-pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_viral_clearance_jaki.csv", stringsAsFactors = F))
-
-measure = "ROM"
-likelihood = "normal"
-link = "identity"
-linearModel = "random"
-
-hy.prior1 = -2.34
-hy.prior2 = 0.3303
-
-placebo = "standard care/placebo"
-
-file_name = "Time to viral clearance"
-
-data.baseline=read.csv("pairwise/drugs/Time to viral clearance_wide data.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))# %>% filter(study!="Arabi",study!="Elogary")
-
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
-
 
 getestimatesnma(data,
                 pairwise_data,
