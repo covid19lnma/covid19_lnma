@@ -110,7 +110,7 @@ getestimatesnma <- function(data,
   
   model=mtc.model(network,type = "consistency",
                   likelihood=.data[[likelihood]],link=.data[[link]],
-                  linearModel=.data[[linearModel]], n.chain =3,
+                  linearModel=linearModel, n.chain =3,
                   powerAdjust=NA, dic=TRUE,
                   hy.prior=mtc.hy.prior("var", "dlnorm", hy.prior1, hy.prior2))
   
@@ -124,7 +124,7 @@ getestimatesnma <- function(data,
   if (nrow(mtc.nodesplit.comparisons(network)) > 0){
     
     result.node <- mtc.nodesplit(network, likelihood=.data[[likelihood]],link=.data[[link]],
-                                 linearModel=.data[[linearModel]], n.chain =4,
+                                 linearModel=linearModel, n.chain =4,
                                  n.adapt=10000, n.iter=50000,
                                  hy.prior=mtc.hy.prior("var", "dlnorm", hy.prior1, hy.prior2))
     
