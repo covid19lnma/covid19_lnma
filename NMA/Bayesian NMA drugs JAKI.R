@@ -31,15 +31,18 @@ hy.prior2 = 0.4328
 
 placebo = "standard care/placebo"
 
-file_name = "Mortality"
+file_name = "Mortality_jaki"
 
-data.baseline=read.csv("pairwise/drugs/mortality - wide data format.csv", stringsAsFactors = F)
+data.baseline=read.csv("pairwise/drugs/mortality - wide data format_jaki.csv", stringsAsFactors = F)
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% as_tibble()
 
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
+
+prob.ref.value=.13
+
 
 getestimatesnma(data,
                 pairwise_data,
@@ -54,45 +57,29 @@ getestimatesnma(data,
                 prob.ref.value,
                 placebo)
 
-#get.network.pdf <- function(pairwise, measure, folder, name){
-
-# pathname <- paste0(mainDir,"/output/", file_name,".pdf")
-# pdf(pathname, width = 8, height = 5, pointsize = 6)
-# 
-# if (measure=="MD" | measure == "ROM") {
-#   contrast_df=pairwise(list(t1,t2), mean = list(mean1,mean2), n = list(n1,n2),sd=list(sd1,sd2),studlab = study, data = data.baseline, sm = measure)
-# } else if (measure == "OR"){
-#   contrast_df=pairwise(list(t1,t2), event = list(e.events,c.events), n = list(e.total,c.total),studlab = study, data = data.baseline, sm = measure) 
-# } 
-# 
-# network=netmeta(contrast_df,reference.group = "standard care/placebo",details.chkmultiarm = T,comb.fixed = F)
-# netgraph(network,multiarm = F)
-# dev.off()
-#}
-
-# data.baseline %<>% filter((e.events != 0 & c.events !=0))
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Adverse effects leading to discont ####
 
-data=read_excel("NMA/drugs/All binary outcomes_long data for analysis_20211025.xlsx", range = "Q2:V24") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder)
+data=read_csv("NMA/drugs/AE_jaki.csv") %>%
+  as.data.frame()
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/AE_jaki.csv", stringsAsFactors = F))
 
-measure = "OR"
-likelihood = "binom"
-link = "logit"
-linearModel = "random"
+measure = "RD"
+likelihood = "normal"
+link = "identity"
+linearModel = "fixed"
 
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
+
 
 placebo = "standard care/placebo"
 
-file_name = "Adverse effects"
+file_name = "Adverse effects_jaki"
 
-data.baseline=read.csv("pairwise/drugs/Adverse effects leading to discont - wide data format.csv")
+data.baseline=read.csv("pairwise/drugs/Adverse effects leading to discont - wide data format_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
 prob.ref.value=data.baseline %>% 
@@ -100,9 +87,6 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
-# data.baseline %<>% filter((e.events != 0 & c.events !=0))
-# nc1 <- netconnection(t1, t2, study, data = data.baseline)
-# dist = nc1$D.matrix
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
@@ -117,7 +101,6 @@ getestimatesnma(data,
                 file_name,
                 prob.ref.value,
                 placebo)
-
 
 ########### mechanical ventilation ####
 
@@ -136,15 +119,18 @@ hy.prior2 = 0.4328
 
 placebo = "standard care/placebo"
 
-file_name = "mechanical ventilation"
+file_name = "mechanical ventilation_jaki"
 
-data.baseline=read.csv("pairwise/drugs/mechanical ventilation - wide data format.csv")
+data.baseline=read.csv("pairwise/drugs/mechanical ventilation - wide data format_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
+
+prob.ref.value=.1160
+
 
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
@@ -179,14 +165,16 @@ hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
-file_name = "Duration of hospitalization"
+file_name = "Duration of hospitalization_jaki"
 
-data.baseline=read.csv("pairwise/drugs/Duration of hospitalization_wide data.csv")
+data.baseline=read.csv("pairwise/drugs/Duration of hospitalization_wide data_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   summarise(median=median(mean2)) %>% as.numeric()
+
+prob.ref.value=12.8
 
 getestimatesnma(data,
                 pairwise_data,
@@ -220,14 +208,17 @@ hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
-file_name = "ICU length"
+file_name = "ICU length_jaki"
 
 data.baseline=read.csv("pairwise/drugs/ICU length of stay_wide data.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   summarise(median=median(mean2)) %>% as.numeric()
+
+prob.ref.value=13.3
+
 
 getestimatesnma(data,
                 pairwise_data,
@@ -261,9 +252,9 @@ hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
-file_name = "Ventilator-free days"
+file_name = "Ventilator-free days_jaki"
 
-data.baseline=read.csv("pairwise/drugs/Ventilator-free days_wide data.csv")
+data.baseline=read.csv("pairwise/drugs/Ventilator-free days_wide data_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
 prob.ref.value=data.baseline %>% 
@@ -302,14 +293,17 @@ hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
 
-file_name = "Duration of ventilation"
+file_name = "Duration of ventilation_jaki"
 
-data.baseline=read.csv("pairwise/drugs/Duration of ventilation_wide data.csv")
+data.baseline=read.csv("pairwise/drugs/Duration of ventilation_wide data_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   summarise(median=median(mean2)) %>% as.numeric()
+
+prob.ref.value=14.7
+
 
 getestimatesnma(data,
                 pairwise_data,
@@ -328,8 +322,9 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Time to symptom resolution ####
 
-data=read.csv("NMA/drugs/Time_to_symptom_resolution_jaki.csv", stringsAsFactors = F) %>%
-  as.data.frame() #%>% rename(study=stauthor,responders=responder)
+data=read_csv("NMA/drugs/Time_to_symptom_resolution_jaki.csv") %>% 
+  as.data.frame()#%>% rename(study=stauthor,responders=responder)
+
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution_jaki.csv", stringsAsFactors = F))
 
@@ -342,10 +337,9 @@ hy.prior1 = -2.34
 hy.prior2 = 0.3303
 
 placebo = "standard care/placebo"
+file_name = "Time to symptom_jaki"
 
-file_name = "Time to symptom resolution"
-
-data.baseline=read.csv("pairwise/drugs/Time to symptom resolution_wide data.csv")
+data.baseline=read.csv("pairwise/drugs/Time to symptom resolution_wide data_jaki.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
 
 prob.ref.value=data.baseline %>% 
@@ -392,6 +386,7 @@ data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("
 prob.ref.value=data.baseline %>% 
   filter(t1==placebo | t2==placebo) %>%
   summarise(median=median(mean2)) %>% as.numeric()
+
 
 getestimatesnma(data,
                 pairwise_data,
