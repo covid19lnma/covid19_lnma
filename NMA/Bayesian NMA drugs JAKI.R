@@ -1,8 +1,6 @@
 # wd <- "/home/antonio/covid19_lnma"
 # setwd(wd)
 source("NMA/functions_NMA.R")
-source("NMA/functions_NMA_2.R")
-source("NMA/functions_NMA_3.R")
 
 mainDir <- paste0(getwd(),"/NMA/drugs")
 subDir <- "output"
@@ -94,7 +92,7 @@ getestimatesnma(data,
                 measure,
                 likelihood, 
                 link, 
-                #linearModel, 
+                linearModel, 
                 hy.prior1, 
                 hy.prior2,
                 output_dir,
@@ -139,7 +137,7 @@ getestimatesnma(data,
                 measure,
                 likelihood, 
                 link, 
-                #linearModel, 
+                linearModel, 
                 hy.prior1, 
                 hy.prior2,
                 output_dir,
