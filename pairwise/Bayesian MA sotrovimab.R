@@ -29,7 +29,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "RD"
-name <- "AE.csv"
+name <- "AE_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir, folderROM="blood")
 
@@ -52,7 +52,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "RD"
-name <- "allergic_reac.csv"
+name <- "allergic_reac_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir, folderROM="blood")
 
@@ -77,7 +77,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
-name <- "mortality.csv"
+name <- "mortality_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
@@ -100,7 +100,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
-name <- "MV.csv"
+name <- "MV_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
@@ -124,7 +124,7 @@ baseline=data %>%
   summarise(median=median(rate)) %>% as.numeric()
 
 measure <- "OR"
-name <- "admission_to_hospital.csv"
+name <- "admission_to_hospital_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
@@ -145,11 +145,10 @@ TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condit
 placebo <- "placebo/standard care"
 baseline=data %>% 
   filter(t1==placebo | t2==placebo) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+  summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "MD"
-name <- "Duration_of_hospitalization.csv"
+name <- "Duration_of_hospitalization_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
 
@@ -171,7 +170,7 @@ baseline=data %>%
   summarise(median=median(mean2)) %>% as.numeric()
 
 measure <- "ROM"
-name <- "Time_to_symptom_resolution.csv"
+name <- "Time_to_symptom_resolution_sotro.csv"
 
 list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir, folderROM="blood")
 
