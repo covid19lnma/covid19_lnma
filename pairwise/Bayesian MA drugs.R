@@ -23,13 +23,13 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 placebo <- "standard care/placebo"
-baseline=data %>%
-  filter(t1==placebo | t2==placebo) %>%
-  filter(c.total!=0) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+# baseline=data %>%
+#   filter(t1==placebo | t2==placebo) %>%
+#   filter(c.total!=0) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
 
-# baseline=.13
+baseline=.13
 
 measure <- "OR"
 name <- "mortality.csv"
@@ -49,13 +49,13 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 placebo <- "standard care/placebo"
-baseline=data %>%
-  filter(t1==placebo | t2==placebo) %>%
-  filter(c.total!=0) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
+# baseline=data %>%
+#   filter(t1==placebo | t2==placebo) %>%
+#   filter(c.total!=0) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
 
-# baseline=.1160
+baseline=.1160
 
 measure <- "OR"
 name <- "MV.csv"
@@ -173,9 +173,10 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 placebo <- "standard care/placebo"
-baseline=data %>% 
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
+# baseline=data %>% 
+#   filter(t1==placebo | t2==placebo) %>%
+#   summarise(median=median(mean2)) %>% as.numeric()
+baseline=12.8
 
 measure <- "MD"
 name <- "Duration_of_hospitalization.csv"
@@ -217,11 +218,11 @@ TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of conditi
 TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
 
 placebo <- "standard care/placebo"
-baseline=data %>%
-  filter(t1==placebo | t2==placebo) %>%
-  summarise(median=median(mean2)) %>% as.numeric()
+# baseline=data %>%
+#   filter(t1==placebo | t2==placebo) %>%
+#   summarise(median=median(mean2)) %>% as.numeric()
 
-# baseline=14.7
+baseline=14.7
 
 measure <- "MD"
 name <- "Duration_of_ventilation.csv"

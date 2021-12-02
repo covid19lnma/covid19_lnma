@@ -19,7 +19,7 @@ library(netmeta)
 
 #########1#########
 model.processing <- function(model){
-  plot(model)
+  #plot(model)
   
   results=mtc.run(model, n.adapt=10000, n.iter=50000) # corre simulaciones
   

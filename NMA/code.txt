@@ -37,11 +37,49 @@ model {
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- d.a.casirivimabimdevimab
-	d[1, 3] <- d.a.convalescentplasma + d.convalescentplasma.controlplasma
-	d[1, 4] <- d.a.convalescentplasma
-	d[1, 5] <- d.a.CTPmonoclonalantibody
-	d[1, 6] <- d.a.sotrovimab
+	d[1, 2] <- d.a.ACEiARB
+	d[1, 3] <- d.a.acetylcysteine
+	d[1, 4] <- d.a.antihepaciviral
+	d[1, 5] <- d.a.aspirin
+	d[1, 6] <- d.a.aspirinstatins
+	d[1, 7] <- d.a.azithromycin
+	d[1, 8] <- d.a.azithromycinhydroxychloroquine
+	d[1, 9] <- d.a.lopinavirritonavir + d.lopinavirritonavir.azithromycinNSAID
+	d[1, 10] <- d.a.lopinavirritonavir + d.lopinavirritonavir.azithromycinNSAIDcorticosteroid
+	d[1, 11] <- d.a.colchicine
+	d[1, 12] <- d.a.colchicineemtricitabinetenofovirstatins
+	d[1, 13] <- d.a.colchicinestatins
+	d[1, 14] <- d.a.corticosteroidssystematic
+	d[1, 15] <- d.a.corticosteroidssystematicILreceptorantagonists
+	d[1, 16] <- d.a.doxycycline
+	d[1, 17] <- d.a.emtricitabinetenofovir
+	d[1, 18] <- d.a.favipiravir
+	d[1, 19] <- d.a.favipiravirhydrochloroquine
+	d[1, 20] <- d.a.fluvoxamine
+	d[1, 21] <- d.a.fulldoseanticoagulant
+	d[1, 22] <- d.a.GMCSFinhibitor
+	d[1, 23] <- d.a.hydroxychloroquine
+	d[1, 24] <- d.a.ILinhibitors
+	d[1, 25] <- d.a.ILreceptorantagonists
+	d[1, 26] <- d.a.inhaledcorticosteroids
+	d[1, 27] <- d.a.interferonalfasubcutaneous
+	d[1, 28] <- d.a.interferonbetasubcutaneous
+	d[1, 29] <- d.a.interferonbetasubcutaneouslopinavirritonavir
+	d[1, 30] <- d.a.fulldoseanticoagulant + d.fulldoseanticoagulant.intermediatedoseanticoagulant
+	d[1, 31] <- d.a.ivermectin
+	d[1, 32] <- d.a.JAKinhibitors
+	d[1, 33] <- d.a.lopinavirritonavir
+	d[1, 34] <- d.a.molnupiravir
+	d[1, 35] <- d.a.proxalutamide
+	d[1, 36] <- d.a.recombinanthumangranulocytecolonystimulatingfactor
+	d[1, 37] <- d.a.remdesivir
+	d[1, 38] <- d.a.serineproteaseinhibitors
+	d[1, 39] <- d.a.SGLTinhibitors
+	d[1, 40] <- d.a.statins
+	d[1, 41] <- d.a.sulodexide
+	d[1, 42] <- d.a.tyrosinekinaseinhibitors
+	d[1, 43] <- d.a.vitaminC
+	d[1, 44] <- d.a.vitaminD
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -56,11 +94,49 @@ model {
 	}
 
 	# Effect parameter priors
-	d.a.casirivimabimdevimab ~ dnorm(0, prior.prec)
-	d.a.convalescentplasma ~ dnorm(0, prior.prec)
-	d.a.CTPmonoclonalantibody ~ dnorm(0, prior.prec)
-	d.a.sotrovimab ~ dnorm(0, prior.prec)
-	d.convalescentplasma.controlplasma ~ dnorm(0, prior.prec)
+	d.a.ACEiARB ~ dnorm(0, prior.prec)
+	d.a.acetylcysteine ~ dnorm(0, prior.prec)
+	d.a.antihepaciviral ~ dnorm(0, prior.prec)
+	d.a.aspirin ~ dnorm(0, prior.prec)
+	d.a.aspirinstatins ~ dnorm(0, prior.prec)
+	d.a.azithromycin ~ dnorm(0, prior.prec)
+	d.a.azithromycinhydroxychloroquine ~ dnorm(0, prior.prec)
+	d.a.colchicine ~ dnorm(0, prior.prec)
+	d.a.colchicineemtricitabinetenofovirstatins ~ dnorm(0, prior.prec)
+	d.a.colchicinestatins ~ dnorm(0, prior.prec)
+	d.a.corticosteroidssystematic ~ dnorm(0, prior.prec)
+	d.a.corticosteroidssystematicILreceptorantagonists ~ dnorm(0, prior.prec)
+	d.a.doxycycline ~ dnorm(0, prior.prec)
+	d.a.emtricitabinetenofovir ~ dnorm(0, prior.prec)
+	d.a.favipiravir ~ dnorm(0, prior.prec)
+	d.a.favipiravirhydrochloroquine ~ dnorm(0, prior.prec)
+	d.a.fluvoxamine ~ dnorm(0, prior.prec)
+	d.a.fulldoseanticoagulant ~ dnorm(0, prior.prec)
+	d.a.GMCSFinhibitor ~ dnorm(0, prior.prec)
+	d.a.hydroxychloroquine ~ dnorm(0, prior.prec)
+	d.a.ILinhibitors ~ dnorm(0, prior.prec)
+	d.a.ILreceptorantagonists ~ dnorm(0, prior.prec)
+	d.a.inhaledcorticosteroids ~ dnorm(0, prior.prec)
+	d.a.interferonalfasubcutaneous ~ dnorm(0, prior.prec)
+	d.a.interferonbetasubcutaneous ~ dnorm(0, prior.prec)
+	d.a.interferonbetasubcutaneouslopinavirritonavir ~ dnorm(0, prior.prec)
+	d.a.ivermectin ~ dnorm(0, prior.prec)
+	d.a.JAKinhibitors ~ dnorm(0, prior.prec)
+	d.a.lopinavirritonavir ~ dnorm(0, prior.prec)
+	d.a.molnupiravir ~ dnorm(0, prior.prec)
+	d.a.proxalutamide ~ dnorm(0, prior.prec)
+	d.a.recombinanthumangranulocytecolonystimulatingfactor ~ dnorm(0, prior.prec)
+	d.a.remdesivir ~ dnorm(0, prior.prec)
+	d.a.serineproteaseinhibitors ~ dnorm(0, prior.prec)
+	d.a.SGLTinhibitors ~ dnorm(0, prior.prec)
+	d.a.statins ~ dnorm(0, prior.prec)
+	d.a.sulodexide ~ dnorm(0, prior.prec)
+	d.a.tyrosinekinaseinhibitors ~ dnorm(0, prior.prec)
+	d.a.vitaminC ~ dnorm(0, prior.prec)
+	d.a.vitaminD ~ dnorm(0, prior.prec)
+	d.fulldoseanticoagulant.intermediatedoseanticoagulant ~ dnorm(0, prior.prec)
+	d.lopinavirritonavir.azithromycinNSAID ~ dnorm(0, prior.prec)
+	d.lopinavirritonavir.azithromycinNSAIDcorticosteroid ~ dnorm(0, prior.prec)
 	
- prob.ref <- 0.0175602458955391
+ prob.ref <- 0.116
  for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }
