@@ -565,7 +565,7 @@ get.network.pdf <- function(pairwise, measure, placebo, folder, name){
   network=netmeta(contrast_df,
                   reference.group = placebo,
                   details.chkmultiarm = T,
-                  comb.fixed = F,
+                  fixed = F,
                   tol.multiarm = 0.5,
                   tol.multiarm.se = 0.5)
   netgraph(network,multiarm = T)
