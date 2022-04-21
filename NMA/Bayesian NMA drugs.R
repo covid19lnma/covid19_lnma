@@ -57,12 +57,12 @@ getestimatesnma(data,
 
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
-# ########### mechanical ventilation ####
+# ########### laboratory confirmed ####
 
-data=read.csv("input/Mechanical ventilation - long data format.csv") %>%
+data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - long data format.csv") %>%
   as.data.frame() %>% rename(study=stauthor,responders=responder)
 
-pairwise_data=as_tibble(read.csv("pairwise/drugs/output/MV.csv", stringsAsFactors = F))
+pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection with COVID-19 (laboratory confirmed) output.csv", stringsAsFactors = F))
 
 measure = "OR"
 likelihood = "binom"
@@ -74,9 +74,54 @@ hy.prior2 = 0.4328
 
 placebo = "standard care/placebo"
 
-file_name = "mechanical ventilation"
+file_name = "laboratory confirmed"
 
-data.baseline=read.csv("input/Mechanical ventilation - wide data format.csv")
+data.baseline=read.csv("input/Infection with COVID-19 (laboratory confirmed) - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# prob.ref.value=data.baseline %>%
+#   filter(t1==placebo | t2==placebo) %>%
+#   filter(c.total!=0) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
+
+prob.ref.value=.1160
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood,
+                link,
+                linearModel,
+                hy.prior1,
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
+# ########### laboratory confirmed and suspected ####
+
+data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - long data format.csv") %>%
+  as.data.frame() %>% rename(study=stauthor,responders=responder)
+
+pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection with COVID-19 (laboratory confirmed and suspected) output.csv", stringsAsFactors = F))
+
+measure = "OR"
+likelihood = "binom"
+link = "logit"
+linearModel = "random"
+
+hy.prior1 = -1.87
+hy.prior2 = 0.4328
+
+placebo = "standard care/placebo"
+
+file_name = "laboratory confirmed and suspected"
+
+data.baseline=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - wide data format.csv")
 data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
 
 # prob.ref.value=data.baseline %>%
@@ -104,44 +149,44 @@ getestimatesnma(data,
 
 ########### Viral clearance ####
 
-data=read.csv("input/Viral clearance - long data format.csv") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder)
-
-pairwise_data=as_tibble(read.csv("pairwise/drugs/output/viral_clearance.csv", stringsAsFactors = F))
-
-measure = "OR"
-likelihood = "binom"
-link = "logit"
-linearModel = "random"
-
-hy.prior1 = -1.87
-hy.prior2 = 0.4328
-
-placebo = "standard care/placebo"
-file_name = "Viral clearance"
-
-data.baseline=read.csv("input/Viral clearance - wide data format.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
-
-prob.ref.value=data.baseline %>% 
-  filter(t1==placebo| t2==placebo) %>%
-  mutate(rate=c.events/c.total) %>%
-  summarise(median=median(rate)) %>% as.numeric()
-
-get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
-
-getestimatesnma(data,
-                pairwise_data,
-                measure,
-                likelihood, 
-                link, 
-                linearModel, 
-                hy.prior1, 
-                hy.prior2,
-                output_dir,
-                file_name,
-                prob.ref.value,
-                placebo)
+# data=read.csv("input/Viral clearance - long data format.csv") %>%
+#   as.data.frame() %>% rename(study=stauthor,responders=responder)
+# 
+# pairwise_data=as_tibble(read.csv("pairwise/drugs/output/viral_clearance.csv", stringsAsFactors = F))
+# 
+# measure = "OR"
+# likelihood = "binom"
+# link = "logit"
+# linearModel = "random"
+# 
+# hy.prior1 = -1.87
+# hy.prior2 = 0.4328
+# 
+# placebo = "standard care/placebo"
+# file_name = "Viral clearance"
+# 
+# data.baseline=read.csv("input/Viral clearance - wide data format.csv")
+# data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
+# 
+# prob.ref.value=data.baseline %>% 
+#   filter(t1==placebo| t2==placebo) %>%
+#   mutate(rate=c.events/c.total) %>%
+#   summarise(median=median(rate)) %>% as.numeric()
+# 
+# get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+# 
+# getestimatesnma(data,
+#                 pairwise_data,
+#                 measure,
+#                 likelihood, 
+#                 link, 
+#                 linearModel, 
+#                 hy.prior1, 
+#                 hy.prior2,
+#                 output_dir,
+#                 file_name,
+#                 prob.ref.value,
+#                 placebo)
 
 ########### Adverse effects leading to discont ####
 
@@ -319,56 +364,12 @@ getestimatesnma(data,
 ##########Continuous###########
 ########### Duration of hospitalization  ####
 
-data=read.csv("input/Duration of hospitalization - long data format.csv") %>%
-  as.data.frame() #%>% rename(study=stauthor,responders=responder)
-
-pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Duration_of_hospitalization.csv", stringsAsFactors = F))
-
-measure = "MD"
-likelihood = "normal"
-link = "identity"
-linearModel = "random"
-
-hy.prior1 = -2.34
-hy.prior2 = 0.3303
-
-placebo = "standard care/placebo"
-
-file_name = "Duration of hospitalization"
-
-data.baseline=read.csv("input/Duration of hospitalization - wide data format.csv")
-data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% filter(study!="Dorward")
-
-# prob.ref.value=data.baseline %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
-
-prob.ref.value=12.8
-
-getestimatesnma(data,
-                pairwise_data,
-                measure,
-                likelihood,
-                link,
-                linearModel,
-                hy.prior1,
-                hy.prior2,
-                output_dir,
-                file_name,
-                prob.ref.value,
-                placebo)
-
-#get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
-
-########### Time to symptom resolution ####
+# data=read.csv("input/Duration of hospitalization - long data format.csv") %>%
+#   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 # 
-# data=read_csv("NMA/drugs/Time_to_symptom_resolution.csv") %>%
-#   as.data.frame() %>% rename(study=stauthor,responders=responder)
+# pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Duration_of_hospitalization.csv", stringsAsFactors = F))
 # 
-# 
-# pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
-# 
-# measure = "ROM"
+# measure = "MD"
 # likelihood = "normal"
 # link = "identity"
 # linearModel = "random"
@@ -377,14 +378,17 @@ getestimatesnma(data,
 # hy.prior2 = 0.3303
 # 
 # placebo = "standard care/placebo"
-# file_name = "Time to symptom"
 # 
-# data.baseline=read.csv("pairwise/drugs/Time to symptom resolution_wide data.csv")
-# data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+# file_name = "Duration of hospitalization"
 # 
-# prob.ref.value=data.baseline %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
+# data.baseline=read.csv("input/Duration of hospitalization - wide data format.csv")
+# data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) %>% filter(study!="Dorward")
+# 
+# # prob.ref.value=data.baseline %>%
+# #   filter(t1==placebo | t2==placebo) %>%
+# #   summarise(median=median(mean2)) %>% as.numeric()
+# 
+# prob.ref.value=12.8
 # 
 # getestimatesnma(data,
 #                 pairwise_data,
@@ -400,6 +404,47 @@ getestimatesnma(data,
 #                 placebo)
 # 
 # get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
+
+########### Time to symptom resolution ####
+
+data=read_csv("NMA/drugs/Time_to_symptom_resolution.csv") %>%
+  as.data.frame() #%>% rename(study=stauthor,responders=responder)
+
+
+pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
+
+measure = "ROM"
+likelihood = "normal"
+link = "identity"
+linearModel = "random"
+
+hy.prior1 = -2.34
+hy.prior2 = 0.3303
+
+placebo = "standard care/placebo"
+file_name = "Time to symptom"
+
+data.baseline=read.csv("input/Time to symptom resolution - wide data format.csv")
+data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+prob.ref.value=data.baseline %>%
+  filter(t1==placebo | t2==placebo) %>%
+  summarise(median=median(mean2)) %>% as.numeric()
+
+getestimatesnma(data,
+                pairwise_data,
+                measure,
+                likelihood,
+                link,
+                linearModel,
+                hy.prior1,
+                hy.prior2,
+                output_dir,
+                file_name,
+                prob.ref.value,
+                placebo)
+
+get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 ########### Duration of ventilation  ####
 # 
