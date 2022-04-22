@@ -73,7 +73,16 @@ getestimatesnma <- function(data,
                             prob.ref.value,
                             placebo){
   
-  data %<>% mutate(treatment=if_else(treatment==placebo,"a",treatment))
+  if("interventionname" %in% colnames(data)){
+    data %<>% 
+      rename(as_is_treatment = treatment) %<>%
+      rename(treatment = interventionname) %<>% 
+      mutate(treatment=if_else(treatment==placebo,"a",treatment))
+  } else {
+    data %<>% 
+      mutate(treatment=if_else(treatment==placebo,"a",treatment))
+  }
+  
   pairwise_data %<>% mutate(t2=if_else(t2==placebo,"a",t2))
   
   if(measure == "MD"){
@@ -107,6 +116,10 @@ getestimatesnma <- function(data,
   } else {
     network=mtc.network(data)
   }
+  
+  # pdf(paste0(output_dir,"/", file_name, ".pdf"))
+  # plot(network)
+  # dev.off()
   
   model=mtc.model(network,type = "consistency",
                   likelihood=.data[[likelihood]],link=.data[[link]],

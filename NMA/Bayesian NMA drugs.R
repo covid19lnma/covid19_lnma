@@ -1,5 +1,5 @@
-# wd <- "/home/antonio/covid19_lnma"
-# setwd(wd)
+wd <- "/home/antonio/covid19_lnma"
+setwd(wd)
 source("NMA/functions_NMA.R")
 
 mainDir <- paste0(getwd(),"/NMA/drugs")
@@ -410,7 +410,6 @@ getestimatesnma(data,
 data=read_csv("NMA/drugs/Time_to_symptom_resolution.csv") %>%
   as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
-
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
 
 measure = "ROM"
@@ -488,4 +487,3 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 #                 placebo)
 # 
 # get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
-
