@@ -121,8 +121,8 @@ getestimatesnma <- function(data,
   # plot(network)
   # dev.off()
   
-  model=mtc.model(network,type = "consistency",
-                  likelihood=.data[[likelihood]],link=.data[[link]],
+  model=mtc.model(network,type = "consistency", 
+                  likelihood=likelihood,link=link,
                   linearModel=linearModel, n.chain =3,
                   powerAdjust=NA, dic=TRUE,
                   hy.prior=mtc.hy.prior("var", "dlnorm", hy.prior1, hy.prior2))

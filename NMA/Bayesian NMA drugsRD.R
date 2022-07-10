@@ -14,12 +14,12 @@ if (!dir.exists(output_dir)){
 ##########Dichotomous##########
 ########### Mortality ####
 
-data=read.csv("input/Mortality - long data format.csv") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder)
+data=read.csv("NMA/drugs/mortality.csv") %>%
+  as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mortality.csv", stringsAsFactors = F))
 
-measure = "OR"
+measure = "RD"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -59,12 +59,12 @@ get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 # ########### laboratory confirmed ####
 
-data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - long data format.csv") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder)
+data=read.csv("NMA/drugs/Infection with COVID-19 (laboratory confirmed) output.csv") %>%
+  as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection with COVID-19 (laboratory confirmed) output.csv", stringsAsFactors = F))
 
-measure = "OR"
+measure = "RD"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -104,12 +104,12 @@ getestimatesnma(data,
 
 # ########### laboratory confirmed and suspected ####
 
-data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - long data format.csv") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder)
+data=read.csv("NMA/drugs/Infection with COVID-19 (laboratory confirmed and suspected) output.csv") %>%
+  as.data.frame() #%>% rename(study=stauthor,responders=responder)
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection with COVID-19 (laboratory confirmed and suspected) output.csv", stringsAsFactors = F))
 
-measure = "OR"
+measure = "RD"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -195,7 +195,6 @@ data=read_csv("NMA/drugs/AE.csv") %>%
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/AE.csv", stringsAsFactors = F))
 
-# measure = "OR"
 measure = "RD"
 likelihood = "normal"
 link = "identity"
@@ -218,10 +217,6 @@ prob.ref.value=data.baseline %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
-if (prob.ref.value ==0){
-  prob.ref.value = 0.001
-}
-
 get.network.pdf(data.baseline, measure, placebo, mainDir, file_name)
 
 getestimatesnma(data,
@@ -239,13 +234,13 @@ getestimatesnma(data,
 
 ########### Admission to hospital #####
 
-data=read.csv("input/Admission to hospital - long data format.csv") %>%
-  as.data.frame() %>% rename(study=stauthor,responders=responder) #%>%
+data=read.csv("NMA/drugs/admission_to_hospital.csv") %>%
+  as.data.frame() #%>% rename(study=stauthor,responders=responder) #%>%
 #mutate(treatment=if_else(treatment=="placebo/standard care","a",treatment))
 
 pairwise_data=as_tibble(read.csv("pairwise/drugs/output/admission_to_hospital.csv", stringsAsFactors = F))
 
-measure = "OR"
+measure = "RD"
 likelihood = "binom"
 link = "logit"
 linearModel = "random"
@@ -417,7 +412,7 @@ getestimatesnma(data,
 # 
 # pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
 # 
-# measure = "RD"
+# measure = "ROM"
 # likelihood = "normal"
 # link = "identity"
 # linearModel = "random"

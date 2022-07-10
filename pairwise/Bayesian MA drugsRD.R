@@ -11,76 +11,37 @@ if (!dir.exists(output_dir)){
   dir.create(output_dir)
 }
 
-outputs = read_excel("input/outputs.xlsx", range = "A:C") %>%
-  as.data.frame()
-
-pairwise_ouput <- function(output, measure, digits, mainDir){
-  
-  TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-  TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-  if (output == "Mortality"){
-    data=read.csv("input/Mortality - wide data format.csv")
-    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-    placebo <- "standard care/placebo"
-    baseline=data %>%
-      filter(t1==placebo | t2==placebo) %>%
-      filter(c.total!=0) %>%
-      mutate(rate=c.events/c.total) %>%
-      summarise(median=median(rate)) %>% as.numeric()
-    name <- "mortality.csv"
-  } else if (output == "Infection with COVID-19 (laboratory confirmed)"){
-    data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - wide data format.csv")
-    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-    placebo <- "standard care/placebo"
-    baseline=data %>%
-      filter(t1==placebo | t2==placebo) %>%
-      filter(c.total!=0) %>%
-      mutate(rate=c.events/c.total) %>%
-      summarise(median=median(rate)) %>% as.numeric()
-    name <- "Infection with COVID-19 (laboratory confirmed) output.csv"
-  }
-  
-  list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-  
-  write.estimates.csv(list.estimates,mainDir, name)
-}
-
-for (row in 1:nrow(outputs)) {
-  output = outputs[row, "output"]
-  measure = outputs[row, "measure"]
-  digits = outputs[row, "digit_precision"]
-  pairwise_ouput(output, measure, digits, mainDir)
-}
-
 ######## Dichotomous #####
 #######################Mortality ###########################
 
-# data=read.csv("input/Mortality - wide data format.csv")
-# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
-# # determine corresponding prior parameters(?TurnerEtAlPrior to help):
-# TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
-# TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
-# placebo <- "standard care/placebo"
+# data=read.csv("pairwise/drugs/Mortality - wide data format.csv")
+data=read.csv("input/Mortality - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+placebo <- "standard care/placebo"
 # baseline=data %>%
 #   filter(t1==placebo | t2==placebo) %>%
 #   filter(c.total!=0) %>%
 #   mutate(rate=c.events/c.total) %>%
 #   summarise(median=median(rate)) %>% as.numeric()
-# 
-# # baseline=.001
-# 
-# measure <- "OR"
-# name <- "mortality.csv"
-# 
-# list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
-# write.estimates.csv(list.estimates,mainDir, name)
+
+baseline=.001
+
+measure <- "RD"
+name <- "mortality.csv"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
+
+write.estimates.csv(list.estimates,mainDir, name)
 
 #######################Infection with COVID-19###########################
 
+# data=read.csv("pairwise/drugs/Mechanical ventilation - wide data format.csv")
 data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - wide data format.csv")
 data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
 
@@ -98,64 +59,65 @@ baseline=data %>%
 
 # baseline=.1160
 
-measure <- "OR"
+measure <- "RD"
 name <- "Infection with COVID-19 (laboratory confirmed) output.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
 #######################Infection with COVID-19 suspected###########################
 
-# data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - wide data format.csv")
-# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
-# # determine corresponding prior parameters(?TurnerEtAlPrior to help):
-# TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
-# TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
-# placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   filter(c.total!=0) %>%
-#   mutate(rate=c.events/c.total) %>%
-#   summarise(median=median(rate)) %>% as.numeric()
-# 
-# # baseline=.1160
-# 
-# measure <- "OR"
-# name <- "Infection with COVID-19 (laboratory confirmed and suspected) output.csv"
-# 
-# list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
-# write.estimates.csv(list.estimates,mainDir, name)
+# data=read.csv("pairwise/drugs/Mechanical ventilation - wide data format.csv")
+data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+placebo <- "standard care/placebo"
+baseline=data %>%
+  filter(t1==placebo | t2==placebo) %>%
+  filter(c.total!=0) %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+# baseline=.1160
+
+measure <- "RD"
+name <- "Infection with COVID-19 (laboratory confirmed and suspected) output.csv"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
+
+write.estimates.csv(list.estimates,mainDir, name)
 
 #######################MV###########################
-# 
+#
 # # data=read.csv("pairwise/drugs/Mechanical ventilation - wide data format.csv")
 # data=read.csv("input/Mechanical ventilation - wide data format.csv")
 # data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
+#
 # # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 # TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
+#
 # TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
+#
 # placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   filter(c.total!=0) %>%
-#   mutate(rate=c.events/c.total) %>%
-#   summarise(median=median(rate)) %>% as.numeric()
-# 
-# # baseline=.1160
-# 
+# # baseline=data %>%
+# #   filter(t1==placebo | t2==placebo) %>%
+# #   filter(c.total!=0) %>%
+# #   mutate(rate=c.events/c.total) %>%
+# #   summarise(median=median(rate)) %>% as.numeric()
+#
+# baseline=.1160
+#
 # measure <- "OR"
 # name <- "MV.csv"
-# 
+#
 # list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
+#
 # write.estimates.csv(list.estimates,mainDir, name)
 
 #######################AE###########################
@@ -176,60 +138,60 @@ baseline=data %>%
   mutate(rate=c.events/c.total) %>%
   summarise(median=median(rate)) %>% as.numeric()
 
-# measure <- "OR"
 measure <- "RD"
 name <- "AE.csv"
 
-list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs", digits = 6)
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
 
 write.estimates.csv(list.estimates,mainDir, name)
 
 ####################### admission to hospital ######
 
-# data=read.csv("input/Admission to hospital - wide data format.csv")
-# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
-# # determine corresponding prior parameters(?TurnerEtAlPrior to help):
-# TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
-# TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
-# placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   filter(c.total!=0) %>%
-#   mutate(rate=c.events/c.total) %>%
-#   summarise(median=median(rate)) %>% as.numeric()
-# 
-# measure <- "OR"
-# name <- "admission_to_hospital.csv"
-# 
-# list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
-# write.estimates.csv(list.estimates,mainDir, name)
+# data=read.csv("pairwise/drugs/Admission to hospital - wide data format.csv")
+data=read.csv("input/Admission to hospital - wide data format.csv")
+data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+
+# determine corresponding prior parameters(?TurnerEtAlPrior to help):
+TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+
+TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+
+placebo <- "standard care/placebo"
+baseline=data %>%
+  filter(t1==placebo | t2==placebo) %>%
+  filter(c.total!=0) %>%
+  mutate(rate=c.events/c.total) %>%
+  summarise(median=median(rate)) %>% as.numeric()
+
+measure <- "RD"
+name <- "admission_to_hospital.csv"
+
+list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir,folderROM="drugs")
+
+write.estimates.csv(list.estimates,mainDir, name)
 
 ####################### viral clearance ###########################
 
 # # data=read.csv("pairwise/drugs/Viral clearance - wide data format.csv")
 # data=read.csv("input/Viral clearance - wide data format.csv")
-# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2)) 
-# 
+# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+#
 # # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 # TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
+#
 # TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
+#
 # placebo <- "standard care/placebo"
-# baseline=data %>% 
+# baseline=data %>%
 #   filter(t1==placebo | t2==placebo) %>%
 #   mutate(rate=c.events/c.total) %>%
 #   summarise(median=median(rate)) %>% as.numeric()
-# 
+#
 # measure <- "OR"
 # name <- "viral_clearance.csv"
-# 
+#
 # list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
+#
 # write.estimates.csv(list.estimates,mainDir, name)
 #
 # ####################### VTE ###########################
@@ -287,23 +249,23 @@ write.estimates.csv(list.estimates,mainDir, name)
 # # data=read.csv("pairwise/drugs/Duration of hospitalization - wide data format.csv")
 # data=read.csv("input/Duration of hospitalization - wide data format.csv")
 # data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
+#
 # # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 # TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
+#
 # TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
+#
 # placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
-# # baseline=12.8
-# 
+# # baseline=data %>%
+# #   filter(t1==placebo | t2==placebo) %>%
+# #   summarise(median=median(mean2)) %>% as.numeric()
+# baseline=12.8
+#
 # measure <- "MD"
 # name <- "Duration_of_hospitalization.csv"
-# 
+#
 # list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
+#
 # write.estimates.csv(list.estimates,mainDir, name)
 
 ####################### Time to symptom resolution ###########################
@@ -330,73 +292,48 @@ write.estimates.csv(list.estimates,mainDir, name)
 
 ####################### ICU lenght of stay ###########################
 
-# # data=read.csv("pairwise/drugs/ICU length of stay - wide data format.csv")
-# data=read.csv("input/ICU length of stay - wide data format.csv")
+# data=read.csv("pairwise/drugs/ICU length of stay - wide data format.csv")
 # data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
+#
 # # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 # TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
+#
 # TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
+#
 # placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
-# 
-# # baseline=13.3
-# 
+# # baseline=data %>%
+# #   filter(t1==placebo | t2==placebo) %>%
+# #   summarise(median=median(mean2)) %>% as.numeric()
+#
+# baseline=13.3
+#
 # measure <- "MD"
 # name <- "ICU_stay.csv"
-# 
+#
 # list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
-# write.estimates.csv(list.estimates,mainDir, name)
-
-####################### Ventilator free days ###########################
-
-# # data=read.csv("pairwise/drugs/Ventilator-free days_wide data_jaki.csv")
-# data=read.csv("input/Ventilator-free days - wide data format.csv")
-# data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
-# # determine corresponding prior parameters(?TurnerEtAlPrior to help):
-# TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
-# TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
-# placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
-# 
-# measure <- "MD"
-# name <- "Ventilator_free_days.csv"
-# 
-# list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
+#
 # write.estimates.csv(list.estimates,mainDir, name)
 
 ####################### Duration of ventilation ###########################
 
-# # data=read.csv("pairwise/drugs/Duration of ventilation_wide data.csv")
-# data=read.csv("input/Duration of ventilation - wide data format.csv")
+# data=read.csv("pairwise/drugs/Duration of ventilation_wide data.csv")
 # data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-# 
+#
 # # determine corresponding prior parameters(?TurnerEtAlPrior to help):
 # TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
-# 
+#
 # TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
-# 
+#
 # placebo <- "standard care/placebo"
-# baseline=data %>%
-#   filter(t1==placebo | t2==placebo) %>%
-#   summarise(median=median(mean2)) %>% as.numeric()
-# 
-# # baseline=14.7
-# 
+# # baseline=data %>%
+# #   filter(t1==placebo | t2==placebo) %>%
+# #   summarise(median=median(mean2)) %>% as.numeric()
+#
+# baseline=14.7
+#
 # measure <- "MD"
 # name <- "Duration_of_ventilation.csv"
-# 
+#
 # list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir)
-# 
+#
 # write.estimates.csv(list.estimates,mainDir, name)

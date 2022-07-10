@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder,folderROM){
+getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder,folderROM, digits = 3){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -115,6 +115,8 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
   list.bm.Turner = list()
   list.bm.hnorm10 = list()
   list.bm.hnorm05 = list()
+  list.bm.uniform = list()
+  list.bm.jef = list()
   list.estimates = list()
   
   pathname <- paste0(folder,"/output/", gsub(".{4}$", "", name.pdf),".pdf")
@@ -138,6 +140,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         ci = c.events, n2i = c.total,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -147,7 +150,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Odds ratio", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     atransf=exp, digits=2)
+                     atransf=exp, digits=digits)
       
     } else if (measure == "RD") {
       
@@ -156,6 +159,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         ci = c.events, n2i = c.total,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -164,7 +168,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      alim = c(-1, 1),
                      xlim = c(-5,5),
                      ylim = yrange, top=2, steps=5, level=95,
-                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5, digits=3)
+                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5, digits=digits)
       
       } else if (measure == "ROM") {
       
@@ -173,6 +177,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         m2i = mean2,  sd2i = sd2, n2i = n2,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       
@@ -183,7 +188,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Ratio of means", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     atransf=exp, digits=2)
+                     atransf=exp, digits=digits)
       
     } else if (measure == "MD") {
       
@@ -192,6 +197,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         m2i = mean2,  sd2i = sd2, n2i = n2,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -201,7 +207,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Mean difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     digits=2)
+                     digits=digits)
     }
     
     to.append <- effsize
@@ -240,20 +246,31 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       bm.hnorm10 <- bayesmeta(effsize, tau.prior = function(x){dhalfnormal(x,scale=1.0)})
       bm.hnorm05 <- bayesmeta(effsize, tau.prior = function(x){dhalfnormal(x,scale=0.5)})
       
+      bm.uniform <- bayesmeta(effsize, tau.prior = "conventional")
+      #bm.jef <- bayesmeta(effsize, tau.prior = "Jeffreys")
+      
       hnorm10.to.append <- bm.hnorm10
       hnorm05.to.append <- bm.hnorm05
+      
+      huniform.to.append <- bm.uniform
+      #hjef.to.append <- bm.jef
       
       #append in the list and be done with it
       
       list.bm.hnorm10[[i]] <- hnorm10.to.append
       list.bm.hnorm05[[i]] <- hnorm05.to.append
       
+      list.bm.uniform[[i]] <- huniform.to.append
+      #list.bm.jef[[i]] <- hjef.to.append
+      
       rma.fixed <- rma.uni(effsize, method="FE")
       rma.random.DL <- rma.uni(effsize, method="DL")
       
       #concat of the summarys, called estimates, same scheize, calculate and append
       estimates <- rbind("HNorm(0.5)" = c(bm.hnorm05$summary[2,1:2], bm.hnorm05$summary[5:6,2]),
-                         "HNorm(1.0)" = c(bm.hnorm10$summary[2,1:2], bm.hnorm10$summary[5:6,2]),
+                         #"HNorm(1.0)" = c(bm.hnorm10$summary[2,1:2], bm.hnorm10$summary[5:6,2]),
+                         "Conventional" = c(bm.uniform$summary[2,1:2], bm.uniform$summary[5:6,2]),
+                         #"Jeffreys" = c(bm.jef$summary[2,1:2], bm.jef$summary[5:6,2]),
                          "Turner Prior"=c(bm.Turner$summary[2,1:2], bm.Turner$summary[5:6,2]),
                          "Frequentist.fixed" = c(sqrt(rma.fixed$tau2.fix), rma.fixed$b, rma.fixed$ci.lb, rma.fixed$ci.ub),
                          "Frequentist.random.DL" = c(sqrt(rma.random.DL$tau2), rma.random.DL$b, rma.random.DL$ci.lb, rma.random.DL$ci.ub))
@@ -261,7 +278,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       if (measure == "OR") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp, digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         if (p1 == placebo | p2 == placebo){
@@ -285,7 +302,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
         for (j in 1:nrow(estimates)){
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4],
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0,
-                  digits=3)}
+                  digits=digits)}
         
         estimates = estimates %>% 
           as_tibble(rownames="type") %>% 
@@ -295,7 +312,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       } else if (measure == "ROM") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp, digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         if (p1 == placebo | p2 == placebo){
@@ -318,7 +335,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       } else if (measure == "MD") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], 
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4],  digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         estimates = estimates %>% as_tibble(rownames="type") %>% mutate(t1=p1,t2=p2) %>% 
@@ -361,7 +378,7 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     est <- as.data.frame(list.estimates[i][1])
     rows.estimates <- bind_rows(rows.estimates, est)
   }
-  rows.estimates %>% filter(type=="Turner Prior") %>% 
+  rows.estimates %>% filter(type=="Conventional") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
 
