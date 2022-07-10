@@ -10,6 +10,8 @@
 # input
 *.csv
 *.xlsx
+*.xlsx#
+*.csv#
 
 # User-specific files
 .Ruserdata
