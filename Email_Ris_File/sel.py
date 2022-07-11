@@ -54,10 +54,9 @@ https://github.com/ijmarshall/robotsearch#readme
 GOOGLE_ACCOUNTS_BASE_URL = 'https://accounts.google.com'
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
 
-GOOGLE_CLIENT_ID = '951184306852-antptr2lfmin2na724idtjcdsvmbuuao.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = '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'
-
-GOOGLE_REFRESH_TOKEN = "1//0fRP_i_Get3f0CgYIARAAGA8SNwF-L9IrN9SR1mI9m8AtWQkFjyfUAZgsqBrBLRlh_MV3ot-akfW4Yx0sOR21SeToaLYaDgdK0I0"
+GOOGLE_CLIENT_ID = ''
+GOOGLE_CLIENT_SECRET = ""
+GOOGLE_REFRESH_TOKEN = None
 
 def command_to_url(command):
     return '%s/%s' % (GOOGLE_ACCOUNTS_BASE_URL, command)
