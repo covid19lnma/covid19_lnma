@@ -221,10 +221,48 @@ nodes_name = "Table of nodes (31-03-2022).xlsx"
 Dichotomous = "Dichotomous outcomes"
 Continuous = "Continuous outcomes"
 
+SubDichotomous = "Subgroups_Dichotomous outcomes"
+SubContinuous = "Subgroups_Continuous outcomes"
+
 filter_small =  False
 filter_dich_total = 100
 filter_dich_event = 20
 filter_cont_total = 100
+
+Trial_char_sheet = True #si se tiene que usar la sheet de trial characteristics
+
+Subgroup_sheets = True #Si se tienen que usar subgroup sheets
+list_subgroup = ["severe"]
+
+#lista de las columnas que es necesario filtrar para extraer ints y floats
+list_int_columns_Dich = [4,5,6]
+list_int_columns_Cont = [4,5,6]
+list_float_columns_Cont = [3,7,8]
+
+# Dich_Outcome_dict = ["Mortality", \
+#                       "Infection with COVID-19 (laboratory confirmed)", \
+#                       "Infection with COVID-19 (laboratory confirmed and suspected)", \
+#                       "Admission to hospital", \
+#                       "Adverse effects leading to discontinuation"]
+
+Dich_Outcome_dict = ["Mortality", \
+                      "Mechanical ventilation", \
+                      "Admission to hospital", \
+                      "Adverse effects leading to discontinuation", \
+                      "Viral clearance", \
+                      "Venous thromboembolism", \
+                      "Clinically important bleeding"]
+
+Cont_Outcome_dict = ["Time to symptom resolution"]
+        
+# Cont_Outcome_dict = ["Duration of hospitalization", \
+#                       "ICU length of stay", \
+#                       "Ventilator-free days", \
+#                       "Duration of ventilation", \
+#                       "Time to symptom resolution", \
+#                       "Time to viral clearance"]
+
+Cont_Outcome_dict = ["Time to symptom resolution"]
 
 
 if nodes_name == 0:
@@ -248,8 +286,6 @@ Cont.dropna(axis=0, how='all', inplace=True)
 Dich.reset_index(inplace = True, drop = True)
 Cont.reset_index(inplace = True, drop = True)
 
-# Dich =id_order(Dich)
-# Cont =id_order(Cont)
 Dich["Ref ID"] = Dich["Ref ID"].astype(str)
 Cont["Ref ID"] = Cont["Ref ID"].astype(str)
 
@@ -259,76 +295,77 @@ Cont =data_prep_subdf(Cont, Continuous)
 Dich=clean_treatments_names(Dich, sheet = Dichotomous, directory_file = nodes_file, node_mask_inplace = False)
 Cont =clean_treatments_names(Cont, sheet = Continuous, directory_file = nodes_file, node_mask_inplace = False)
 
-Dich =find_int_in_string(Dich, start_column = 4, end_column = 6)
-Cont =find_int_in_string(Cont, start_column = 4, end_column = 6)
-# Cont =find_int_in_string(Cont, start_column = 7, end_column = 9)
-# Cont =find_int_in_string(Cont, start_column = 7, end_column = 7)
+for column in list_int_columns_Dich:
+    Dich =find_int_in_string(Dich, start_column = column, end_column = column)
 
-# Dich.drop("Definition of infection", axis = 1, level = 1, inplace = True)
-
-Cont =find_float_in_string(Cont, start_column = 3, end_column = 8)
-# Cont =find_float_in_string(Cont, start_column = 9, end_column = 9)
+for column in list_int_columns_Cont:
+    Cont =find_int_in_string(Cont, start_column = column, end_column = column)
+    
+for column in list_float_columns_Cont:
+    Cont =find_float_in_string(Cont, start_column = column, end_column = column)
 
 Dich.columns = Dich.columns.get_level_values(1)
 Cont.columns = Cont.columns.get_level_values(1)  
 
 ############# Subgroups from trial characteristics sheet
-# TrialPrim = pd.read_excel(Name_File_Data, header = None, sheet_name = "Trial characteristics")
-# Trial=cleandf(TrialPrim, total_nan = True)
-# Trial.dropna(axis=0, how='all', inplace=True)
-# Trial.reset_index(inplace = True, drop = True)
-# Trial["Ref ID"] = Trial["Ref ID"].astype(str)
-
-# Trial.columns = Trial.columns.get_level_values(1)
-# Trial = Trial[["Ref ID", "1st Author", "Pre-exposure (%)", "Post-exposure (%)"]]
-# Trial =find_float_in_string(Trial, start_column = 2, end_column = 3)
-
-# Dich = pd.merge(Dich, Trial, how = "left", left_on = ["Ref ID", "1st Author"], right_on = ["Ref ID", "1st Author"])
-# Cont = pd.merge(Cont, Trial, how = "left", left_on = ["Ref ID", "1st Author"], right_on = ["Ref ID", "1st Author"])
-
-# Dich = Dich[(Dich["Post-exposure (%)"] == 100)]
-# Cont = Cont[(Cont["Post-exposure (%)"] == 100)]
-
-# Dich.drop(["Pre-exposure (%)", "Post-exposure (%)"], axis = 1, inplace = True)
-# Cont.drop(["Pre-exposure (%)", "Post-exposure (%)"], axis = 1, inplace = True)
+if Trial_char_sheet == True:
+    
+    TrialPrim = pd.read_excel(Name_File_Data, header = None, sheet_name = "Trial characteristics")
+    Trial=cleandf(TrialPrim, total_nan = True)
+    Trial.dropna(axis=0, how='all', inplace=True)
+    Trial.reset_index(inplace = True, drop = True)
+    Trial["Ref ID"] = Trial["Ref ID"].astype(str)
+    
+    Trial.columns = Trial.columns.get_level_values(1)
+    Trial = Trial[["Ref ID", "1st Author", "Pre-exposure (%)", "Post-exposure (%)"]]
+    Trial =find_float_in_string(Trial, start_column = 2, end_column = 3)
+    
+    Dich = pd.merge(Dich, Trial, how = "left", left_on = ["Ref ID", "1st Author"], right_on = ["Ref ID", "1st Author"])
+    Cont = pd.merge(Cont, Trial, how = "left", left_on = ["Ref ID", "1st Author"], right_on = ["Ref ID", "1st Author"])
+    
+    Dich = Dich[(Dich["Post-exposure (%)"] == 100)]
+    Cont = Cont[(Cont["Post-exposure (%)"] == 100)]
+    
+    Dich.drop(["Pre-exposure (%)", "Post-exposure (%)"], axis = 1, inplace = True)
+    Cont.drop(["Pre-exposure (%)", "Post-exposure (%)"], axis = 1, inplace = True)
 
 ############# Subgroup section. Do a function dummy
-Groups_Dich = pd.read_excel(Name_File_Data, sheet_name = "Subgroups_Dichotomous outcomes")
-Groups_Cont = pd.read_excel(Name_File_Data, sheet_name = "Subgroups_Continuous outcomes")
-
-Groups_Dich.rename(columns = {"RefID" : "Ref ID"}, inplace = True)
-Groups_Cont.rename(columns = {"RefID" : "Ref ID"}, inplace = True)
-
-Groups_Dich["Ref ID"] = Groups_Dich["Ref ID"].astype(str)
-Groups_Cont["Ref ID"] = Groups_Cont["Ref ID"].astype(str)
-
-Dich = pd.merge(Dich, Groups_Dich, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
-Cont = pd.merge(Cont, Groups_Cont, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
-
-Dich.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
-Cont.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
-
-Dich = Dich[(Dich["Group for analysis"] == "severe")]
-Cont = Cont[(Cont["Group for analysis"] == "severe")]
-# | (Dich["Group for analysis"] == "critical")   (Dich["Group for analysis"] == "severe")  | (Dich["Group for analysis"] == "critical") | (Dich["Group for analysis"] == "severe/critical")
-# | (Cont["Group for analysis"] == "critical")   (Cont["Group for analysis"] == "severe")  | (Cont["Group for analysis"] == "critical") | (Cont["Group for analysis"] == "severe/critical")
-Dich.drop("Group for analysis", axis = 1, inplace = True)
-Cont.drop("Group for analysis", axis = 1, inplace = True)
+if Subgroup_sheets == True and len(list_subgroup)>0:
+    Groups_Dich = pd.read_excel(Name_File_Data, sheet_name = SubDichotomous)
+    Groups_Cont = pd.read_excel(Name_File_Data, sheet_name = SubContinuous)
+    
+    Groups_Dich.rename(columns = {"RefID" : "Ref ID"}, inplace = True)
+    Groups_Cont.rename(columns = {"RefID" : "Ref ID"}, inplace = True)
+    
+    Groups_Dich["Ref ID"] = Groups_Dich["Ref ID"].astype(str)
+    Groups_Cont["Ref ID"] = Groups_Cont["Ref ID"].astype(str)
+    
+    Dich = pd.merge(Dich, Groups_Dich, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
+    Cont = pd.merge(Cont, Groups_Cont, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
+    
+    Dich.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
+    Cont.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
+    
+    if len(list_subgroup) == 1:
+        Dich = Dich[(Dich["Group for analysis"] == list_subgroup[0])]
+        Cont = Cont[(Cont["Group for analysis"] == list_subgroup[0])]
+        
+    elif len(list_subgroup) == 2:
+        Dich = Dich[(Dich["Group for analysis"] == list_subgroup[0]) | (Dich["Group for analysis"] == list_subgroup[1])]
+        Cont = Cont[(Cont["Group for analysis"] == list_subgroup[0]) | (Cont["Group for analysis"] == list_subgroup[1])]
+        
+    elif len(list_subgroup) == 3:
+        Dich = Dich[(Dich["Group for analysis"] == list_subgroup[0]) | (Dich["Group for analysis"] == list_subgroup[1]) | (Dich["Group for analysis"] == list_subgroup[2])]
+        Cont = Cont[(Cont["Group for analysis"] == list_subgroup[0]) | (Cont["Group for analysis"] == list_subgroup[1]) | (Cont["Group for analysis"] == list_subgroup[2])]
+        
+    elif len(list_subgroup) == 4:
+        Dich = Dich[(Dich["Group for analysis"] == list_subgroup[0]) | (Dich["Group for analysis"] == list_subgroup[1]) | (Dich["Group for analysis"] == list_subgroup[2]) | (Dich["Group for analysis"] == list_subgroup[3])]
+        Cont = Cont[(Cont["Group for analysis"] == list_subgroup[0]) | (Cont["Group for analysis"] == list_subgroup[1]) | (Cont["Group for analysis"] == list_subgroup[2]) | (Cont["Group for analysis"] == list_subgroup[3])]
+        
+    Dich.drop("Group for analysis", axis = 1, inplace = True)
+    Cont.drop("Group for analysis", axis = 1, inplace = True)
 
 ####Dich
-# Dich_Outcome_dict = ["Mortality", \
-#                       "Infection with COVID-19 (laboratory confirmed)", \
-#                       "Infection with COVID-19 (laboratory confirmed and suspected)", \
-#                       "Admission to hospital", \
-#                       "Adverse effects leading to discontinuation"]
-
-Dich_Outcome_dict = ["Mortality", \
-                      "Mechanical ventilation", \
-                      "Admission to hospital", \
-                      "Adverse effects leading to discontinuation", \
-                      "Viral clearance", \
-                      "Venous thromboembolism", \
-                      "Clinically important bleeding"]
 
 Dich["Number of events"] = pd.to_numeric(Dich["Number of events"])
 
@@ -414,25 +451,7 @@ if len(Cont.index) > 0:
                        "Standard Deviation" : "Standard_Deviation"}
     
     Contlong.rename(columns = non_space_names, inplace=True)
-    
-    #####Comparison between sd estimations from 95% CI
-    # Contdev = estimate_mean_sd(Contlong)
-    # Contdev2 = estimate_mean_sd(Contlong, better_CI_estimate = False)
-    
-    # Contdev = Contdev[Contdev["Measure of variability"] == 3]
-    # Contdev2 = Contdev2[Contdev2["Measure of variability"] == 3]
-    
-    # Contdev = Contdev[["1st Author", "N analyzed", "Standard Deviation"]]
-    # Contdev2 = Contdev2[["1st Author", "N analyzed", "Standard Deviation"]]
-    
-    # Comparison = pd.merge(Contdev2, Contdev, left_index=True, right_index=True)
-    # Comparison.drop("1st Author_y", axis = 1, inplace = True)
-    # Comparison.drop("N analyzed_y", axis = 1, inplace = True)
-    
-    # Comparison["Relative difference"] = 100*(Comparison["Standard Deviation_x"] - Comparison["Standard Deviation_y"]) / Comparison["Standard Deviation_x"]
-    
-    # Comparison.plot(x = "N analyzed_x", y = "Relative difference", style = '.', ylabel = "Relative dfference (%)")
-    
+     
     Contlong = sd_imputation(Contlong)
     
     select_continuous_columns = ["Ref_ID", "1st_Author", "Intervention", "Outcome", "N_analyzed", "Mean", "Standard_Deviation"]
@@ -441,7 +460,6 @@ if len(Cont.index) > 0:
     
     Contgroup_N = Contlong.groupby(["Ref_ID", "1st_Author", "Intervention", "Outcome"], as_index = False).agg({"N_analyzed" : 'sum'})
     Contlong_N = pd.merge(Contlong, Contgroup_N, how = "left", on = ["Ref_ID", "1st_Author", "Intervention", "Outcome"])
-    #Contlong_N.drop("N_analyzed_x", axis = 1, inplace = True)
     Contlong_N.rename(columns={'N_analyzed_y': 'N_analyzed'}, inplace=True)
     
     Contgroup_mean = Contlong_N.groupby(["Ref_ID", "1st_Author", "Intervention", "Outcome", "N_analyzed"], as_index = False).apply(global_mean)
@@ -487,14 +505,6 @@ if len(Cont.index) > 0:
     Contwide = Contwide.drop(["RefID"], axis = 1)
     Contwide = Contwide[Contwide.columns[[0,1,6,3,4,5,7,8,9,2]]]
     
-    Cont_Outcome_dict = ["Time to symptom resolution"]
-        
-    # Cont_Outcome_dict = ["Duration of hospitalization", \
-    #                       "ICU length of stay", \
-    #                       "Ventilator-free days", \
-    #                       "Duration of ventilation", \
-    #                       "Time to symptom resolution", \
-    #                       "Time to viral clearance"]
     
     for outcome in Cont_Outcome_dict:
         

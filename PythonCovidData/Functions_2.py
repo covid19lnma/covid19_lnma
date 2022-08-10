@@ -686,7 +686,7 @@ def precursor_column_outcomes(df, remove_redundant = True):
 
         elif continuous == 6:
             
-            dfr.loc[j, (new_column, new_column)] = "Time to to viral clearance"
+            dfr.loc[j, (new_column, new_column)] = "Time to viral clearance"
             
     if remove_redundant == True:                #removes the columns we dont need anymore
         
@@ -739,6 +739,10 @@ def precursor_column_outcomes_blood(df, remove_redundant = True):
         elif dichotomous == 8:
             
             dfr.loc[j, (new_column, new_column)] = "Allergic reactions"
+        
+        elif dichotomous == 9:
+            
+            dfr.loc[j, (new_column, new_column)] = "Graft vs. host disease"
             
         if continuous == 1:
             
@@ -826,7 +830,7 @@ def stronger_left_join_trial_characteristics(df1, df2):
     return left_join
 
 
-def filter_treatment_pair(df, filter_treat, n, intersection = True):
+def filter_treatment_pair(df, filter_treat, n, intersection = True, node = False):
     
     if bool(filter_treat):
         
@@ -837,12 +841,20 @@ def filter_treatment_pair(df, filter_treat, n, intersection = True):
             for i in range(1, n):
             
                 treat1 = filter_treat[0]
-                aux_df = df[df[("Intervention node", f"Intervention {i} name node")] == treat1]
+                
+                if node:
+                    aux_df = df[(df[("Intervention node", f"Intervention {i} name node")] == treat1)]
+                else:
+                    aux_df = df[df[(f"Intervention {i}", f"Intervention {i} name")] == treat1]
         
                 for j in range(1, n):
                 
                     treat2 = filter_treat[1]
-                    aux_df_2 = aux_df[aux_df[("Intervention node", f"Intervention {j} name node")] == treat2]
+                    
+                    if node:
+                        aux_df_2 = aux_df[(aux_df[("Intervention node", f"Intervention {j} name node")] == treat2)]
+                    else:
+                        aux_df_2 = aux_df[aux_df[(f"Intervention {j}", f"Intervention {j} name")] == treat2]
 
                     Precursor_1_aux = Precursor_1_aux.append(aux_df_2, ignore_index = True)
         
@@ -852,14 +864,14 @@ def filter_treatment_pair(df, filter_treat, n, intersection = True):
                 
                 treat1 = filter_treat[0]
                 treat2 = filter_treat[1]
-                # aux_df = df[(df[("Intervention node", f"Intervention {i} name node")] == treat1) | \
-                #             (df[("Intervention node", f"Intervention {i} name node")] == treat2)]
                 
-                aux_df = df[(df[(f"Intervention {i}", f"Intervention {i} name")] == treat1) | \
-                            (df[(f"Intervention {i}", f"Intervention {i} name")] == treat2)]
-                    
+                if node:
+                    aux_df = df[(df[("Intervention node", f"Intervention {i} name node")] == treat1) | \
+                                (df[("Intervention node", f"Intervention {i} name node")] == treat2)]
+                else:
+                    aux_df = df[(df[(f"Intervention {i}", f"Intervention {i} name")] == treat1) | \
+                                (df[(f"Intervention {i}", f"Intervention {i} name")] == treat2)]
                 Precursor_1_aux = Precursor_1_aux.append(aux_df, ignore_index = True)
-        
         return Precursor_1_aux
         
     else:

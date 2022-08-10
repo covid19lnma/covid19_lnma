@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder,folderROM, digits = 3){
+getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder, digits = 3,folderROM){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -382,3 +382,195 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     write_csv(paste0(folder,"/output/", name))
 }
 
+pairwise_ouput <- function(output, measure, digits, placebo, mainDir, folderROM){
+  
+  TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+  TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+  baseline =0.0
+  
+  if (output == "Mortality"){
+    data=read.csv("input/Mortality - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "mortality.csv"
+    
+  } else if (output == "COVID-19 (laboratory confirmed)"){
+    data=read.csv("input/COVID-19 (laboratory confirmed) - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Infection_COVID-19_(laboratory_confirmed).csv"
+    
+  } else if (output == "COVID-19 (confirmed and suspected)"){
+    data=read.csv("input/COVID-19 (confirmed and suspected) - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Infection_COVID-19_(laboratory_confirmed_and_suspected).csv"
+    
+  } else if (output == "Mechanical ventilation"){
+    data=read.csv("input/Mechanical ventilation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "MV.csv"
+    
+  } else if (output == "Admission to hospital"){
+    data=read.csv("input/Admission to hospital - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "admission_to_hospital.csv"
+    
+  } else if (output == "Adverse effects leading to discontinuation"){
+    data=read.csv("input/Adverse effects leading to discontinuation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "AE.csv"
+    
+  } else if (output == "Viral clearance"){
+    data=read.csv("input/Viral clearance - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "viral_clearance.csv"
+    
+  } else if (output == "Venous thromboembolism"){
+    data=read.csv("input/Venous thromboembolism - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "VTE.csv"
+    
+  } else if (output == "TRALI"){
+    data=read.csv("input/TRALI - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Transfusion_lung_injury.csv"
+    
+  } else if (output == "TACO"){
+    data=read.csv("input/TACO - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Transfusion_circulatory_overload.csv"
+    
+  } else if (output == "Clinically important bleeding"){
+    data=read.csv("input/Clinically important bleeding - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "clinically_important_bleeding.csv"
+    
+  } else if (output == "Allergic reactions"){
+    data=read.csv("input/Allergic reactions - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Allergic_reactions.csv"
+    
+  } else if (output == "Graft vs. host disease"){
+    data=read.csv("input/Graft vs. host disease - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Graft.csv"
+    
+  } else if (output == "Duration of hospitalization"){
+    data=read.csv("input/Duration of hospitalization - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Duration_of_hospitalization.csv"
+    
+  } else if (output == "ICU length of stay"){
+    data=read.csv("input/ICU length of stay - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "ICU_stay.csv"
+    
+  } else if (output == "Ventilator-free days"){
+    data=read.csv("input/Ventilator-free days - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Ventilator_free_days.csv"
+    
+  } else if (output == "Duration of ventilation"){
+    data=read.csv("input/Duration of ventilation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Duration_of_ventilation.csv"
+    
+  } else if (output == "Time to symptom resolution"){
+    data=read.csv("input/Time to symptom resolution - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))d
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Time_to_symptom_resolution.csv"
+    
+  } else if (output == "Time to to viral clearance"){
+    data=read.csv("input/Time to to viral clearance - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))d
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Time_to_viral_clearance.csv"
+    
+  }
+  if (baseline ==0){
+    baseline = 0.001
+  }
+  list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir, digits,folderROM)
+  
+  write.estimates.csv(list.estimates,mainDir, name)
+}

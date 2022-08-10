@@ -21,10 +21,6 @@ from inputs_gradeing import *
 TrialsPrim = pd.read_excel(Name_File_Data, header = None, sheet_name = Trial_Data)
 TrialsPrim2 = pd.read_excel(Name_File_Data, header = None, sheet_name = Trial_Data2)
 
-################New var
-replace_node = False
-first_intervention_column = 34
-
 if nodes_name == 0:
     nodes_file = 0
     
@@ -61,14 +57,11 @@ for n in range(1, 20):
         
     except KeyError:
         break
-    
-    # except IndexError:
-    #     break
 
 #n is the number of intervention columns there is minus 1  
   
-intersection = False
-Precursor_1 = filter_treatment_pair(Precursor_1, filter_treat, n, intersection = intersection)
+#filtra por la lista de tratamientos
+Precursor_1 = filter_treatment_pair(Precursor_1, filter_treat, n, intersection = intersection, node = replace_node)
 
 #Next we get the subdataframe, dropping all the columns we aren't going to use, for easier readability
 
@@ -93,7 +86,7 @@ Precursor_1 = comorbidities_column(Precursor_1)
 Precursor_1 = type_of_care_column(Precursor_1)
 
 #find string in severity columns
-Precursor_1 = find_int_in_string(Precursor_1, start_column = 25, end_column = 28)
+Precursor_1 = find_int_in_string(Precursor_1, start_column = severity_columns_number_range[0], end_column = severity_columns_number_range[1])
 
 Precursor_1 = severity_column(Precursor_1)
 
@@ -132,8 +125,10 @@ drop_columns2 = [Rob, "Comments"]
 
 Precursor_2 = Precursor_2.drop(drop_columns2, level = 0, axis = 1)
 
-Precursor_2 = precursor_column_outcomes(Precursor_2)
-
+if drugs_or_blood == "drugs":
+    Precursor_2 = precursor_column_outcomes(Precursor_2)
+elif drugs_or_blood == "blood":
+    Precursor_2 = precursor_column_outcomes_blood(Precursor_2)
 #simplifying multiindex column names
 
 poc = "Outcomes"
@@ -166,6 +161,14 @@ if bool(filter_treat):
     if filter_treat[1] == "standard care/placebo":
         
         filter_treat[1] = "placebo"
+    
+    if filter_treat[0] == "placebo/standard care":
+        
+        filter_treat[0] = "placebo"
+        
+    if filter_treat[1] == "placebo/standard care":
+        
+        filter_treat[1] = "placebo"
         
     if filter_treat[0] == "ACEi/ARB":
         
@@ -175,9 +178,15 @@ if bool(filter_treat):
         
         filter_treat[1] = "ACEi-ARB"
     
-    name_excel = "COVID19 NMA - Table of study characteristics - Drug, filtered for " + filter_treat[0] + " and " + filter_treat[1] + " (created from " + Name_File_Data + ").xlsx"
+    if drugs_or_blood == "drugs":
+        name_excel = "COVID19 NMA - Table of study characteristics - Drug, filtered for " + filter_treat[0] + " and " + filter_treat[1] + " (created from " + Name_File_Data + ").xlsx"
+    elif drugs_or_blood == "blood":
+        name_excel = "COVID19 NMA - Table of study characteristics - Blood products filtered for " + filter_treat[0] + " and " + filter_treat[1] + " (created from " + Name_File_Data + ").xlsx"
 else:
-    name_excel = "COVID19 NMA - Table of study characteristics - Drug (created from " + Name_File_Data + ").xlsx"
+    if drugs_or_blood == "drugs":
+        name_excel = "COVID19 NMA - Table of study characteristics - Drug (created from " + Name_File_Data + ").xlsx"
+    elif drugs_or_blood == "blood":
+        name_excel = "COVID19 NMA - Table of study characteristics - Blood products (created from " + Name_File_Data + ").xlsx"
 
 writer = pd.ExcelWriter(name_excel, engine='xlsxwriter')
 
