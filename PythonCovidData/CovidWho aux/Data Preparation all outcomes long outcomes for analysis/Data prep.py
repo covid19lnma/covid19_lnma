@@ -22,12 +22,12 @@ from Functions import cleandf, clean_treatments_names, check_spelling_manually_l
 # +
 def data_prep_subdf(df, sheet):
     dfr = df.copy()
-    if sheet == "Dichotomous outcomes" or sheet == "Dichtomous outcomes":
+    if sheet == "Dichotomous outcomes" or sheet == "Dichtomous outcomes" or sheet == Dichotomous:
 
         dfr.drop("Comments", axis = 1, level = 0, inplace = True)
         dfr.drop("Follow-up time (days)", axis = 1, level = 1, inplace = True)
         
-    if sheet == "Continuous outcomes":    
+    if sheet == "Continuous outcomes" or sheet == Continuous:    
         
         dfr.drop("Comments", axis = 1, level = 0, inplace = True)
         dfr.drop("Follow-up time (days)", axis = 1, level = 1, inplace = True)
@@ -225,7 +225,8 @@ def sd_imputation(df, sample_size_column = "N_analyzed", means_column = "Mean", 
 
 # +
 Name_File_Data = glob.glob("COVID*.xlsx")
-nodes_name = glob.glob("*nodes*.xlsx")
+# nodes_name = glob.glob("*nodes*.xlsx")
+nodes_name = glob.glob("*Nodes*.xlsx")
 
 if len(Name_File_Data) != 1:
     raise Exception("Error in detecting file")
@@ -254,12 +255,14 @@ filter_cont_total = 100
 Trial_char_sheet = False #si se tiene que usar la sheet de trial characteristics
 
 Subgroup_sheets = False #Si se tienen que usar subgroup sheets
-list_subgroup = ["severe/critical", "critical", "severe"]
+list_subgroup = ["severe/critical", "mild/moderate"]
 
 #lista de las columnas que es necesario filtrar para extraer ints y floats
-list_int_columns_Dich = [3,5,6]
-list_int_columns_Cont = [4,5,6,8]
-list_float_columns_Cont = [7,9]
+list_int_columns_Dich = [3,4,5]
+list_int_columns_Cont = [3,4,5,7]
+list_float_columns_Cont = [6,8]
+
+comment_file_name = " (mild_moderate)"
 
 # +
 # Dich_Outcome_dict = ["Mortality",
@@ -271,22 +274,28 @@ list_float_columns_Cont = [7,9]
 
 Dich_Outcome_dict = [
     "Mortality",
-    "Infection with COVID-19 (laboratory confirmed)", 
-    "Infection with COVID-19 (laboratory confirmed and suspected)",
-    # "Mechanical ventilation", 
+    # "Infection with COVID-19 (laboratory confirmed)", 
+    # "Infection with COVID-19 (laboratory confirmed and suspected)",
+    "Mechanical ventilation", 
     "Admission to hospital", 
     "Adverse effects leading to discontinuation", 
-    # "Viral clearance", 
+    "Viral clearance", 
+    "Transfusion-related acute lung injury",
+    "Transfusion-associated circulatory overload",
+    "Allergic reactions",
+    "Graft vs. host disease"
     # "Venous thromboembolism", 
     # "Clinically important bleeding",
 ]
 
-Cont_Outcome_dict = ["Duration of hospitalization", \
-                      "ICU length of stay", \
-                      "Ventilator-free days", \
-                      "Duration of ventilation", \
-                      "Time to symptom resolution", \
-                      "Time to viral clearance"]
+Cont_Outcome_dict = [
+    "Duration of hospitalization", 
+    "ICU length of stay", 
+    "Ventilator-free days", 
+    "Duration of ventilation", 
+    "Time to symptom resolution", 
+    "Time to viral clearance"
+]
 
 # +
 # Cont_Outcome_dict = ["Time to symptom resolution"]
@@ -304,6 +313,7 @@ DichPrim = pd.read_excel(Name_File_Data, header = None, sheet_name = Dichotomous
 ContPrim = pd.read_excel(Name_File_Data, header = None, sheet_name = Continuous)
 
 dich_list = DichPrim.iloc[2,3]
+# -
 
 Dich =cleandf(DichPrim, total_nan = True)
 Cont =cleandf(ContPrim, total_nan = True)
@@ -322,6 +332,8 @@ Cont =data_prep_subdf(Cont, Continuous)
 
 Dich=clean_treatments_names(Dich, sheet = Dichotomous, directory_file = nodes_file, node_mask_inplace = False)
 Cont =clean_treatments_names(Cont, sheet = Continuous, directory_file = nodes_file, node_mask_inplace = False)
+
+# ### Tomar lista antes del siguiente codigo
 
 # +
 for column in list_int_columns_Dich:
@@ -375,8 +387,8 @@ if Subgroup_sheets == True and len(list_subgroup)>0:
     Groups_Dich["Ref ID"] = Groups_Dich["Ref ID"].astype(str)
     Groups_Cont["Ref ID"] = Groups_Cont["Ref ID"].astype(str)
     
-    Dich = pd.merge(Dich, Groups_Dich, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
-    Cont = pd.merge(Cont, Groups_Cont, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First author", "Subgroup description"])
+    Dich = pd.merge(Dich, Groups_Dich, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First Author", "Subgroup description"])
+    Cont = pd.merge(Cont, Groups_Cont, how = "left", left_on = ["Ref ID", "1st Author", "Subgroups"], right_on = ["Ref ID", "First Author", "Subgroup description"])
     
     Dich.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
     Cont.drop(["Subgroups", "Subgroup description", "First author"], axis = 1, inplace = True)
@@ -407,12 +419,16 @@ Dich["Number of events"] = pd.to_numeric(Dich["Number of events"])
 
 Dichlong = Dich.groupby(["Ref ID", "1st Author", "Intervention 1 name node", "Outcome"], as_index = False)\
     [["N analyzed", "Number of events", "Intervention name"]].agg(lambda x: x.sum())
+# -
 
 if filter_small:
-    Dichlong = Dichlong.\
-        groupby(["Intervention 1 name node", "Outcome"], as_index = False).filter(lambda x: (sum(x["N analyzed"]) >= filter_dich_total) | \
-                                                                                  (sum(x["Number of events"]) >= filter_dich_event))
+    Dichlong = (
+        Dichlong
+        .groupby(["Intervention 1 name node", "Outcome"], as_index = False)
+        .filter(lambda x: (sum(x["N analyzed"]) >= filter_dich_total) | (sum(x["Number of events"]) >= filter_dich_event))
+    )
 
+# +
 Dichlong = Dichlong.groupby(["Ref ID", "1st Author", "Outcome"]).filter(lambda d: len(d) > 1)
 
 Dichlong.rename(columns = {"Ref ID" : "refid", \
@@ -464,8 +480,8 @@ for outcome in Dich_Outcome_dict:
     
     if len(outcome_long_df) > 0:
         
-        outcome_long_df.to_csv("output/"+outcome + " - long data format.csv", index = False, )
-        outcome_wide_df.to_csv("output/"+outcome + " - wide data format.csv", index = False, )
+        outcome_long_df.to_csv("output/"+outcome + f" - long data format{comment_file_name}.csv", index = False, )
+        outcome_wide_df.to_csv("output/"+outcome + f" - wide data format{comment_file_name}.csv", index = False, )
 # -
 
 # ## Cont group
@@ -559,8 +575,8 @@ if len(Cont.index) > 0:
         outcome_wide_df = get_outcome(Contwide, "Outcome", index)
         
         if len(outcome_long_df) > 0:
-            outcome_long_df.to_csv("output/"+outcome + " - long data format.csv", index = False, )
-            outcome_wide_df.to_csv("output/"+outcome + " - wide data format.csv", index = False, )
+            outcome_long_df.to_csv("output/"+outcome + f" - long data format{comment_file_name}.csv", index = False, )
+            outcome_wide_df.to_csv("output/"+outcome + f" - wide data format{comment_file_name}.csv", index = False, )
 
 
 

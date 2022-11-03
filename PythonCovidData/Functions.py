@@ -279,7 +279,7 @@ def clean_treatments_names(df, sheet = "Trial characteristics", adverse_events =
                 
                 aux_str = dfr.loc[j, (f"Intervention {i}", f"Intervention {i} name")]
                 
-            elif sheet == "Dichotomous outcomes" or sheet == "Dichotomous outcomes-severity" or sheet == "Dichtomous outcomes":
+            elif sheet == "Dichotomous outcomes" or sheet == "Dichotomous outcomes-severity" or sheet == "Dichtomous outcomes" or sheet == "Dichtomous outcomes-severity":
                 
                 aux_str = dfr.loc[j, ("Intervention name", "Intervention name")]
             
@@ -361,7 +361,7 @@ def clean_treatments_names(df, sheet = "Trial characteristics", adverse_events =
                 
                     dfr.loc[j, (f"Intervention {i}", f"Intervention {i} name")] = ", ".join(aux_list)
                 
-                elif sheet == "Dichotomous outcomes" or sheet == "Dichotomous outcomes-severity":
+                elif sheet == "Dichotomous outcomes" or sheet == "Dichotomous outcomes-severity" or sheet == "Dichtomous outcomes-severity":
                 
                     dfr.loc[j, ("Intervention name", "Intervention name")] = ", ".join(aux_list)
             
