@@ -50,3 +50,5 @@ vignettes/*.pdf
 
 NMA.R
 NMAfunc.R
+
+presentation/extra/lnma_files/*

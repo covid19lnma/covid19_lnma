@@ -1,0 +1,90 @@
+---
+title: "Case study: COVID-19 LNMA"
+author: Juan Pablo Diaz Martinez
+format:
+  revealjs: 
+    theme: mytheme.scss
+    slide-number: true
+bibliography: biblio.bib
+---
+
+# Living systematic review (LSR): Why, what, how and when
+
+## Keeping evidence up to date
+
+The goal of evidence synthesis, at least from a health research perspective, is to provide the best evidence that are available. Methods for evidence synthesis are well developed [@moher2009group; @higgins2012update], usually being resource intensive, which makes difficult to keep it up to date as new evidence becomes available [@bastian2010seventy].
+
+Traditionally, SRs are not updated or updated sporadically [@garner2016and]. This leaves gaps which may be missing new research that are important.
+
+The "Living Systematic Review Network" has published an overview of LSRs and living guidance recommendations [@elliott2017living; @thomas2017living; @simmonds2017living; @akl2017living]
+
+## What is a LSR?
+
+-   A SR which is continuously updated
+-   An approach to do it and not a formal methodology
+-   Explicit predetermined frequency of search and review updating
+
+## When is appropiate?
+
+1.  Priority in the context of decision-making
+2.  Certainty in the existing evidence is low or very low
+3.  There is likely to be new research evidence
+
+## How to perform a LSR?
+
+1.  Protocol
+2.  Produce a "baseline" SR, aiming for a smooth transition to a LSR
+    -   Search
+    -   **Project management**
+    -   **Data science**
+    -   **Evidence synthesis**
+    -   Quality of evidence (GRADE)
+3.  Publication
+4.  Link to other "living" activities
+
+# Covid-19: LSR and NMA
+
+## Background I
+
+-   The number of randomized clinical trials evaluating vaccines, prophylaxis, and treatments reached 1,000 before August 2020, and is [currently](https://www.covid19-trials.com/) at 3,250.
+-   SRs labeled as "rapid" proliferated in the early days of the pandemic, and 1,700 of the COVID-19 relevant reviews are described as [rapid](https://www.epistemonikos.org/en/search?&q=COVID19&classification=systematic-review&fl=4869).
+-   Unfortunately, many reviewers use the term "rapid" to justify conducting sub-optimal SRs, including the use of single reviewers for critical tasks such as data abstraction, risk of bias assessment, and assessment of the certainty of evidence.
+
+## Background II
+
+-   Our COVID-19 Living NMA (LNMA) addressing drug prophylaxis, antiviral antibodies and cellular products, and drug treatments [@siemieniuk2020drug; @bartoszko2021prophylaxis; @siemieniuk2021antibody] is a constantly updated SR that has informed the development of a number of World Health Organization (WHO) practice recommendations [@agarwal2020living].
+-   With, as of February, 2022, 592 unique trials reported in 992 publications, our group have collected a large amount of data that allows us to address important methodological questions.
+-   The need to maintain an up to date, dynamic system for evidence synthesis in the context of COVID-19 can be facilitated using new technologies which comprise both human and machine effort.
+
+## Data science in the context of the COVID-19 LNMA
+
+-   SR activities can be broken down into "micro-tasks". Machine automation can assist with some of these tasks, including routine searching, eligibility assessment, identification and retrieval of full-text reports, and others [@thomas2017living].
+- Updated every 2 months.
+-   By dividing the work into micro-tasks, our LNMA may be conducted more efficiently among a wider range of people.
+-   Our process automation is written in `R` and `Python`, and can be found in our [github repository](https://github.com/covid19lnma/covid19_lnma).
+
+## COVID-19 LNMA microtasks
+
+|          Task          |                                                                                                    Micro-task                                                                                                     |                                                                                                            Method                                                                                                            |
+|:----------------------:|:----------------------:|:----------------------:|
+|         Search         | Running search on bibliographic databases, specifically from the ["Global literature on coronavirus disease"](https://search.bvsalud.org/global-literature-on-novel-coronavirus-2019-ncov/) published by the WHO |                                                                                 Automatic, continuous database search with push notification                                                                                 |
+| Eligibility assessment |                                                                                         Selecting studies for inclusion                                                                                          |                                                   Use of [robotsearch](https://github.com/ijmarshall/robotsearch), a machine learning RCT classifier, which is run daily.                                                    |
+|       Synthesis        |                                                     \- Entering data into meta-analysis (MA) software <br /> - Conducting MA and NMA <br /> - Report writing                                                     | \- `Python` scripts for structured data extraction tools <br /> - `R` scripts for continuous analysis updating <br /> - Automated table of study characteristics,risk of bias (RoB) ratings for GRADE |
+
+## Search and eligibility tasks
+
+![](fig/fig1.png){fig-align="center"}
+
+## Synthesis task I
+
+![](fig/fig2.png){fig-align="center"}
+
+## Synthesis task II
+
+![](fig/fig3.png){fig-align="center"}
+
+# Conclusions
+
+We have provided an overview of the workflow used in our COVID-19 LNMA. Automation scripts were created with the objective of achieving a continual update of the most relevant evidence. We also aimed to remain flexible to incorporate new developments in the broader evidence ecosystem.
+
+# References

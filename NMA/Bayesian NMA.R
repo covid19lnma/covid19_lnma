@@ -1,25 +1,18 @@
-wd <- "/home/antonio/covid19_lnma"
-drugs_or_blood <- "drugs"
-# placebo <- "placebo/standard care"
-placebo <- "standard care/placebo"
-
-setwd(wd)
 source("NMA/functions_NMA.R")
 
 if (drugs_or_blood == "drugs"){
-  mainDir <- paste0(getwd(),"/NMA/drugs")
-} else if (drug_or_blood == "blood"){
-  mainDir <- paste0(getwd(),"/NMA/blood")
+  mainDir <- "NMA/drugs"
+} else if (drugs_or_blood == "blood"){
+  mainDir <- "NMA/blood"
+} else if (drugs_or_blood == "prohylaxis"){
+  mainDir <-"NMA/prohylaxis"
 }
 
-subDir <- "output"
-output_dir <- file.path(mainDir, subDir)
-
-if (!dir.exists(output_dir)){
-  dir.create(output_dir)
+if (!dir.exists(paste0(mainDir,"/output"))){
+  dir.create(paste0(mainDir,"/output"))
 }
 
-outputs = read_excel("input/outputs.xlsx", range = "A:F") %>%
+outputs = read_excel("input/outputs.xlsx") %>%
   as.data.frame()
 
 for (row in 1:nrow(outputs)) {
@@ -28,7 +21,7 @@ for (row in 1:nrow(outputs)) {
   likelihood = outputs[row, "likelihood"]
   link = outputs[row, "link"]
   linearModel = outputs[row, "linearModel"]
-  nma_ouput(output,
+  nma_output(output,
             measure,
             likelihood,
             link,
