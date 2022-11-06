@@ -51,6 +51,9 @@ vignettes/*.pdf
 NMA.R
 NMAfunc.R
 
+
+presentation/extra/lnma_files/*
+
 # Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -185,3 +188,4 @@ dmypy.json
 #Sensitive info
 *.json
 .env
+

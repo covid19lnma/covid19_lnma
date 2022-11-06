@@ -1,27 +1,20 @@
-wd <- "/home/antonio/covid19_lnma"
-drugs_or_blood <- "drugs"
-# placebo <- "placebo/standard care"
-placebo <- "standard care/placebo"
-folderROM = drugs_or_blood
-
-setwd(wd)
+source("setup.R")
 source("pairwise/functions_MA.R")
+
 
 if (drugs_or_blood == "drugs"){
   mainDir <- paste0(getwd(),"/pairwise/drugs")
-} else if (drug_or_blood == "blood"){
+} else if (drugs_or_blood == "blood"){
   mainDir <- paste0(getwd(),"/pairwise/blood")
+} else if (drugs_or_blood == "prohylaxis"){
+  mainDir <- paste0(getwd(),"/pairwise/prohylaxis")
 }
 
-subDir <- "output"
-
-output_dir <- file.path(mainDir, subDir)
-
-if (!dir.exists(output_dir)){
-  dir.create(output_dir)
+if (!dir.exists(paste0(mainDir,"/output"))){
+  dir.create(paste0(mainDir,"/output"))
 }
 
-outputs = read_excel("input/outputs.xlsx", range = "A:C") %>%
+outputs = read_excel("input/outputs.xlsx") %>%
   as.data.frame()
 
 for (row in 1:nrow(outputs)) {

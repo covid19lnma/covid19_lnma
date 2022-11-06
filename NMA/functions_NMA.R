@@ -578,14 +578,14 @@ get.network.pdf <- function(pairwise, measure, placebo, folder, name){
   network=netmeta(contrast_df,
                   reference.group = placebo,
                   details.chkmultiarm = T,
-                  fixed = F,
+                  comb.fixed = F,
                   tol.multiarm = 0.5,
                   tol.multiarm.se = 0.5)
   netgraph(network,multiarm = T)
   dev.off()
 }
 #########4######
-nma_ouput <- function(output, 
+nma_output <- function(output, 
                       measure,
                       likelihood,
                       link,
@@ -620,7 +620,7 @@ nma_ouput <- function(output,
       mutate(rate=c.events/c.total) %>%
       summarise(median=median(rate)) %>% as.numeric()
     
-  } else if (output == "COVID-19 (laboratory confirmed)"){
+  } else if (output == "Infection with COVID-19 (laboratory confirmed)"){
     data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - long data format.csv") %>%
       as.data.frame() %>% rename(study=stauthor,responders=responder)
     
@@ -628,7 +628,10 @@ nma_ouput <- function(output,
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection_COVID-19_(laboratory_confirmed).csv", stringsAsFactors = F))
     } else if (drugs_or_blood == "blood"){
       pairwise_data=as_tibble(read.csv("pairwise/blood/output/Infection_COVID-19_(laboratory_confirmed).csv", stringsAsFactors = F))
+    } else if (drugs_or_blood == "prohylaxis"){
+      pairwise_data=as_tibble(read.csv("pairwise/prohylaxis/output/Infection_COVID-19_(laboratory_confirmed).csv", stringsAsFactors = F))
     }
+    
     hy.prior1 = -1.87
     hy.prior2 = 0.4328
     
@@ -643,7 +646,7 @@ nma_ouput <- function(output,
       mutate(rate=c.events/c.total) %>%
       summarise(median=median(rate)) %>% as.numeric()
     
-  } else if (output == "COVID-19 (confirmed and suspected)"){
+  } else if (output == "Infection with COVID-19 (confirmed and suspected)"){
     data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - long data format.csv") %>%
       as.data.frame() %>% rename(study=stauthor,responders=responder)
     
