@@ -31,27 +31,19 @@ model {
 	}
 	
 	# Random effects variance prior
-	var.d ~ dlnorm(-1.87, 0.4328)
+	var.d ~ dlnorm(-2.34, 0.3303)
 	sd.d <- sqrt(var.d)
 	tau.d <- 1 / var.d
 
 	# Relative effect matrix
 	d[1, 1] <- 0
 	d[1, 2] <- d.a.ARGOVITAgNPs
-	d[1, 3] <- d.a.bamlanivimab
-	d[1, 4] <- d.a.casirivimabimdevimab
-	d[1, 5] <- d.a.dimethylsulfoxidenasalspray
-	d[1, 6] <- d.a.hydroxychloroquine
-	d[1, 7] <- d.a.hydroxychloroquinetenofovirdisoproxilfumarateemtricitabine
-	d[1, 8] <- d.a.iotacarrageenan
-	d[1, 9] <- d.a.iotacarrageenanivermectin
-	d[1, 10] <- d.a.hydroxychloroquine + d.hydroxychloroquine.ivermectin
-	d[1, 11] <- d.a.lopinavirritonavir
-	d[1, 12] <- d.a.melatonin
-	d[1, 13] <- d.a.hydroxychloroquine + d.hydroxychloroquine.povidoneiodine
-	d[1, 14] <- d.a.tenofovirdisoproxilfumarateemtricitabine
-	d[1, 15] <- d.a.hydroxychloroquine + d.hydroxychloroquine.vitaminC
-	d[1, 16] <- d.a.hydroxychloroquine + d.hydroxychloroquine.vitaminCzinc
+	d[1, 3] <- d.a.casirivimabimdevimab
+	d[1, 4] <- d.a.hydroxychloroquine
+	d[1, 5] <- d.a.hydroxychloroquinetenofovirdisoproxilfumarateemtricitabine
+	d[1, 6] <- d.a.iotacarrageenan
+	d[1, 7] <- d.a.iotacarrageenanivermectin
+	d[1, 8] <- d.a.tenofovirdisoproxilfumarateemtricitabine
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -67,20 +59,12 @@ model {
 
 	# Effect parameter priors
 	d.a.ARGOVITAgNPs ~ dnorm(0, prior.prec)
-	d.a.bamlanivimab ~ dnorm(0, prior.prec)
 	d.a.casirivimabimdevimab ~ dnorm(0, prior.prec)
-	d.a.dimethylsulfoxidenasalspray ~ dnorm(0, prior.prec)
 	d.a.hydroxychloroquine ~ dnorm(0, prior.prec)
 	d.a.hydroxychloroquinetenofovirdisoproxilfumarateemtricitabine ~ dnorm(0, prior.prec)
 	d.a.iotacarrageenan ~ dnorm(0, prior.prec)
 	d.a.iotacarrageenanivermectin ~ dnorm(0, prior.prec)
-	d.a.lopinavirritonavir ~ dnorm(0, prior.prec)
-	d.a.melatonin ~ dnorm(0, prior.prec)
 	d.a.tenofovirdisoproxilfumarateemtricitabine ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.ivermectin ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.povidoneiodine ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.vitaminC ~ dnorm(0, prior.prec)
-	d.hydroxychloroquine.vitaminCzinc ~ dnorm(0, prior.prec)
 	
- prob.ref <- 0.0679611650485437
+ prob.ref <- 0.0221606648199446
  for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }

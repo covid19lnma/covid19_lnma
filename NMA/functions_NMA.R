@@ -598,14 +598,35 @@ nma_output <- function(output,
   output_dir <- file.path(mainDir, subDir)
   
   if (output == "Mortality"){
-    data=read.csv("input/Mortality - long data format.csv") %>%
-      as.data.frame() %>% rename(study=stauthor,responders=responder)
-    
     if (drugs_or_blood == "drugs"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/drugs/mortality.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Mortality - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/mortality.csv", stringsAsFactors = F))
     } else if (drugs_or_blood == "blood"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/blood/mortality.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Mortality - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/blood/output/mortality.csv", stringsAsFactors = F))
+    } else {
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/prohylaxis/mortality.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Mortality - long data format.csv") %>%
+          as.data.frame() %>% rename(study=stauthor,responders=responder)
+      }
+      pairwise_data=as_tibble(read.csv("pairwise/prohylaxis/output/mortality.csv", stringsAsFactors = F))
     }
+    
     hy.prior1 = -1.87
     hy.prior2 = 0.4328
     
@@ -647,20 +668,23 @@ nma_output <- function(output,
       summarise(median=median(rate)) %>% as.numeric()
     
   } else if (output == "Infection with COVID-19 (confirmed and suspected)"){
-    data=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - long data format.csv") %>%
+    data=read.csv("input/Infection with COVID-19 (confirmed and suspected) - long data format.csv") %>%
       as.data.frame() %>% rename(study=stauthor,responders=responder)
     
     if (drugs_or_blood == "drugs"){
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Infection_COVID-19_(laboratory_confirmed_and_suspected).csv", stringsAsFactors = F))
     } else if (drugs_or_blood == "blood"){
       pairwise_data=as_tibble(read.csv("pairwise/blood/output/Infection_COVID-19_(laboratory_confirmed_and_suspected).csv", stringsAsFactors = F))
+    } else if (drugs_or_blood == "prohylaxis"){
+      pairwise_data=as_tibble(read.csv("pairwise/prohylaxis/output/Infection_COVID-19_(laboratory_confirmed_and_suspected).csv", stringsAsFactors = F))
     }
+    
     hy.prior1 = -1.87
     hy.prior2 = 0.4328
     
     file_name = "laboratory confirmed and suspected"
     
-    data.baseline=read.csv("input/Infection with COVID-19 (laboratory confirmed and suspected) - wide data format.csv")
+    data.baseline=read.csv("input/Infection with COVID-19 (confirmed and suspected) - wide data format.csv")
     data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
     
     prob.ref.value=data.baseline %>%
@@ -693,14 +717,35 @@ nma_output <- function(output,
       summarise(median=median(rate)) %>% as.numeric()
     
   } else if (output == "Admission to hospital"){
-    data=read.csv("input/Admission to hospital - long data format.csv") %>%
-      as.data.frame() %>% rename(study=stauthor,responders=responder)
-    
     if (drugs_or_blood == "drugs"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/drugs/admission_to_hospital.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Admission to hospital - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/admission_to_hospital.csv", stringsAsFactors = F))
     } else if (drugs_or_blood == "blood"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/blood/admission_to_hospital.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Admission to hospital - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/blood/output/admission_to_hospital.csv", stringsAsFactors = F))
+    } else {
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/prohylaxis/admission_to_hospital.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Admission to hospital - long data format.csv") %>%
+          as.data.frame() %>% rename(study=stauthor,responders=responder)
+      }
+      pairwise_data=as_tibble(read.csv("pairwise/prohylaxis/output/admission_to_hospital.csv", stringsAsFactors = F))
     }
+    
     hy.prior1 = -1.87
     hy.prior2 = 0.4328
     file_name = "Admission to hosp"
@@ -715,14 +760,35 @@ nma_output <- function(output,
       summarise(median=median(rate)) %>% as.numeric()
     
   } else if (output == "Adverse effects leading to discontinuation"){
-    data=read.csv("input/Adverse effects leading to discontinuation - long data format.csv") %>%
-      as.data.frame() %>% rename(study=stauthor,responders=responder)
-    
     if (drugs_or_blood == "drugs"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/drugs/AE.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Adverse effects leading to discontinuation - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/AE.csv", stringsAsFactors = F))
     } else if (drugs_or_blood == "blood"){
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/blood/AE.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Adverse effects leading to discontinuation - long data format.csv") %>%
+          as.data.frame()
+      }
       pairwise_data=as_tibble(read.csv("pairwise/blood/output/AE.csv", stringsAsFactors = F))
+    } else {
+      if(measure == "ROM" || measure == "RD"){
+        data=read_csv("NMA/prohylaxis/AE.csv") %>%
+          as.data.frame()
+      } else {
+        data=read.csv("input/Adverse effects leading to discontinuation - long data format.csv") %>%
+          as.data.frame() %>% rename(study=stauthor,responders=responder)
+      }
+      pairwise_data=as_tibble(read.csv("pairwise/prohylaxis/output/AE.csv", stringsAsFactors = F))
     }
+    
     hy.prior1 = -2.34
     hy.prior2 = 0.3303
     
@@ -927,7 +993,7 @@ nma_output <- function(output,
         data=read_csv("NMA/drugs/ICU_stay.csv") %>%
           as.data.frame()
       } else {
-        ddata=read.csv("input/ICU length of stay - long data format.csv") %>%
+        data=read.csv("input/ICU length of stay - long data format.csv") %>%
           as.data.frame()
       }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/ICU_stay.csv", stringsAsFactors = F))
@@ -958,7 +1024,7 @@ nma_output <- function(output,
         data=read_csv("NMA/drugs/Ventilator_free_days.csv") %>%
           as.data.frame()
       } else {
-        ddata=read.csv("input/Ventilator-free days - long data format.csv") %>%
+        data=read.csv("input/Ventilator-free days - long data format.csv") %>%
           as.data.frame()
       }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Ventilator_free_days.csv", stringsAsFactors = F))
@@ -989,7 +1055,7 @@ nma_output <- function(output,
         data=read_csv("NMA/drugs/Duration_of_ventilation.csv") %>%
           as.data.frame()
       } else {
-        ddata=read.csv("input/Duration of ventilation - long data format.csv") %>%
+        data=read.csv("input/Duration of ventilation - long data format.csv") %>%
           as.data.frame()
       }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Duration_of_ventilation.csv", stringsAsFactors = F))
@@ -1020,7 +1086,7 @@ nma_output <- function(output,
         data=read_csv("NMA/drugs/Time_to_symptom_resolution.csv") %>%
           as.data.frame()
       } else {
-        ddata=read.csv("input/Time to symptom resolution - long data format.csv") %>%
+        data=read.csv("input/Time to symptom resolution - long data format.csv") %>%
           as.data.frame()
       }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_symptom_resolution.csv", stringsAsFactors = F))
@@ -1051,7 +1117,7 @@ nma_output <- function(output,
         data=read_csv("NMA/drugs/Time_to_viral_clearance.csv") %>%
           as.data.frame()
       } else {
-        ddata=read.csv("input/Time to viral clearance - long data format.csv") %>%
+        data=read.csv("input/Time to viral clearance - long data format.csv") %>%
           as.data.frame()
       }
       pairwise_data=as_tibble(read.csv("pairwise/drugs/output/Time_to_viral_clearance.csv", stringsAsFactors = F))

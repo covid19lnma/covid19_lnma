@@ -226,7 +226,7 @@ def sd_imputation(df, sample_size_column = "N_analyzed", means_column = "Mean", 
 # +
 Name_File_Data = glob.glob("COVID*.xlsx")
 # nodes_name = glob.glob("*nodes*.xlsx")
-nodes_name = glob.glob("*Nodes*.xlsx")
+nodes_name = glob.glob("*nodes*.xlsx")
 
 if len(Name_File_Data) != 1:
     raise Exception("Error in detecting file")
@@ -239,9 +239,8 @@ else:
 
 # +
 #####name of inputs
-# Name_File_Data = "COVID19 NMA Data extraction form - Drug Therapy - Subgroups - remdesivir - severe vs critical(2).xlsx"
-# nodes_name = "Table of nodes (31-03-2022).xlsx"
-Dichotomous = "Dichotomous outcomes"
+
+Dichotomous = "Dichtomous outcomes"
 Continuous = "Continuous outcomes"
 
 SubDichotomous = "Subgroups_Dichotomous outcomes"
@@ -258,11 +257,12 @@ Subgroup_sheets = False #Si se tienen que usar subgroup sheets
 list_subgroup = ["severe/critical", "mild/moderate"]
 
 #lista de las columnas que es necesario filtrar para extraer ints y floats
-list_int_columns_Dich = [3,4,5]
+list_int_columns_Dich = [3,5,6]
 list_int_columns_Cont = [3,4,5,7]
 list_float_columns_Cont = [6,8]
 
-comment_file_name = " (mild_moderate)"
+# comment_file_name = " (mild_moderate)"
+comment_file_name = ""
 
 # +
 # Dich_Outcome_dict = ["Mortality",
@@ -274,27 +274,27 @@ comment_file_name = " (mild_moderate)"
 
 Dich_Outcome_dict = [
     "Mortality",
-    # "Infection with COVID-19 (laboratory confirmed)", 
-    # "Infection with COVID-19 (laboratory confirmed and suspected)",
-    "Mechanical ventilation", 
+    "Infection with COVID-19 (laboratory confirmed)", 
+    "Infection with COVID-19 (laboratory confirmed and suspected)",
+    # "Mechanical ventilation", 
     "Admission to hospital", 
     "Adverse effects leading to discontinuation", 
-    "Viral clearance", 
-    "Transfusion-related acute lung injury",
-    "Transfusion-associated circulatory overload",
-    "Allergic reactions",
-    "Graft vs. host disease"
+    # "Viral clearance", 
+    # "Transfusion-related acute lung injury",
+    # "Transfusion-associated circulatory overload",
+    # "Allergic reactions",
+    # "Graft vs. host disease"
     # "Venous thromboembolism", 
     # "Clinically important bleeding",
 ]
 
 Cont_Outcome_dict = [
-    "Duration of hospitalization", 
-    "ICU length of stay", 
-    "Ventilator-free days", 
-    "Duration of ventilation", 
+    # "Duration of hospitalization", 
+    # "ICU length of stay", 
+    # "Ventilator-free days", 
+    # "Duration of ventilation", 
     "Time to symptom resolution", 
-    "Time to viral clearance"
+    # "Time to viral clearance"
 ]
 
 # +
@@ -349,6 +349,17 @@ for column in list_float_columns_Cont:
 Dich.columns = Dich.columns.get_level_values(1)
 Cont.columns = Cont.columns.get_level_values(1)
 # -
+
+# ## Special filter
+
+first_author = [
+    "Mitja",
+    "Barnabas",
+    "Seet",
+    "Labhardt"
+]
+
+Dich = Dich[~Dich["1st Author"].isin(first_author)].copy()
 
 # ## Subgroups from trial characteristics sheet
 
@@ -487,7 +498,7 @@ for outcome in Dich_Outcome_dict:
 # ## Cont group
 
 if len(Cont.index) > 0:
-    to_numeric_columns = ["Outcome", "Central tendency", "Measure of variability"]
+    to_numeric_columns = ["Outcome", "Central tendency", "Measure of variability", "N analyzed"]
     for column in to_numeric_columns:
         
         Cont[column] = pd.to_numeric(Cont[column])
@@ -578,5 +589,8 @@ if len(Cont.index) > 0:
             outcome_long_df.to_csv("output/"+outcome + f" - long data format{comment_file_name}.csv", index = False, )
             outcome_wide_df.to_csv("output/"+outcome + f" - wide data format{comment_file_name}.csv", index = False, )
 
+Cont_Outcome_dict
+
+outcome_long_df
 
 

@@ -1,5 +1,5 @@
-drugs_or_blood="blood"
-placebo="placebo/standard care"
+drugs_or_blood="prohylaxis"
+placebo="standard care/placebo"
 folderROM = drugs_or_blood
 
 if (!dir.exists("NMA/drugs")){ # create directories
