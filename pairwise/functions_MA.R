@@ -101,7 +101,7 @@ convert <- function(re) {
   results
 }
 
-getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder,folderROM){
+getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,folder, digits = 3,folderROM){
   
   data=as.data.frame(data) # tibble doesnt work for subsetting
   #get 1 subdataframes with the treatment columns
@@ -115,6 +115,8 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
   list.bm.Turner = list()
   list.bm.hnorm10 = list()
   list.bm.hnorm05 = list()
+  list.bm.uniform = list()
+  list.bm.jef = list()
   list.estimates = list()
   
   pathname <- paste0(folder,"/output/", gsub(".{4}$", "", name.pdf),".pdf")
@@ -138,6 +140,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         ci = c.events, n2i = c.total,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -147,7 +150,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Odds ratio", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     atransf=exp, digits=2)
+                     atransf=exp, digits=digits)
       
     } else if (measure == "RD") {
       
@@ -156,6 +159,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         ci = c.events, n2i = c.total,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -164,7 +168,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      alim = c(-1, 1),
                      xlim = c(-5,5),
                      ylim = yrange, top=2, steps=5, level=95,
-                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5, digits=3)
+                     xlab="Risk difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5, digits=digits)
       
       } else if (measure == "ROM") {
       
@@ -173,6 +177,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         m2i = mean2,  sd2i = sd2, n2i = n2,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       
@@ -183,7 +188,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Ratio of means", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     atransf=exp, digits=2)
+                     atransf=exp, digits=digits)
       
     } else if (measure == "MD") {
       
@@ -192,6 +197,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                         m2i = mean2,  sd2i = sd2, n2i = n2,
                         slab = study,
                         subset = ((data[,"t1"]==p1&data[,"t2"]==p2)|(data[,"t1"]==p2&data[,"t2"]==p1)),
+                        digits = digits,
                         data = data)
       
       yrange <- c(-7 - nrow(effsize), 1)
@@ -201,7 +207,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
                      xlim = c(-10,10),
                      ylim = yrange, top=2, steps=5, level=95,
                      xlab="Mean difference", slab = effsize[,"study"],efac=1, pch=15,cex=1.5,cex.lab=1.5,
-                     digits=2)
+                     digits=digits)
     }
     
     to.append <- effsize
@@ -240,20 +246,31 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       bm.hnorm10 <- bayesmeta(effsize, tau.prior = function(x){dhalfnormal(x,scale=1.0)})
       bm.hnorm05 <- bayesmeta(effsize, tau.prior = function(x){dhalfnormal(x,scale=0.5)})
       
+      bm.uniform <- bayesmeta(effsize, tau.prior = "conventional")
+      #bm.jef <- bayesmeta(effsize, tau.prior = "Jeffreys")
+      
       hnorm10.to.append <- bm.hnorm10
       hnorm05.to.append <- bm.hnorm05
+      
+      huniform.to.append <- bm.uniform
+      #hjef.to.append <- bm.jef
       
       #append in the list and be done with it
       
       list.bm.hnorm10[[i]] <- hnorm10.to.append
       list.bm.hnorm05[[i]] <- hnorm05.to.append
       
+      list.bm.uniform[[i]] <- huniform.to.append
+      #list.bm.jef[[i]] <- hjef.to.append
+      
       rma.fixed <- rma.uni(effsize, method="FE")
       rma.random.DL <- rma.uni(effsize, method="DL")
       
       #concat of the summarys, called estimates, same scheize, calculate and append
       estimates <- rbind("HNorm(0.5)" = c(bm.hnorm05$summary[2,1:2], bm.hnorm05$summary[5:6,2]),
-                         "HNorm(1.0)" = c(bm.hnorm10$summary[2,1:2], bm.hnorm10$summary[5:6,2]),
+                         #"HNorm(1.0)" = c(bm.hnorm10$summary[2,1:2], bm.hnorm10$summary[5:6,2]),
+                         "Conventional" = c(bm.uniform$summary[2,1:2], bm.uniform$summary[5:6,2]),
+                         #"Jeffreys" = c(bm.jef$summary[2,1:2], bm.jef$summary[5:6,2]),
                          "Turner Prior"=c(bm.Turner$summary[2,1:2], bm.Turner$summary[5:6,2]),
                          "Frequentist.fixed" = c(sqrt(rma.fixed$tau2.fix), rma.fixed$b, rma.fixed$ci.lb, rma.fixed$ci.ub),
                          "Frequentist.random.DL" = c(sqrt(rma.random.DL$tau2), rma.random.DL$b, rma.random.DL$ci.lb, rma.random.DL$ci.ub))
@@ -261,7 +278,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       if (measure == "OR") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp, digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         if (p1 == placebo | p2 == placebo){
@@ -285,7 +302,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
         for (j in 1:nrow(estimates)){
           addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4],
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0,
-                  digits=3)}
+                  digits=digits)}
         
         estimates = estimates %>% 
           as_tibble(rownames="type") %>% 
@@ -295,7 +312,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       } else if (measure == "ROM") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp,
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], atransf=exp, digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         if (p1 == placebo | p2 == placebo){
@@ -318,7 +335,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       } else if (measure == "MD") {
         
         for (j in 1:nrow(estimates)){
-          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4], 
+          addpoly(estimates[j,"mu"], ci.lb=estimates[j,3], ci.ub=estimates[j,4],  digits = digits,
                   mlab=row.names(estimates)[j], rows=yrange[1]+5-j, col=colvec[j],cex=1.5,width =0)}
         
         estimates = estimates %>% as_tibble(rownames="type") %>% mutate(t1=p1,t2=p2) %>% 
@@ -361,7 +378,199 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     est <- as.data.frame(list.estimates[i][1])
     rows.estimates <- bind_rows(rows.estimates, est)
   }
-  rows.estimates %>% filter(type=="Turner Prior") %>% 
+  rows.estimates %>% filter(type=="Conventional") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
 
+pairwise_ouput <- function(output, measure, digits, placebo, mainDir, folderROM){
+  
+  TP <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "placebo / control")
+  TP1 <- TurnerEtAlPrior("signs / symptoms reflecting continuation / end of condition", "pharma", "pharma")
+  baseline =0.0
+  
+  if (output == "Mortality"){
+    data=read.csv("input/Mortality - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "mortality.csv"
+    
+  } else if (output == "Infection with COVID-19 (laboratory confirmed)"){
+    data=read.csv("input/Infection with COVID-19 (laboratory confirmed) - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Infection_COVID-19_(laboratory_confirmed).csv"
+    
+  } else if (output == "Infection with COVID-19 (confirmed and suspected)"){
+    data=read.csv("input/Infection with COVID-19 (confirmed and suspected) - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Infection_COVID-19_(laboratory_confirmed_and_suspected).csv"
+    
+  } else if (output == "Mechanical ventilation"){
+    data=read.csv("input/Mechanical ventilation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "MV.csv"
+    
+  } else if (output == "Admission to hospital"){
+    data=read.csv("input/Admission to hospital - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "admission_to_hospital.csv"
+    
+  } else if (output == "Adverse effects leading to discontinuation"){
+    data=read.csv("input/Adverse effects leading to discontinuation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "AE.csv"
+    
+  } else if (output == "Viral clearance"){
+    data=read.csv("input/Viral clearance - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "viral_clearance.csv"
+    
+  } else if (output == "Venous thromboembolism"){
+    data=read.csv("input/Venous thromboembolism - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "VTE.csv"
+    
+  } else if (output == "TRALI"){
+    data=read.csv("input/Transfusion-related acute lung injury - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Transfusion_lung_injury.csv"
+    
+  } else if (output == "TACO"){
+    data=read.csv("input/Transfusion-associated circulatory overload - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Transfusion_circulatory_overload.csv"
+    
+  } else if (output == "Clinically important bleeding"){
+    data=read.csv("input/Clinically important bleeding - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "clinically_important_bleeding.csv"
+    
+  } else if (output == "Allergic reactions"){
+    data=read.csv("input/Allergic reactions - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Allergic_reactions.csv"
+    
+  } else if (output == "Graft vs. host disease"){
+    data=read.csv("input/Graft vs. host disease - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      filter(c.total!=0) %>%
+      mutate(rate=c.events/c.total) %>%
+      summarise(median=median(rate)) %>% as.numeric()
+    name <- "Graft.csv"
+    
+  } else if (output == "Duration of hospitalization"){
+    data=read.csv("input/Duration of hospitalization - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Duration_of_hospitalization.csv"
+    
+  } else if (output == "ICU length of stay"){
+    data=read.csv("input/ICU length of stay - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "ICU_stay.csv"
+    
+  } else if (output == "Ventilator-free days"){
+    data=read.csv("input/Ventilator-free days - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Ventilator_free_days.csv"
+    
+  } else if (output == "Duration of ventilation"){
+    data=read.csv("input/Duration of ventilation - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Duration_of_ventilation.csv"
+    
+  } else if (output == "Time to symptom resolution"){
+    data=read.csv("input/Time to symptom resolution - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Time_to_symptom_resolution.csv"
+    
+  } else if (output == "Time to to viral clearance"){
+    data=read.csv("input/Time to to viral clearance - wide data format.csv")
+    data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
+    baseline=data %>%
+      filter(t1==placebo | t2==placebo) %>%
+      summarise(median=median(mean2)) %>% as.numeric()
+    name <- "Time_to_viral_clearance.csv"
+    
+  }
+  if (baseline ==0){
+    baseline = 0.001
+  }
+  list.estimates <- getestimates(data, TP, TP1, baseline, measure, placebo, name, mainDir, digits,folderROM)
+  
+  write.estimates.csv(list.estimates,mainDir, name)
+}
