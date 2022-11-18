@@ -6,6 +6,11 @@ This repository includes the [R](https://www.r-project.org) code for our network
 + Prophylaxis
 + Antibodies and blood products
 
+## Run
+```bash
+docker run -d --name rstudio_covid -e USERID=$(id -u) -p 8888:8787 -e ROOT=TRUE -e PASSWORD=pass  -v "$HOME/Documents:/home/rstudio" jadm333/covid19_lnma
+```
+
 ## Questions or bugs
 
 If you have a question or find a bug, feel free to contact [Anila Qasim](mailto:qasima@mcmaster.ca). Also feel free to submit a pull request if you find and fix a bug.

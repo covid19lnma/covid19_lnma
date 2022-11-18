@@ -1,10 +1,8 @@
-sudo apt update
-sudo apt upgrade
-sudo apt install cmake
-sudo apt install jags
-sudo apt install libtcl8.6
-sudo apt install tk
-sudo apt install libglpk-dev
+FROM rocker/tidyverse:4.2
 
-Rscript install.R
-Which would you like to update? none 3
+COPY setup.sh /rocker_scripts/setup.sh
+COPY install.R /rocker_scripts/install.R
+
+RUN bash /rocker_scripts/setup.sh
+
+# docker build -t jadm333/covid19_lnma .

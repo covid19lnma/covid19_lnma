@@ -355,7 +355,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       rename(base=t2,treatment=t1,diff=yi,base.n=n2,treatment.n=n1) %>% 
       mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment),
              base=gsub("^\\d+_(.*$)","\\1",base)) %>% convert() %>% 
-      write_csv(paste0("~/covid19_lnma/NMA/",folderROM,"/",name.pdf))
+      write_csv(paste0("NMA/",folderROM,"/",name.pdf))
     
   } else if(measure == "RD"){
     bind_rows(list.effsize) %>% 
@@ -364,7 +364,7 @@ getestimates <- function(data, TP, TP1, baseline, measure, placebo, name.pdf,fol
       rename(base=t2,treatment=t1,diff=yi,base.n=c.total,treatment.n=e.total) %>% 
       mutate(treatment=gsub("^\\d+_(.*$)","\\1",treatment), base=gsub("^\\d+_(.*$)","\\1",base)) %>% 
       convert() %>% 
-      write_csv(paste0("~/covid19_lnma/NMA/",folderROM,"/",name.pdf)) 
+      write_csv(paste0("NMA/",folderROM,"/",name.pdf)) 
   }
   
   dev.off()
