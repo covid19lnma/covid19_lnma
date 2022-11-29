@@ -3,7 +3,7 @@
 """
 Created on Fri Dec 8 08:28:58 2022
 
-@author: antonio
+@author: 
 """
 
 # +
@@ -278,7 +278,7 @@ Dich_Outcome_dict = [
     "Infection with COVID-19 (laboratory confirmed and suspected)",
     # "Mechanical ventilation", 
     "Admission to hospital", 
-    "Adverse effects leading to discontinuation", 
+    # "Adverse effects leading to discontinuation", 
     # "Viral clearance", 
     # "Transfusion-related acute lung injury",
     # "Transfusion-associated circulatory overload",
@@ -293,7 +293,7 @@ Cont_Outcome_dict = [
     # "ICU length of stay", 
     # "Ventilator-free days", 
     # "Duration of ventilation", 
-    "Time to symptom resolution", 
+    # "Time to symptom resolution", 
     # "Time to viral clearance"
 ]
 
@@ -352,14 +352,17 @@ Cont.columns = Cont.columns.get_level_values(1)
 
 # ## Special filter
 
-first_author = [
-    "Mitja",
-    "Barnabas",
-    "Seet",
-    "Labhardt"
-]
+# +
+# first_author = [
+#     "Mitja",
+#     "Barnabas",
+#     "Seet",
+#     "Labhardt"
+# ]
 
-Dich = Dich[~Dich["1st Author"].isin(first_author)].copy()
+# +
+# Dich = Dich[~Dich["1st Author"].isin(first_author)].copy()
+# -
 
 # ## Subgroups from trial characteristics sheet
 

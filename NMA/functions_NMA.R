@@ -136,7 +136,7 @@ getestimatesnma <- function(data,
   
   if (nrow(mtc.nodesplit.comparisons(network)) > 0){
     
-    result.node <- mtc.nodesplit(network, likelihood=.data[[likelihood]],link=.data[[link]],
+    result.node <- mtc.nodesplit(network, likelihood=likelihood,link=link,
                                  linearModel=linearModel, n.chain =4,
                                  n.adapt=10000, n.iter=50000,
                                  hy.prior=mtc.hy.prior("var", "dlnorm", hy.prior1, hy.prior2))
