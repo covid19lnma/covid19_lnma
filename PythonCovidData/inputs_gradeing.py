@@ -12,7 +12,7 @@ Created on Mon Feb 15 18:21:17 2021
 #it is the file it compares against, if there is no file, it is equal to 0
 old_Name_File_Data = 0
 # old_Name_File_Data = "COVID19 NMA Therapy Data (22-11-2021) - revised.xlsx"
-Name_File_Data = "COVID19 NMA Blood Products (13-06-2022) - CP trials.xlsx" #nombre de archivo
+Name_File_Data = "COVID19 NMA Data Mini NMA 17-01-23.xlsx" #nombre de archivo
 
 gradeing_severity = True
 
@@ -29,7 +29,7 @@ severity = 2
 #Nodes 
 #Replace with ( nodes_name = 0 ) if the coded grouping is desired to be used, instead of the file
 # nodes_name = 0
-nodes_name = "COVID19 NMA Blood Products Table of Nodes (28-10-2021).xlsx"
+nodes_name = "Table of Nodes 17-01-23.xlsx"
 
 ######trial characteristics table
 #filter by treatment pair

@@ -1,6 +1,4 @@
-source("setup.R")
 source("pairwise/functions_MA.R")
-
 
 if (drugs_or_blood == "drugs"){
   mainDir <- paste0(getwd(),"/pairwise/drugs")

@@ -378,7 +378,7 @@ write.estimates.csv <- function(list.estimates ,folder,name) {
     est <- as.data.frame(list.estimates[i][1])
     rows.estimates <- bind_rows(rows.estimates, est)
   }
-  rows.estimates %>% filter(type=="Conventional") %>% 
+  rows.estimates %>% filter(type=="Turner Prior") %>% 
     write_csv(paste0(folder,"/output/", name))
 }
 
@@ -558,8 +558,8 @@ pairwise_ouput <- function(output, measure, digits, placebo, mainDir, folderROM)
       summarise(median=median(mean2)) %>% as.numeric()
     name <- "Time_to_symptom_resolution.csv"
     
-  } else if (output == "Time to to viral clearance"){
-    data=read.csv("input/Time to to viral clearance - wide data format.csv")
+  } else if (output == "Time to viral clearance"){
+    data=read.csv("input/Time to viral clearance - wide data format.csv")
     data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
     baseline=data %>%
       filter(t1==placebo | t2==placebo) %>%

@@ -1,4 +1,4 @@
-drugs_or_blood="prohylaxis"
+drugs_or_blood="drugs"
 placebo="standard care/placebo"
 folderROM = drugs_or_blood
 

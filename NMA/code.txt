@@ -37,9 +37,12 @@ model {
 
 	# Relative effect matrix
 	d[1, 1] <- 0
-	d[1, 2] <- d.a.casirivimabimdevimab
+	d[1, 2] <- d.a.fluvoxamine
 	d[1, 3] <- d.a.hydroxychloroquine
 	d[1, 4] <- d.a.ivermectin
+	d[1, 5] <- d.a.lopinavirritonavir
+	d[1, 6] <- d.a.molnupiravir
+	d[1, 7] <- d.a.remdesivir
 	for (i in 2:nt) {
 		for (j in 1:nt) {
 			d[i, j] <- d[1, j] - d[1, i]
@@ -54,9 +57,12 @@ model {
 	}
 
 	# Effect parameter priors
-	d.a.casirivimabimdevimab ~ dnorm(0, prior.prec)
+	d.a.fluvoxamine ~ dnorm(0, prior.prec)
 	d.a.hydroxychloroquine ~ dnorm(0, prior.prec)
 	d.a.ivermectin ~ dnorm(0, prior.prec)
+	d.a.lopinavirritonavir ~ dnorm(0, prior.prec)
+	d.a.molnupiravir ~ dnorm(0, prior.prec)
+	d.a.remdesivir ~ dnorm(0, prior.prec)
 	
- prob.ref <- 0.078674867642479
+ prob.ref <- 0.356666666666667
  for(k in 1:nt){    cr[k] <- exp(d[1,k] + log(prob.ref) - log(1 + prob.ref*(OR.ref[k] - 1)))                } for (c in 1:(nt-1)) { for (k in (c+1):nt) {  RD[k, c] <- (cr[k] - cr[c])*1000                           }                     } for(c in 1:nt){    OR.ref[c] <- exp(d[1,c])               } }

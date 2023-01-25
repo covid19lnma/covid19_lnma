@@ -23,31 +23,29 @@ TrialsPrim2 = pd.read_excel(Name_File_Data, header = None, sheet_name = Trial_Da
 
 if nodes_name == 0:
     nodes_file = 0
-    
 else:
     nodes_file = pd.read_excel(nodes_name)
     nodes_file = nodes_file.iloc[:, 0:2]
 
-#gets the dataframes cleaned and re-indexed, this functions are found in "Functions.py"
+# gets the dataframes cleaned and re-indexed, this functions are found in "Functions.py"
 
 #filter treatments by nodes but without replacing the displayed entry
 if replace_node == True:
     Precursor_1 = id_order(clean_node_treatments_names(cleandf(TrialsPrim),filter_treat,directory_file=nodes_file))
-    
 else:
     Precursor_1 = id_order(clean_treatments_names(cleandf(TrialsPrim), directory_file=nodes_file))
 
 Precursor_2 = id_order(cleandf(TrialsPrim2))
 
-#From this point forward, we are using functions from "Functions_2.py"
-#First we process the trial characteristics sheet in preparation for the merge
+# From this point forward, we are using functions from "Functions_2.py"
+# First we process the trial characteristics sheet in preparation for the merge
 
-#We do so extracting the data into different columns with the correct cell format we desire, one column at a time
+# We do so extracting the data into different columns with the correct cell format we desire, one column at a time
 
 Precursor_1 = clean_trial_name(Precursor_1)
 #Precursor_1_aux = find_int_in_string(Precursor_1, start_column = 5, end_column = 6)
 
-#bandaid 2 to get integers from the n randomized columns
+# bandaid 2 to get integers from the n randomized columns
 
 for n in range(1, 20):
             #print(n)
@@ -58,12 +56,12 @@ for n in range(1, 20):
     except KeyError:
         break
 
-#n is the number of intervention columns there is minus 1  
-  
+# n is the number of intervention columns there is minus 1  
+
 #filtra por la lista de tratamientos
 Precursor_1 = filter_treatment_pair(Precursor_1, filter_treat, n, intersection = intersection, node = replace_node)
 
-#Next we get the subdataframe, dropping all the columns we aren't going to use, for easier readability
+# Next we get the subdataframe, dropping all the columns we aren't going to use, for easier readability
 
 PSc = "Publication/Study characteristics"
 Bpc = "Baseline patient characteristics"
@@ -96,28 +94,28 @@ Precursor_1 = ventilation_percentages_column(Precursor_1)
 
 Precursor_1 = treatments_column(Precursor_1, Name_File_Data)
 
-#after getting all the columns we want, we get the subdataframe of the reference id and 1st author
-#with the columns we obtained from the chain of functions previously applied
+# after getting all the columns we want, we get the subdataframe of the reference id and 1st author
+# with the columns we obtained from the chain of functions previously applied
 
 subdf_trial = [("Ref ID", "Ref ID"), ("1st Author", "1st Author"), ("Study", "Study"), ("Publication status\nRegistration", "Publication status\nRegistration"), \
                ("Number of\nparticipants", "Number of\nparticipants"), ("Country", "Country"), ("Mean\nage", "Mean\nage"), \
                ("% Male", "% Male"), ("Comorbidities", "Comorbidities"), ("Type of care", "Type of care"), ("Severity", "Severity"), \
                ("% Mechanical \nventilation \n(at baseline)", "% Mechanical \nventilation \n(at baseline)"), \
                ("Detailed ventilation (%)", "Detailed ventilation (%)"), ("Treatments (dose and duration)", "Treatments (dose and duration)")]
-    
+
 # subdf_trial = [("Ref ID", "Ref ID"), ("1st Author", "1st Author"), ("Study", "Study"), ("Publication status\nRegistration", "Publication status\nRegistration"), \
 #                ("Number of\nparticipants", "Number of\nparticipants"), ("Country", "Country"), ("Mean\nage", "Mean\nage"), \
 #                ("% Male", "% Male"), ("Comorbidities", "Comorbidities"), ("Treatments (dose and duration)", "Treatments (dose and duration)")]
 
 Precursor_1 = Precursor_1[subdf_trial]
 
-#and we simplify the multiindexed column names to just one level, since we dropped the columns which needed the multiindex
+# and we simplify the multiindexed column names to just one level, since we dropped the columns which needed the multiindex
 
 Precursor_1.columns = Precursor_1.columns.droplevel(0)
 
-#We process the risk of bias sheet next
+# We process the risk of bias sheet next
 
-#dropping some columns
+# dropping some columns
 
 Rob = "Risk of bias (Use the RoB guidance)"
 
@@ -135,18 +133,18 @@ poc = "Outcomes"
 
 Precursor_2.columns = Precursor_2.columns.droplevel(0)
 
-#Here we group by the same reference id and authors the column of the outcomes we got
-#aggregating with a in-line lambda function which concatenates the cells in different columns
+# Here we group by the same reference id and authors the column of the outcomes we got
+# aggregating with a in-line lambda function which concatenates the cells in different columns
 
 Precursor_2 = Precursor_2.groupby(["Ref ID", "1st Author"], as_index = False)[poc].agg(lambda col: "\n".join(col))
 
-#inner join. This means we mere over the similar columns the 2 dataframes
+# inner join. This means we mere over the similar columns the 2 dataframes
 
 inner_join_precursors = stronger_left_join_trial_characteristics(Precursor_1, Precursor_2)
 
 #list of row heights
 heights = set_row_heights(inner_join_precursors)
-            
+
 #export to excel
 #Where the table starts
 start_row = 2
