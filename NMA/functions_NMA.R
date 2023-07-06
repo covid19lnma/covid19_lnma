@@ -753,11 +753,13 @@ nma_output <- function(output,
     data.baseline=read.csv("input/Admission to hospital - wide data format.csv")
     data.baseline=data.baseline %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
     
-    prob.ref.value=data.baseline %>%
-      filter(t1==placebo | t2==placebo) %>%
-      filter(c.total != 0) %>%
-      mutate(rate=c.events/c.total) %>%
-      summarise(median=median(rate)) %>% as.numeric()
+    # prob.ref.value=data.baseline %>%
+    #   filter(t1==placebo | t2==placebo) %>%
+    #   filter(c.total != 0) %>%
+    #   mutate(rate=c.events/c.total) %>%
+    #   summarise(median=median(rate)) %>% as.numeric()
+    # 
+    prob.ref.value=.06
     
   } else if (output == "Adverse effects leading to discontinuation"){
     if (drugs_or_blood == "drugs"){

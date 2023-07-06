@@ -431,11 +431,12 @@ pairwise_ouput <- function(output, measure, digits, placebo, mainDir, folderROM)
   } else if (output == "Admission to hospital"){
     data=read.csv("input/Admission to hospital - wide data format.csv")
     data=data %>% mutate(t1=gsub("^\\d+_(.*$)","\\1",t1),t2=gsub("^\\d+_(.*$)","\\1",t2))
-    baseline=data %>%
-      filter(t1==placebo | t2==placebo) %>%
-      filter(c.total!=0) %>%
-      mutate(rate=c.events/c.total) %>%
-      summarise(median=median(rate)) %>% as.numeric()
+    # baseline=data %>%
+    #   filter(t1==placebo | t2==placebo) %>%
+    #   filter(c.total!=0) %>%
+    #   mutate(rate=c.events/c.total) %>%
+    #   summarise(median=median(rate)) %>% as.numeric()
+    baseline=0.06
     name <- "admission_to_hospital.csv"
     
   } else if (output == "Adverse effects leading to discontinuation"){
