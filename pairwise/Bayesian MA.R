@@ -12,8 +12,13 @@ if (!dir.exists(paste0(mainDir,"/output"))){
   dir.create(paste0(mainDir,"/output"))
 }
 
-outputs = read_excel("input/outputs.xlsx") %>%
+# outputs = read_excel("input/outputs.xlsx") %>%
+#   as.data.frame()
+
+outputs = read_excel("input/outputs_mini.xlsx") %>%
   as.data.frame()
+
+outputs=outputs[c(2),]
 
 for (row in 1:nrow(outputs)) {
   output = outputs[row, "output"]

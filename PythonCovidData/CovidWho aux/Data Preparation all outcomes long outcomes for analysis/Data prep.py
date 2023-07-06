@@ -224,7 +224,7 @@ def sd_imputation(df, sample_size_column = "N_analyzed", means_column = "Mean", 
 # # Files
 
 # +
-Name_File_Data = glob.glob("COVID*.xlsx")
+Name_File_Data = glob.glob("*COVID*.xlsx")
 # nodes_name = glob.glob("*nodes*.xlsx")
 nodes_name = glob.glob("*Nodes*.xlsx")
 
